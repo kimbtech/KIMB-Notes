@@ -10,13 +10,6 @@ session_start();
 //	Fehler aus
 error_reporting( 0 );
 
-/*
-//Fehler anmachen
-ini_set( 'display_errors', 1 );
-ini_set( 'display_startup_errors', 1);
-error_reporting( E_ALL & ~E_NOTICE );
-*/
-
 //Klassen
 require_once( __DIR__.'/php/json.php' );
 //	Einstellungen zu json.php
@@ -34,7 +27,8 @@ check_params( array_keys( $_GET ), array( 0 => 'strAZaz09' ), 'GET Parameter err
 $tasks = array(
 	'login',
 	'list',
-	'view'
+	'view',
+	'admin'
 );
 //	Task aus URL holen
 $task = array_keys( $_GET );

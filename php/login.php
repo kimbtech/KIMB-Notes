@@ -32,7 +32,8 @@ if( check_params( POST, array( 'username' => 'strAZaz09', 'password' => 'strAZaz
 			//Ausgabe
 			add_output( array(
 					"name" => $userdata['username'],
-					"id" => $userdata['userid']
+					"id" => $userdata['userid'],
+					"admin" => $userdata['admin']
 			));
 
 			//do Login via Session
@@ -75,7 +76,8 @@ elseif( check_params( POST, array( 'username' => 'strAZaz09', 'authcode' => 'str
 				//UserID ausgeben!
 				add_output(
 					array(
-						'id' => $userlist->getValue( [$id, 'userid'] )
+						'id' => $userlist->getValue( [$id, 'userid'] ),
+						'admin' => $userlist->getValue( [$id, 'admin'] )
 					)
 				);
 				//Last used ändern

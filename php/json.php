@@ -9,7 +9,7 @@ class JSONReader{
 
 	//Pfad unter dem alle Dateien liegen
 	//	können auch Unterordner sein!
-	protected static $path = __DIR__.'/';
+	private static $path = __DIR__.'/';
 
 	//Den Pfad fuer die json Dateien aendern
 	//	$path => neuer Pfad (vollständig ab /)
@@ -30,7 +30,7 @@ class JSONReader{
 	}
 
 	//Daten über die geöffnete JSON
-	protected
+	private
 		$data, //JSON Daten Array
 		$filepath, //Vollständiger Dateipfad
 		$datahash, //Hash des JSON-Strings auf dem Dateissystem
@@ -91,7 +91,7 @@ class JSONReader{
 	}
 
 	//Datei schreiben
-	protected function write_content(){
+	private function write_content(){
 		//schreibbar?
 		if( $this->writeable ){
 			//zu JSON
@@ -241,7 +241,7 @@ class JSONReader{
 	//	=> siehe setValue();
 	//	$data => Array, welches angepasst werden soll
 	//	Return => Angepasstes Array (mit geändertem, neuen, gelöschten Wert)
-	protected function setValueHelper( $index, $value, $data ){
+	private function setValueHelper( $index, $value, $data ){
 		//Abbruch wenn nur noch ein Index
 		//	=> dann schreiben
 		if( count( $index ) == 1){
