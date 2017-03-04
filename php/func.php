@@ -319,11 +319,9 @@ function checkAdminLogin( $userid, $userlist ){
 		$id = $userlist->searchValue( [], $userid, 'userid' );
 		//gefunden?
 		if( $id !== false ){
-			//Admin lesen
-			$admin = $userlist->getValue( [$id], 'admin' );
-
-			if( $admin ){
-				return true;	
+			//Admin lesen und auf wahr pruefen
+			if( $userlist->getValue( [$id, 'admin'] ) === true ){
+				return true;
 			}
 		}
 	}
