@@ -5,6 +5,8 @@ $(function (){
 
 //Allgemein fuer Userid und Namen
 var userinformation = { "name": null, "id": null };
+//Speicher fuer Timeout
+var errorMessageTimeOut = null;
 
 //Ein und Ausblendungen überarbeiten
 function review( enabled ){
@@ -15,6 +17,36 @@ function review( enabled ){
 
 	//eins wieder hin
 	$( "div." + enabled ).removeClass( "disable" );
+}
+
+/**
+ * globale Fehlermeldung anzeigen
+ * @param message Text der Fehlermeldung
+ * @param remove (optional) Wann soll die Nachricht wieder verschwinden (Sekunden oder false; Standard 10)
+ */
+function errorMessage( message, remove ){
+	//Remove gegeben?
+	if( typeof remove == "undefinded" ){
+		remove = 10;
+	}
+	//Meldung setzen
+	$( "div.global.error.message" ).html( message );
+	//Medlung anzeigen
+	$( "div.global.error.message" ).removeClass( "disable" );
+
+	//altes Timeout weg
+	if( errorMessageTimeOut !== null ){
+		clearTimeout( errorMessageTimeOut );
+	}
+
+	//Soll Meldung ueberhaupt verschwinden
+	if( remove !== false ){
+		//per timeOut wieder loeschen
+		errorMessageTimeOut = setTimeout( function(){
+			//wieder weg
+			$( "div.global.error.message" ).addClass( "disable" );
+		}, remove * 1000 );
+	}	
 }
 
 //Ajax Anfrage stellen
@@ -34,10 +66,12 @@ function ajax_request( task, post, callback  ){
 				}
 			}
 			else{
-				alert( "Connection to Server lost!!" );
+				errorMessage('Sever antwortet nicht korrekt!', false);
 			}
 		}
-	);
+	).fail(function() {
+		errorMessage('Verbindung zum Sever verloren!', false);
+	});
 }
 
 //Login
@@ -239,6 +273,8 @@ function loginsys(){
 			$( "button#logout" ).unbind("click").click( do_logout );
 		}
 
+		var keepAliveInterval = null;
+
 		function do_logout(){
 			//ajax
 			ajax_request( "login",
@@ -270,13 +306,39 @@ function loginsys(){
 			//Auch etwaige Links wegnehmen
 			window.location.hash = "";
 
+			//Session keep Alive ausschalten
+			if( keepAliveInterval !== null ){
+				clearInterval( keepAliveInterval );
+			}
+
 			//ausblenden	
 			$( "div.logout" ).addClass( "disable" );
 			//Loginform zeigen
 			loginsys();
 		}
 
+		//User soll solange eingeloggt bleiben, bis er sich
+		//	ausloggt, Session alle 5 Minuten
+		//	erneuern
+		function keepSessionAlive(){
+			//alle 5 Minuten Session wiederbeleben ;)
+			keepAliveInterval = setInterval( function(){
+				ajax_request(
+					"login",
+					{ "status" : userinformation.id },
+					function (data){
+						if( data.data != true ){
+							//Fehler!
+							errorMessage( 'Die Session ist abgelaufen!', false );
+						}
+					}
+				);
+			//5 Minuten in 1000-stel sec
+			}, 300000 );
+		}
+
 		display_and_listen();
+		keepSessionAlive();
 	}
 }
 

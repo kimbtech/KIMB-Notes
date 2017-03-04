@@ -44,7 +44,7 @@ $jsdivmin = SystemInit::get( 'JSdivmin' );
 
 		<link rel="stylesheet" href="<?php echo $domain; ?>/load/codemirror/codemirror.css">
 		<script src="<?php echo $domain; ?>/load/codemirror/codemirror.js"></script>
-		<script src="<?php echo $domain; ?>u/load/codemirror/overlay.js"></script>
+		<script src="<?php echo $domain; ?>/load/codemirror/overlay.js"></script>
 		<script src="<?php echo $domain; ?>/load/codemirror/xml.js"></script>
 		<script src="<?php echo $domain; ?>/load/codemirror/markdown.js"></script>
 		<script src="<?php echo $domain; ?>/load/codemirror/gfm.js"></script>
@@ -69,6 +69,9 @@ $jsdivmin = SystemInit::get( 'JSdivmin' );
 		<div class="main">
 			<h1>5d7.eu - Notes</h1>
 
+			<div class="global error message disable">
+				Fehler!
+			</div>
 
 			<p class="message error loggedout disable">Logout erfolgreich!</p>
 			<div class="login">
