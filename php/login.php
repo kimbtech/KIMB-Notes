@@ -77,7 +77,7 @@ elseif( check_params( POST, array( 'username' => 'strAZaz09', 'authcode' => 'str
 				add_output(
 					array(
 						'id' => $userlist->getValue( [$id, 'userid'] ),
-						'admin' => $userlist->getValue( [$id, 'admin'] )
+						'admin' => ( $userlist->getValue( [$id, 'admin'] ) === true )
 					)
 				);
 				//Last used ändern
