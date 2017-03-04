@@ -2,8 +2,8 @@
     "noteid": "481e910a12a20c76e32137504fef322e985e249b7c662185ebbb539860f8e21bc36f28980836a11ea5d738b3afb9dc93ea32",
     "userid": "sdfsdfsadfewrtgdfsgftrghdfgdftr",
     "name": "Notestoolfunktionen",
-    "content": "# Zuerst:\n- Bessere Bereinigung des DOM nach Logout\n\n- Festes Verhalten wenn Server keine R\u00fcckmeldung zu Notizabfrage gibt\n\t- Wird aus localStorage genommen und Server \u00fcberschrieben?\n    - Wird User befragt?\n    - Wird Alter, \u00c4hnlichkeit etc. verglichen??\n- Backend zur Usererstellung\n- Authlinks\n\t- User kann erstellen und l\u00f6schen (aber nur einmal nach Erstellung sehen)\n    - Link per QR scannen ??\n- Notizfreigabe\n\t- Freigabe per Links\n    \t- URL: `https:\/\/notes.5d7.eu\/#<noteid>:<authcode>`\n    - Rechte einstellbar (\u00c4nderungen erlauben)\n    - Links erstellen und l\u00f6schen, mehrere pro Notiz\n    \n# Sp\u00e4ter:\n- Andere Notiz per `@<noteid>` referenzieren ?\n- FontAwesome MD-Parser ?\n- PrimsJS f\u00fcr Quellcodes ?\n- Notizverlauf aufrufen ?\n- Gel\u00f6schte Notizen wiederholen ?",
-    "geandert": 1488626965,
+    "content": "# Zuerst:\n- Festes Verhalten wenn Server keine R\u00fcckmeldung zu Notizabfrage gibt\n\t- Wird aus localStorage genommen und Server \u00fcberschrieben?\n    - Wird User befragt?\n    - Wird Alter, \u00c4hnlichkeit etc. verglichen??\n- Authlinks\n\t- User kann erstellen und l\u00f6schen (aber nur einmal nach Erstellung sehen)\n    - Passwort \u00e4ndern\n- Notizfreigabe\n\t- Freigabe per Links\n    \t- URL: `https:\/\/notes.5d7.eu\/#<noteid>:<authcode>`\n    - Rechte einstellbar (\u00c4nderungen erlauben)\n    - Links erstellen und l\u00f6schen, mehrere pro Notiz\n- Notizverlauf aufrufen\n- Gel\u00f6schte Notizen wiederholen\n\n# Sp\u00e4ter:\n- Andere Notiz per `@<noteid>` referenzieren ?\n- FontAwesome MD-Parser ?\n- PrimsJS f\u00fcr Quellcodes ?",
+    "geandert": 1488652774,
     "erstellt": 1483897069,
     "freigaben": []
 }

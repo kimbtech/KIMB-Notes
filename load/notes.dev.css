@@ -136,6 +136,10 @@ div.logout span.usertools span.ui-icon{
 	display: inline-block;
 }
 
+div.noteslist div.toolbar button#notesarchive{
+	float: right;
+}
+
 div.footer{
 	text-align:center;
 	padding:10px;

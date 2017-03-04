@@ -48,11 +48,11 @@ function adminDialog(){
 					+ "<table> <tr><th>UserId</th><th>Username</th><th>Admin</th><th>Löschen</th> </tr>";
 				//Array der User durchgehen
 				data.data.list.forEach( function( value ){
-					html += '<tr id="' + value.userid + '">'
+					html += '<tr userid="' + value.userid + '" class="'+(value.userid == userinformation.id ? 'important' : '')+'">'
 						+ "<td>" + value.userid.substr( 0, 20 ) + "</td>"
 						+ "<td>" + value.username + "</td>"
-						+ "<td>" + value.admin + "</td>"
-						+ "<td><button>Löschen</button></td>"
+						+ '<td><code style="color:black;">' + value.admin + "</code></td>"
+						+ '<td><button class="delUser">Löschen</button></td>'
 						+ "</tr>";
 				});
 				html += "</table>";
@@ -68,7 +68,7 @@ function adminDialog(){
 
 				setContent( html );
 
-				//Listenenr Add und Del
+				//Listenenr Add
 				$( "button#newUserButton" ).click(function(){
 					//Felder geflüllt
 					if(
@@ -114,6 +114,32 @@ function adminDialog(){
 							mainView();
 						}
 					});
+				});
+
+				//Listener Del
+				$( "button.delUser" ).click(function(){
+					//UserID holen
+					var userId = $( this ).parent().parent().attr('userid');
+
+					//Noch einmale fragen
+					if( confirm( "Wollen Sie den User mit der ID: '"+ userId +"' wirklich löschen?" ) ){
+						//Sich selbst löschen?
+						if( userId == userinformation.id ){
+							if( !confirm( "Sie löschen Ihren eigenen Account!! (Achten Sie darauf, dass immer ein Administrator bestehen bleibt!)" ) ){
+								return;
+							}
+						}
+
+						//Löschen AJAX
+						ajax_request( 'admin', { userid : userinformation.id, art : 'del', deluserid : userId  }, function( data ){
+							//okay?
+							if( data.data.done == true ){
+								//Liste neu laden
+								mainView();
+							}
+						});
+					}
+
 				});
 			}
 			else{

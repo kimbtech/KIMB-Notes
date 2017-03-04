@@ -26,7 +26,7 @@ function review( enabled ){
  */
 function errorMessage( message, remove ){
 	//Remove gegeben?
-	if( typeof remove == "undefinded" ){
+	if( typeof remove == "undefined" ){
 		remove = 10;
 	}
 	//Meldung setzen
@@ -320,6 +320,29 @@ function loginsys(){
 			if( keepAliveInterval !== null ){
 				clearInterval( keepAliveInterval );
 			}
+			//Fehlermeldungen verschwinden lassen
+			errorMessage( "Fehler!", 0);
+
+			//DOM bereinigen
+			if( typeof cm_editor !== "undefined" ){
+				//CodeMirror leeren
+				cm_editor.setValue( 'empty' );
+			}
+			//Array aller zu bereinigenden DOM Elemente
+			[
+				'input#userpassword',
+				'input#username',
+				'input#notename',
+				'div#notespreview',
+				'textarea#notesinput',
+				'input#newnotename',
+				'div.listpart div.list'
+			].forEach( function( v ){
+				$( v ).empty();
+				if( v !== 'textarea#notesinput' ){
+					$( v ).val('');
+				}
+			});
 
 			//ausblenden	
 			$( "div.logout" ).addClass( "disable" );
@@ -360,7 +383,7 @@ function loginsys(){
 				$( "div.logout span.usertools span.ui-icon-wrench" ).removeClass( "disable" );
 
 				//Auf Click hoeren
-				$( "div.logout span.usertools span.ui-icon-wrench" ).click( function() {
+				$( "div.logout span.usertools span.ui-icon-wrench" ).unbind('click').click( function() {
 					//Admin JS laden
 					$.getScript( domain + "/load/backend."+ jsdevmin +".js", function(){
 						//AdminDialog offnen
@@ -374,7 +397,7 @@ function loginsys(){
 			}
 
 			//Useradministration
-			$( "div.logout span.usertools span.ui-icon-person" ).click( function() {
+			$( "div.logout span.usertools span.ui-icon-person" ).unbind('click').click( function() {
 				//authocode Manager oeffnen
 				authCodeManager();
 			});
@@ -422,6 +445,12 @@ function list(){
 			}
 		});
 
+		//Archivbutton
+		$( "button#notesarchive" ).unbind("click").click( function (){
+			//Manager fuer alte Notizen laden
+			oldNotesManager();
+		});
+
 		//Notizen
 		//	Liste erstellen
 		var table = '<ul>';
@@ -431,12 +460,14 @@ function list(){
 			table += '<li class="noteslist_notesnames box" noteid="' + v.noteid + '"><span class="notesnames">'+ v.name +'</span> <span class="noteseditbuttons">'
 				+ '<button art="up" title="Nach oben" '+ (k != 0 ? '' : 'disabled="disabled"' ) +'>&uarr;</button>'
 				+ '<button art="down" title="Nach unten" '+ ( notes.length - 1 != k ? '' : 'disabled="disabled"' ) +'>&darr;</button>'
-				+ '<button art="del" title="Löschen (macht die Notiz unsichtbar, der Admin kann sie wieder hervorzaubern)">&#x21bb;</button>'
+				+ '<button art="del" title="Notiz archivieren">&#x21bb;</button>'
 				+ '</span></li>';
 		});
 		table += '</ul>';
 		//auf Seite einblenden
 		$( "div.noteslist div.listpart div.list" ).html( table );
+		//Tooltips fuer hoch, runter, Archiv
+		$( "li.noteslist_notesnames" ).tooltip();
 
 		//Liste Design
 		$( "div.noteslist div.listpart div.list ul" ).css({ "list-style-type": "none" });
@@ -448,7 +479,7 @@ function list(){
 
 		//Listener
 		//	Open
-		$( "div.noteslist div.listpart div.list ul li span.notesnames" ).click(function(){
+		$( "div.noteslist div.listpart div.list ul li span.notesnames" ).unbind('click').click(function(){
 			var noteid = $( this ).parent().attr( "noteid" );
 			var name = $( this ).text();
 			//Notiz zeigen
@@ -563,7 +594,7 @@ function maker( noteid, notename ){
 
 	}
 
-	//Schließen Button nutzbar machen
+	//Schließen Button (und Freigabe) nutzbar machen
 	function closebutton(){
 		$( "button#closenote" ).unbind("click").click(function (){
 			//schließen und speichern
@@ -577,11 +608,42 @@ function maker( noteid, notename ){
 	
 			//save (hier nur expliziet per AJAX)
 			//	localStorage wird ja immer bei jeder Änderung gemacht
-			ajaxsave( function (){
-				//zur Notizliste
-				list();
+			ajaxsave( function ( okay ){
+				if( okay ){
+					//zur Notizliste
+					list();
+				}
+				else{
+					//Fehlermeldung
+					$( "body" ).append( '<div id="errorMessageNoteSave">Die Speicherung der Notiz auf dem Server schlug fehl!<br />Wollen Sie den Editor verlassen und einen Verlust der Änderungen in Kauf nehmen oder abbrechen?</div>' );
+					$( "#errorMessageNoteSave" ).dialog({
+						resizable: false,
+						height: "auto",
+						width: "auto",
+						modal: true,
+						title : 'Fehler beim Speichern!',
+						buttons: {
+							"Änderungen verwerfen": function() {
+								$( this ).dialog( "close" );
+								list();
+							},
+							"Abbrechen" : function() {
+								$( this ).dialog( "close" );
+							}
+						},
+						close : function(){
+							$( this ).remove();
+						}
+					});
+				}
 			});		
 		});
+
+		//Freigabe Manager laden
+		$( "button#publishnote" ).unbind( 'click' ).click( freigabeManager );
+
+		//Verlaufs Manager laden
+		$( "button#notehistory" ).unbind( 'click' ).click( historyManager );
 	}
 	// Die internen Funktione, die per Event von CodeMirror aufgerufen werden,
 	// müssen am Ende wieder aus dem Event (on...) weg.
@@ -692,10 +754,11 @@ function maker( noteid, notename ){
 					//Zeitpunkt merken
 					lastajaxsave = Date.now();
 
-					//Callback vorhnaden?
-					if( typeof callback === "function" ){
-						callback();
-					}
+				}
+
+				//Callback vorhnaden?
+				if( typeof callback === "function" ){
+					callback( ( data.status === 'okay' ) );
 				}
 			}
 		);
@@ -707,17 +770,26 @@ function maker( noteid, notename ){
 	//Schließen Button funktionstüchtig machen
 	closebutton();
 	
+	//Manager fuer das Freigeben von Notizen
+	function freigabeManager(){
+		alert( '\n!!!Funktion noch nicht vorhanden!!!\n' );
+	}
+
+	//Manager fuer Notizverläufe
+	function historyManager(){
+		alert( '\n!!!Funktion noch nicht vorhanden!!!\n' );
+	}
 }
 
 //Manager Dialog das Management der
 //	Authcodes des Users
 function authCodeManager(){
-	alert('Noch nicht vorhanden');
+	alert('Hallo '+userinformation.name+'!\n\n!!!Funktion noch nicht vorhanden!!!\n- AuthCodes verwalten\n- Passwort ändern');
 }
 
 //Manager Dialog fuer das Wiederherstellen
 //	von alten Notizen
 function oldNotesManager(){
-	alert('Noch nicht vorhanden');
+	alert( '\n!!!Funktion noch nicht vorhanden!!!\n' );
 }
 

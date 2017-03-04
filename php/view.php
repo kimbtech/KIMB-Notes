@@ -124,7 +124,10 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz
 							//Note History öffnen
 							$note_hist = new JSONReader( 'notes/note_' . $noteid . '.history' );
 							//eine Zeile anfügen
-							$note_hist->setValue( [null], array( $note->getValue(['content']) , date( 'H:i:s d.m.Y', $note->getValue( ['geandert'] ) ) ) );
+							$note_hist->setValue( [null], array(
+								( !is_array( $note->getValue(['content']) ) ? $note->getValue(['content']) : '<empty>' ),
+								date( 'H:i:s d.m.Y', $note->getValue( ['geandert'] ) ) 
+							));
 							//Meldung, dass History geschrieben
 							$hist = 'History geschrieben! (Aehnlichkeit: '.$sim_p.'% | Zeitdifferenz: '.( time() - $note->getValue( ['geandert'] ) ).'sec)';
 						}

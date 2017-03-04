@@ -82,7 +82,29 @@ if( checkAdminLogin( $userid, $userlist ) ){
 				add_error( 'Invalid Data' );
 			}
 		}
-
+		elseif( $art == 'del' ){
+			//UserId des zu entfernenden Users
+			$deluserid = preg_replace( '/[^a-z]/', '', $_POST['deluserid'] );
+			
+			//UserId okay?
+			if( !empty( $deluserid ) ){
+				//User suchen
+				$id = $userlist->searchValue( [], $deluserid, 'userid' );
+				//gefunden?
+				if( $id !== false ){
+					//Löschen
+					$userlist->setValue( [$id], null );
+					//Ausgabe
+					add_output( array( 'done' => true ) );
+				}
+				else{
+					add_error( 'User not found' );
+				}
+			}
+			else{
+				add_error( 'Invalid Data' );
+			}
+		}
 	}
 	else{
 		add_error( 'Unknown Task' );	

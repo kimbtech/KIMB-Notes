@@ -93,14 +93,16 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 					<input type="checkbox" id="logouttype" checked="checked"> Inhalte im Browser behalten
 				</span>
 				<span class="usertools">
-					<span class="ui-icon ui-icon-person" title="Authentifizierungslinks verwalten"></span>
-					<span class="ui-icon ui-icon-wrench disable" title="Administration"></span>
+					<span class="ui-icon ui-icon-person" title="Authentifizierungslinks verwalten sowie Passwort ändern"></span>
+					<span class="ui-icon ui-icon-wrench disable" title="Administration des Systems"></span>
 				</span>
 			</div>
 
 			<div class="noteview disable box">
 				Notiz: <input type="text" readonly="readonly" id="notename">
 				<button id="closenote">Schließen</button>
+				<button id="publishnote">Freigabe</button>
+				<button id="notehistory">Verlauf</button>
 				<div class="parsed box">
 					<div class="loading"></div>
 
@@ -120,6 +122,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 				<div class="toolbar">
 					<input type="text" id="newnotename" placeholder="Notizname">
 					<button id="newnote">Neu</button>
+					<button id="notesarchive">Notizarchiv</button>
 				</div>
 
 				<div class="listpart">
