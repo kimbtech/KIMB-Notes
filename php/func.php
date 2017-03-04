@@ -285,5 +285,51 @@ function output_sys(){
 	echo json_encode( $system_output_array, JSON_PRETTY_PRINT );
 }
 
+/**
+	ADMIN
+*/
+function makepassw( $laenge, $typ = 0 ){
+	if( $typ === 0 ){
+		$chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+	}
+	elseif( $typ === 1 ){
+		$chars = 'abcdefghijklmnopqrstuvwxyz';
+	}
+	else{
+		$chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_/&%$:.;,|<>"!*+-()={[]}#';
+	}
+	$anzahl = strlen($chars);
+	$i = 0;
+	$output = '';
+	while($i < $laenge){
+		$stelle = random_int(0, $anzahl-1);
+		$output .= $chars{$stelle};
+		$i++;
+	}
+	return $output;
+}
+
+//Adminrechte preufen
+function checkAdminLogin( $userid, $userlist ){
+	//Loginstatus
+	if( check_logged_in( $userid ) ){
+		//Admin?
+
+		//User suchen
+		$id = $userlist->searchValue( [], $userid, 'userid' );
+		//gefunden?
+		if( $id !== false ){
+			//Admin lesen
+			$admin = $userlist->getValue( [$id], 'admin' );
+
+			if( $admin ){
+				return true;	
+			}
+		}
+	}
+	
+	return false;
+}
+
 
 ?>

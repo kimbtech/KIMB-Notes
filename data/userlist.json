@@ -4,8 +4,17 @@
         "password": "31b3724a4cc7e154f834dbe46f3ae1cea933a83f738805ee65124c395a55ec4d",
         "salt": "aaa",
         "userid": "sdfsdfsadfewrtgdfsgftrghdfgdftr",
+        "admin": true,
         "authcodes": {
             "6c5d61de1da5a909a6252dbae1d2740c9b7c3e74d854b3fe838d9b862d0de502971e63c5bf": 1488585035
         }
+    },
+    {
+        "username": "cc",
+        "password": "3dd7134c27ec1f129b5a8a9138f792c18e251b97594ce867b5dafbc91d516e58",
+        "salt": "YLO29jyzcXC381i8Itj4qAJwmBtndiVtpri4X5gn",
+        "userid": "zuyduzltdqvdtmvtjsdrekrladuscm",
+        "admin": false,
+        "authcodes": []
     }
 ]

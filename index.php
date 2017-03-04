@@ -13,7 +13,7 @@ require_once( __DIR__ . '/php/systemInit.php' );
 //Domain holen
 $domain = SystemInit::get( 'domain' );
 //JSdivmin
-$jsdivmin = SystemInit::get( 'JSdivmin' );
+$jsdevmin = SystemInit::get( 'JSdevmin' );
 ?>
 <!DOCTYPE html>
 <html>
@@ -54,9 +54,9 @@ $jsdivmin = SystemInit::get( 'JSdivmin' );
 		<script src="<?php echo $domain; ?>/load/codemirror/clike.js"></script>
 		<script src="<?php echo $domain; ?>/load/codemirror/meta.js"></script>
 
-		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/notes.<?php echo $jsdivmin; ?>.css">
-		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdivmin; ?>.js"></script>
-		<script>var domain = "<?php echo $domain; ?>"; </script>
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.css">
+		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.js"></script>
+		<script>var domain = "<?php echo $domain; ?>", jsdevmin = "<?php echo $jsdevmin; ?>"; </script>
 	</head>
 	<body>
 <?php
@@ -91,6 +91,10 @@ $jsdivmin = SystemInit::get( 'JSdivmin' );
 				<button id="logout">Logout</button><br />
 				<span class="small">
 					<input type="checkbox" id="logouttype" checked="checked"> Inhalte im Browser behalten
+				</span>
+				<span class="usertools">
+					<span class="ui-icon ui-icon-person" title="Authentifizierungslinks verwalten"></span>
+					<span class="ui-icon ui-icon-wrench disable" title="Administration"></span>
 				</span>
 			</div>
 

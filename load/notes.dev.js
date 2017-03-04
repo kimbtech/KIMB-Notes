@@ -4,7 +4,7 @@ $(function (){
 });
 
 //Allgemein fuer Userid und Namen
-var userinformation = { "name": null, "id": null };
+var userinformation = { "name": null, "id": null, "admin" : false };
 //Speicher fuer Timeout
 var errorMessageTimeOut = null;
 
@@ -49,7 +49,12 @@ function errorMessage( message, remove ){
 	}	
 }
 
-//Ajax Anfrage stellen
+/**
+ * AJAX Anfrage an Server stellen
+ * @param task Aufgabenbereich der Anfage (login, list, view, admin)
+ * @param post Daten die per POST übertragen werden sollen
+ * @param callback (optional) Funktion nach erfolgreicher Anfage
+ */
 function ajax_request( task, post, callback  ){
 	$.post( domain + "/ajax.php?" + task , post,
 		function (data) {
@@ -100,6 +105,7 @@ function loginsys(){
 			//uebernehmen
 			userinformation.id = localStorage.getItem( "userinformation_id" );
 			userinformation.name = localStorage.getItem( "userinformation_name" );
+			userinformation.admin = JSON.parse( localStorage.getItem( "userinformation_admin" ) );
 
 			$( "div.login div.input div.loading" ).removeClass( "disable" );
 			
@@ -164,9 +170,11 @@ function loginsys(){
 							//global merken
 							userinformation.name = user;
 							userinformation.id = data.data.id;
+							userinformation.admin = data.data.admin;
 							//in localStorage
 							localStorage.setItem( "userinformation_id", userinformation.id );
-							localStorage.setItem( "userinformation_name", userinformation.name );		
+							localStorage.setItem( "userinformation_name", userinformation.name );	
+							localStorage.setItem( "userinformation_admin", userinformation.admin );
 
 							//Logoutbutton
 							logout_enable();
@@ -246,9 +254,11 @@ function loginsys(){
 						//global merken
 						userinformation.name = data.data.name;
 						userinformation.id = data.data.id;
+						userinformation.admin = data.data.admin;
 						//in localStorage
 						localStorage.setItem( "userinformation_id", userinformation.id );
-						localStorage.setItem( "userinformation_name", userinformation.name );		
+						localStorage.setItem( "userinformation_name", userinformation.name );
+						localStorage.setItem( "userinformation_admin", userinformation.admin );	
 
 						//Logoutbutton
 						logout_enable();
@@ -301,7 +311,7 @@ function loginsys(){
 			}
 
 			//Userifos zuruecksetzen
-			userinformation = { "name": null, "id": null };
+			userinformation = { "name": null, "id": null, "admin" : false };
 
 			//Auch etwaige Links wegnehmen
 			window.location.hash = "";
@@ -313,6 +323,7 @@ function loginsys(){
 
 			//ausblenden	
 			$( "div.logout" ).addClass( "disable" );
+
 			//Loginform zeigen
 			loginsys();
 		}
@@ -337,8 +348,41 @@ function loginsys(){
 			}, 300000 );
 		}
 
+		//Administratoren den Admin-Button
+		//	zeigen
+		function adminButtons(){
+			//Beschriftungen
+			$( "div.logout span.usertools" ).tooltip();
+
+			//Admin?
+			if( userinformation.admin ){
+				//Systemadministration zeigen
+				$( "div.logout span.usertools span.ui-icon-wrench" ).removeClass( "disable" );
+
+				//Auf Click hoeren
+				$( "div.logout span.usertools span.ui-icon-wrench" ).click( function() {
+					//Admin JS laden
+					$.getScript( domain + "/load/backend."+ jsdevmin +".js", function(){
+						//AdminDialog offnen
+						adminDialog();
+					});
+				});
+			}
+			else{
+				//keine Administratoion
+				$( "div.logout span.usertools span.ui-icon-wrench" ).addClass( "disable" );
+			}
+
+			//Useradministration
+			$( "div.logout span.usertools span.ui-icon-person" ).click( function() {
+				//authocode Manager oeffnen
+				authCodeManager();
+			});
+		}
+
 		display_and_listen();
 		keepSessionAlive();
+		adminButtons();
 	}
 }
 
@@ -663,5 +707,17 @@ function maker( noteid, notename ){
 	//Schließen Button funktionstüchtig machen
 	closebutton();
 	
+}
+
+//Manager Dialog das Management der
+//	Authcodes des Users
+function authCodeManager(){
+	alert('Noch nicht vorhanden');
+}
+
+//Manager Dialog fuer das Wiederherstellen
+//	von alten Notizen
+function oldNotesManager(){
+	alert('Noch nicht vorhanden');
 }
 
