@@ -21,8 +21,8 @@ function review( enabled ){
 
 /**
  * globale Fehlermeldung anzeigen
- * @param message Text der Fehlermeldung
- * @param remove (optional) Wann soll die Nachricht wieder verschwinden (Sekunden oder false; Standard 10)
+ * @param {String} message Text der Fehlermeldung
+ * @param {int} remove (optional) Wann soll die Nachricht wieder verschwinden (Sekunden oder false; Standard 10)
  */
 function errorMessage( message, remove ){
 	//Remove gegeben?
@@ -51,11 +51,12 @@ function errorMessage( message, remove ){
 
 /**
  * AJAX Anfrage an Server stellen
- * @param task Aufgabenbereich der Anfage (login, list, view, admin)
- * @param post Daten die per POST übertragen werden sollen
- * @param callback (optional) Funktion nach erfolgreicher Anfage
+ * @param {String} task Aufgabenbereich der Anfage (login, list, view, admin)
+ * @param {JSON} post Daten die per POST übertragen werden sollen
+ * @param {function (JSON)} callback (optional) Funktion nach erfolgreicher Anfage, JSON Rückgabe als Parameter
+ * @param {function (JSON)} errcallback (optional) Funktion bei fehlerhafter Anfrage, JSON Rückgabe wenn möglich
  */
-function ajax_request( task, post, callback  ){
+function ajax_request( task, post, callback, errcallback ){
 	$.post( domain + "/ajax.php?" + task , post,
 		function (data) {
 			//Serveranwort okay?
@@ -65,18 +66,34 @@ function ajax_request( task, post, callback  ){
 					//log auf Konsole
 					console.log( data.error );
 				}
-				//Callback vorhnaden?
+				else{
+					//Fehlermeldungen wegnehmen
+					errorMessage('', 0);
+				}
+				//Callback vorhanden?
 				if( typeof callback === "function" ){
 					callback( data );
 				}
 			}
 			else{
+				//globale Fehlermeldung
 				errorMessage('Sever antwortet nicht korrekt!', false);
+
+				//Callback vorhanden?
+				if( typeof errcallback === "function" ){
+					errcallback( data );
+				}
 			}
 		}
-	).fail(function() {
+	).fail( function() {
+		//globale Fehlermeldung
 		errorMessage('Verbindung zum Sever verloren!', false);
-	});
+
+		//Callback vorhanden?
+		if( typeof errcallback === "function" ){
+			errcallback( {} );
+		}
+	} );
 }
 
 //Login
@@ -542,52 +559,74 @@ function maker( noteid, notename ){
 
 	//Notiz holen
 	var notedata;
+	//Besteht die Gefahr, dass die Notiz auf dem Server ueberschrieben
+	//	wird?
+	//		(zB: wenn Server nicht antwortet, aber noch eine Nachricht im localStorage)
+	var noteOverrideDanger = false;
 	function get_notedata(){
+
+		//Daten ohne Server aus localStorage oder Vorgabe nehmen
+		// empty => Ist der Server leer?
+		function getDataWithoutServer( empty ){
+			//Dateien 
+			if( !empty ){
+				//Gefahr merken
+				noteOverrideDanger = true;
+				//Meldung
+				errorMessage( 'Kann die aktuelle Version der Notiz nicht vom Server holen.', 20 );
+			}
+
+			//erst in localStorage gucken
+			if( localStorage.getItem( "note_autosave_"+noteid ) != null ){
+				//localStorage
+				notedata = JSON.parse( localStorage.getItem( "note_autosave_"+noteid ) );
+
+				//Eingabefeld
+				make_inputfield();
+			}
+			else{
+				//Fallback (Vorgabe)
+				notedata = {
+					"name" : notename,
+					"id" : noteid,
+					"content" : "# "+notename+"\nUnd hier dann der Text!!\n"
+				};
+
+				//Eingabefeld
+				make_inputfield();
+			}
+		}
 
 		$( "div.noteview div.loading" ).removeClass( "disable" );
 		ajax_request( "view",
 	 		{"userid" : userinformation.id, "noteid" : noteid },
 			function ( data ) {
 				$( "div.noteview div.loading" ).addClass( "disable" );
-				if(
-					//Abfrage okay?
-					data.status === 'okay'
-					&&
+				//Abfrage okay?
+				if( data.status === 'okay' ){
 					//neue Notiz (dann Server noch leer)
-					!data.data.empty
-				){
+					if( !data.data.empty ){
 
-					//Daten übernehmen
-					notedata = {
-						"name" : data.data.name,
-						"id" : data.data.id,
-						"content" : data.data.content
-					};
-				
-					//Eingabefeld
-					make_inputfield();
-				}
-				else{
-					//Dann in localStorage gucken
-					if( localStorage.getItem( "note_autosave_"+noteid ) != null ){
-						//localStorage
-						notedata = JSON.parse( localStorage.getItem( "note_autosave_"+noteid ) );
-
+						//Daten übernehmen
+						notedata = {
+							"name" : data.data.name,
+							"id" : data.data.id,
+							"content" : data.data.content
+						};
+					
 						//Eingabefeld
 						make_inputfield();
 					}
 					else{
-						//Fallback (Vorgabe)
-						notedata = {
-							"name" : notename,
-							"id" : noteid,
-							"content" : "# "+notename+"\nUnd hier dann der Text!!\n"
-						};
-
-						//Eingabefeld
-						make_inputfield();
+						getDataWithoutServer( true );	
 					}
 				}
+				else{
+					getDataWithoutServer( false );
+				}
+			},
+			function ( data ){
+				getDataWithoutServer( false );
 			}
 		);
 		
@@ -740,28 +779,70 @@ function maker( noteid, notename ){
 	}
 	//Speicherung per AJAX durchführen
 	function ajaxsave( callback ){
-		$( "div.noteview div.loading" ).removeClass( "disable" );
-		ajax_request( "view",
-	 		{"userid" : userinformation.id, "noteid" : noteid, "note" : { "name" : $( "input#notename" ).val(), "cont" : cm_editor.getValue() } },
-			function ( data ) {
-				$( "div.noteview div.loading" ).addClass( "disable" );
-				if(
-					data.status === 'okay'
-				){
+		//Gefahr des Überschreibens?
+		if( noteOverrideDanger ){
+			//User darauf hinweisen
 
-					console.log( 'Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.' );
-
-					//Zeitpunkt merken
-					lastajaxsave = Date.now();
-
+			$( "body" ).append( '<div id="dangerMessageNoteSave">Beim Speichern der Notiz kann es eventuell zu Datenverlust kommen, da die aktuellste Version nicht vom Server geladen werden konnte!</div>' );
+			$( "#dangerMessageNoteSave" ).dialog({
+				resizable: false,
+				height: "auto",
+				width: "auto",
+				modal: true,
+				title : 'Gefahr des Datenverlustes!',
+				buttons: {
+					"Trotzdem Speichern": function() {
+						$( this ).dialog( "close" );
+						//jetzt keine Gefahr mehr
+						noteOverrideDanger = false;
+						//Speichern
+						doSave();
+					},
+					"Erstmal nicht" : function() {
+						$( this ).dialog( "close" );
+					}
+				},
+				close : function(){
+					$( this ).remove();
 				}
+			});
+		}
+		else{
+			//immer speichern!
+			doSave();
+		}
 
-				//Callback vorhnaden?
-				if( typeof callback === "function" ){
-					callback( ( data.status === 'okay' ) );
+		//Die Speicherung ausführen
+		function doSave(){
+			$( "div.noteview div.loading" ).removeClass( "disable" );
+			ajax_request( "view",
+				{"userid" : userinformation.id, "noteid" : noteid, "note" : { "name" : $( "input#notename" ).val(), "cont" : cm_editor.getValue() } },
+				function ( data ) {
+					$( "div.noteview div.loading" ).addClass( "disable" );
+					if(
+						data.status === 'okay'
+					){
+
+						console.log( 'Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.' );
+
+						//Zeitpunkt merken
+						lastajaxsave = Date.now();
+
+					}
+
+					//Callback vorhnaden?
+					if( typeof callback === "function" ){
+						callback( ( data.status === 'okay' ) );
+					}
+				},
+				function ( data ){
+					//Callback vorhnaden?
+					if( typeof callback === "function" ){
+						callback( false );
+					}
 				}
-			}
-		);
+			);
+		}
 	}
 
 	//Daten holen
