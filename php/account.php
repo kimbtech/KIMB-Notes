@@ -50,8 +50,61 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'newpass' => 'strAZa
 	}
 }
 //Authcodes
-//	list
-//	add
-//	del
+elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09', 'id' => 'strAZaz09' ) ) ){
+	//Userid
+	//	=> Konvention nur kleine Buchstaben!
+	$userid = preg_replace( '/[^a-z]/', '', $_POST['userid'] );
+
+	//Loginstatus
+	if( check_logged_in( $userid ) ){
+
+		//Aufgabe okay?
+		$art = $_POST['art'];
+		if( in_array( $art, array( 'list', 'new', 'del' ) ) ){
+
+			//Userdaten
+			$userlist = new JSONReader( 'userlist' );
+
+			//User suchen
+			$id = $userlist->searchValue( [], $userid, 'userid' );
+			//gefunden?
+			if( $id !== false ){
+		
+				//Alles Codes des User lesen
+				$codes = $userlist->getValue( [$id] );
+				$codes = $codes['authcodes'];
+
+				//Nach Aufgabe unterscheiden
+				if( $art == 'list' ){
+					//Array fuer Ausgabe
+					$out = array();
+					//Array durchgehen
+					foreach( $codes as $code => $time ){
+						//Infos über diesen Code
+						$out[] = array(
+							'time' => date( 'd.m.Y H:i:s', $time ),
+							'code' => substr( $code, 0, 10 ),
+							'id' => hash( 'sha256', $code )
+						);
+					}
+					//Ausgabe
+					add_output( empty( $out ) ? false : $out );
+
+				}
+			}
+			else{
+				add_error( 'User not found' );
+			}
+
+		}
+		else{
+			add_error( 'Unknown task!' );
+		}
+
+	}
+	else{
+		add_error( 'Not allowed' );
+	}
+}
 
 ?>

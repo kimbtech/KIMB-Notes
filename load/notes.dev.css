@@ -149,6 +149,10 @@ div.footer a{
 }
 
 /* Admin */
+div#authCodeManagerDialog table,
+div#authCodeManagerDialog td,
+div#authCodeManagerDialog th,
+div#authCodeManagerDialog tr,
 div#mainAdminDialog table,
 div#mainAdminDialog td,
 div#mainAdminDialog th,

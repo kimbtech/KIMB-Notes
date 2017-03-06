@@ -886,12 +886,34 @@ function authCodeManager(){
 
 	//Erste Ansicht des Dialogs laden und
 	//	mit Listenern versehen
-	function loadContent(){
+	function loadContent( authcodes ){
 
 		//HTML Inhalte
 		var html = '<h3>Authentifizierungslinks</h3>'
+		if( authcodes !== false ){
+			html += '<table>'
+				+ '<tr>'
+				+ '<th>Code (Anfang)</th>'
+				+ '<th>Letzte Nutzung</th>'
+				+ '<th>Löschen</th>'
+				+ '</tr>';
+			//Tabelle füllen
+			authcodes.forEach( function( value ) {
+				html += '<tr>'
+					+ '<td><code style="color:black;">'+ value.code +'</code></td>'
+					+ '<td>'+ value.time +'</td>'
+					+ '<td><button class="deleteAuthLink" linkid="'+ value.id +'">Link Löschen</button></td>'
+					+ '</tr>';
+			});
 
-			+'<h3>Passwort ändern</h3>'
+			html += '</table>'
+		}
+		else{
+			html += '<p>Sie haben noch keine Authentifizierungslinks!</p>';
+		}
+		html += '<button id="addAuthLink">Neuen Link hinzufügen</button>'
+			+ '<p>&nbsp;</p>';
+		html += '<h3>Passwort ändern</h3>'
 			+'<div id="newPasswordLoader" class="loading disable"></div>'
 			+'<input class="newPassword" type="password" id="newPasswordA" placeholder="Neues Passwort"> <span class="newPasswordIndikator" id="newPasswordAIndikator">Bitte geben Sie ein Passwort ein!</span><br />'
 			+'<input class="newPassword" type="password" id="newPasswordB" placeholder="Neues Passwort"> <span class="newPasswordIndikator" id="newPasswordBIndikator">Bitte geben Sie das Passwort ein!</span><br />'
@@ -967,6 +989,23 @@ function authCodeManager(){
 			else{
 				$( "button#newPasswordSet" ).prop('disabled', true);
 			}
+		});
+
+		//Löschen von Authcodes
+		$( "button.deleteAuthLink" ).click( function () {
+			var codeid = $( this ).attr( 'linkid' );
+
+			alert( 'Löschen noch nicht möglich!\n\n' +codeid );
+
+			// Wirklich sicher Dialog
+		});
+
+		//Hinzufügen von Authcodes
+		$( "button#addAuthLink" ).click( function () {
+			alert( 'Hinzufügen noch nicht möglich!' );
+
+			//Dialog mit vollständigem Code und Link, wenn
+			//	erstellt 
 		});
 
 		//Funktionen
@@ -1079,8 +1118,19 @@ function authCodeManager(){
 
 	}
 
+	//Dialog erstellen
 	initDialog();
-	loadContent();
+	//Inhalt
+	ajax_request( "account", { userid : userinformation.id, art : 'list', id : 'list' },
+		function( data ){
+			if( data.status === 'okay' ){
+				loadContent( data.data );
+			}
+			else{
+				dialogSetContent( 'Kann nicht laden!' );
+			}
+		});
+
 }
 
 //Manager Dialog fuer das Wiederherstellen
