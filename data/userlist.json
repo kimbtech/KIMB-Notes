@@ -1,8 +1,8 @@
 [
     {
         "username": "admin",
-        "password": "31b3724a4cc7e154f834dbe46f3ae1cea933a83f738805ee65124c395a55ec4d",
-        "salt": "aaa",
+        "password": "f073f9419055438a416b109f978574ed290bc14ec848f0a0384e46fc455a7e5e",
+        "salt": "LwqiryDFA5nRd6fhOoe7ewcCgRTtxVWcNjPoqfl8",
         "userid": "sdfsdfsadfewrtgdfsgftrghdfgdftr",
         "admin": true,
         "authcodes": {

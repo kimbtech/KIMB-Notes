@@ -166,3 +166,11 @@ div#mainAdminDialog tr{
 	min-height:200px;
 }
 
+.ui-widget,
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+	font-family: Ubuntu, sans-serif;
+	font-size: 1em;
+}

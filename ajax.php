@@ -28,7 +28,8 @@ $tasks = array(
 	'login',
 	'list',
 	'view',
-	'admin'
+	'admin',
+	'account'
 );
 //	Task aus URL holen
 $task = array_keys( $_GET );
