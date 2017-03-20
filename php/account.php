@@ -74,6 +74,9 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09'
 				$codes = $userlist->getValue( [$id] );
 				$codes = $codes['authcodes'];
 
+				//Uebergebenen Code (ID) prüfen
+				$codeID = preg_replace( '/[^a-z0-9]/', '', $_POST['id'] );
+
 				//Nach Aufgabe unterscheiden
 				if( $art == 'list' ){
 					//Array fuer Ausgabe
@@ -90,6 +93,34 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09'
 					//Ausgabe
 					add_output( empty( $out ) ? false : $out );
 
+				}
+				elseif(  $art == 'new' ){
+
+				}
+				//Löschen
+				elseif( $art == 'del' ) {
+					//zu löschenden Code bestimmen
+					//	alle durchgehen
+					foreach( $codes as $code => $time ){
+						//stimmen die Hashes?
+						if( $codeID == hash( 'sha256', $code ) ){
+							//gefunden
+							$delcode = $code;
+							break;
+						}
+					}
+
+					//gefunden?
+					if( !empty( $delcode ) ){
+						//löschen
+						$userlist->setValue( [$id, 'authcodes', $delcode], null );
+
+						//Meldung
+						add_output( true );
+					}
+					else{
+						add_error( 'Code not found' );
+					}
 				}
 			}
 			else{
