@@ -876,6 +876,9 @@ function authCodeManager(){
 			title : 'Authentifizierungslinks und Passwort',
 			close : function(){
 				$( this ).remove();
+			},
+			position: {
+				my: "center", at: "center", of: $("div.main")
 			}
 		});
 	}
@@ -902,7 +905,7 @@ function authCodeManager(){
 				html += '<tr>'
 					+ '<td><code style="color:black;">'+ value.code +'</code></td>'
 					+ '<td>'+ value.time +'</td>'
-					+ '<td><button class="deleteAuthLink" linkid="'+ value.id +'">Link Löschen</button></td>'
+					+ '<td><button class="deleteAuthLink" linkid="' + value.id + '" codeteil="' + value.code +'">Link Löschen</button></td>'
 					+ '</tr>';
 			});
 
@@ -994,10 +997,19 @@ function authCodeManager(){
 		//Löschen von Authcodes
 		$( "button.deleteAuthLink" ).click( function () {
 			var codeid = $( this ).attr( 'linkid' );
+			var codeteil = $( this ).attr( 'codeteil' );
 
-			alert( 'Löschen noch nicht möglich!\n\n' +codeid );
-
-			// Wirklich sicher Dialog
+			if( confirm( 'Wollen sie den Code "'+ codeteil +'" wirklich löschen? ') ){
+				ajax_request("account", { userid: userinformation.id, art: 'del', id: codeid },
+					function (data) {
+						if (data.status === 'okay') {
+							fillDialog();
+						}
+						else {
+							alert('Konnte den Code nicht löschen!');
+						}
+					});
+			}
 		});
 
 		//Hinzufügen von Authcodes
@@ -1121,15 +1133,18 @@ function authCodeManager(){
 	//Dialog erstellen
 	initDialog();
 	//Inhalt
-	ajax_request( "account", { userid : userinformation.id, art : 'list', id : 'list' },
-		function( data ){
-			if( data.status === 'okay' ){
-				loadContent( data.data );
-			}
-			else{
-				dialogSetContent( 'Kann nicht laden!' );
-			}
-		});
+	function fillDialog(){
+		ajax_request( "account", { userid : userinformation.id, art : 'list', id : 'list' },
+			function( data ){
+				if( data.status === 'okay' ){
+					loadContent( data.data );
+				}
+				else{
+					dialogSetContent( 'Kann nicht laden!' );
+				}
+			});
+	}
+	fillDialog();
 
 }
 
