@@ -295,6 +295,9 @@ function makepassw( $laenge, $typ = 0 ){
 	elseif( $typ === 1 ){
 		$chars = 'abcdefghijklmnopqrstuvwxyz';
 	}
+	elseif( $typ == 2 ){
+		$chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	}
 	else{
 		$chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_/&%$:.;,|<>"!*+-()={[]}#';
 	}

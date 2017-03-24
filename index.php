@@ -39,6 +39,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<script src="//data.5d7.eu/jquery-ui.min.js"></script>
 
 		<script src="//data.5d7.eu/sjcl.min.js"></script>
+		<script src="//data.5d7.eu/qrcode.min.js"></script>
 
 		<script src="<?php echo $domain; ?>/load/marked.min.js"></script>	
 
