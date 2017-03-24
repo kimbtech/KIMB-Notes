@@ -94,8 +94,19 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09'
 					add_output( empty( $out ) ? false : $out );
 
 				}
+				//Neuen Code?
 				elseif(  $art == 'new' ){
+					do{
+						//neuen Code erstellen
+						$newCode = makepassw( 75, 2 );
+						//und noch leer?
+					} while( isset( $codes[$newCode] ) );
 
+					//Code anfuegen
+					$userlist->setValue( [$id, 'authcodes', $newCode], 0 );
+
+					//Code ausgeben
+					add_output( $newCode );
 				}
 				//Löschen
 				elseif( $art == 'del' ) {

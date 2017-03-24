@@ -893,6 +893,7 @@ function authCodeManager(){
 
 		//HTML Inhalte
 		var html = '<h3>Authentifizierungslinks</h3>'
+			+ '<div class="loading disable" id="authLinkLoading"></div>';
 		if( authcodes !== false ){
 			html += '<table>'
 				+ '<tr>'
@@ -1000,8 +1001,10 @@ function authCodeManager(){
 			var codeteil = $( this ).attr( 'codeteil' );
 
 			if( confirm( 'Wollen sie den Code "'+ codeteil +'" wirklich löschen? ') ){
+				$("div#authLinkLoading").removeClass("disable");
 				ajax_request("account", { userid: userinformation.id, art: 'del', id: codeid },
 					function (data) {
+						$("div#authLinkLoading").addClass("disable");
 						if (data.status === 'okay') {
 							fillDialog();
 						}
@@ -1014,10 +1017,50 @@ function authCodeManager(){
 
 		//Hinzufügen von Authcodes
 		$( "button#addAuthLink" ).click( function () {
-			alert( 'Hinzufügen noch nicht möglich!' );
+			$("div#authLinkLoading").removeClass("disable");
+			ajax_request("account", { userid: userinformation.id, art: 'new', id: 'new' },
+				function (data) {
+					$("div#authLinkLoading").addClass("disable");
+					if (data.status === 'okay') {
+						showNewCode( data.data );
+						fillDialog();
+					}
+					else {
+						alert('Konnte keinen Code erstellen!');
+					}
+				});
 
-			//Dialog mit vollständigem Code und Link, wenn
-			//	erstellt 
+			//Dialog mit neuem Code
+			function showNewCode( code ){
+				var authlink = domain + '/#' + userinformation.name + ':' + code;
+				var html = '<p><b>Neuer Authentifizierungslink wurde erstellt:</b></p>'
+					+ '<p><b>Code:</b> <code style="color:black;">' + code + '</code></p>'
+					+ '<p><b>URL:</b> <input type="text" value="' + authlink +'" readonly="readonly" style="width:90%;"></p>'
+					+ '<p><b>Link:</b> <a href="' + authlink +'" target="_blank" style="color:lightblue;">Aufrufen</a></p>'
+					+ '<p><center><div style="background-color:white; padding:15px; border-radius:5px;" id="authCodeManagerNewCodeDialogQR"></div></center></p>'
+					+ '<p><em><u>Achtung:</u> Dieser Link und Code wird nur ein einziges Mal angezeigt!!</em></p>';
+				//HTML
+				$("body").append('<div id="authCodeManagerNewCodeDialog">'+ html +'</div>');
+				//Dialog
+				$("div#authCodeManagerNewCodeDialog").dialog({
+					resizable: false,
+					height: "auto",
+					width: "auto",
+					modal: true,
+					title: 'Neuer Authentifizierungslink',
+					close: function () {
+						$(this).remove();
+					},
+					position: {
+						my: "center", at: "center", of: $("div.main")
+					}
+				});
+				//QR-Code
+				new QRCode(
+					document.getElementById( "authCodeManagerNewCodeDialogQR" ),
+					authlink
+				)
+			}
 		});
 
 		//Funktionen
