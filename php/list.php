@@ -190,6 +190,98 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'name' => 'strALL') 
 		add_error( 'Not allowed' );
 	}	
 }
+//Archiv?
+elseif(check_params( POST, array( 'userid' => 'strAZaz09', 'reload' => 'strAZaz09') ) ){
+	//Userid
+	//	=> Konvention nur kleine Buchstaben!
+	$userid = preg_replace( '/[^a-z]/', '', $_POST['userid'] );
+
+	//Loginstatus
+	if( check_logged_in( $userid ) ){
+
+		//Liste aller Notes des Systems
+		$allNotesList = new JSONReader( 'notes/noteslist' );
+		//Liste aller aktiver Notes des Users
+		$activeNotesList = new JSONReader( 'user/user_'. $userid );
+
+		//Liste?
+		if( $_POST['reload'] == 'none' ){
+			//Liste aller aktiver Notes des Users
+			//	IDs => in Array
+			$activeIds = array_column( $activeNotesList->getArray(), 'noteid' ); 
+
+			//Array fuer alle deaktivierten Notes des Users
+			$out = array();
+
+			//alle IDs des System durchgehen
+			foreach( $allNotesList->getArray() as $noteId ){
+				//Notiz schon aktiv?
+				if( !in_array( $noteId, $activeIds ) ){
+					//Notiz diese Users?
+					//	Notzi laden
+					$note = new JSONReader( 'notes/note_' . $noteId );
+					//	nicht leer?
+					if( $note->getArray() !== array() ){
+						//UserID passend?
+						if( $userid == $note->getValue(['userid']) ){
+							$out[] = array(
+								'noteid' => $noteId,
+								'name' => $note->getValue(['name']),
+								'geaendert' => date( 'H:i:s d.m.Y', $note->getValue(['geandert']) )
+							);
+						}
+					}
+				}
+			}
+
+			//Ausgabe
+			add_output( $out );
+
+		}
+		//aus Archiv retten
+		else{
+			//Noteid
+			//	=> Konvention nur kleine Buchstaben und Zahlen!
+			$noteid = preg_replace( '/[^a-z0-9]/', '', $_POST['reload'] );
+
+			//NoteID vorhanden
+			if( $allNotesList->searchValue( [], $noteid ) !== false ){
+				//die zu ladende Notiz einlesen
+				$newNote = new JSONReader( 'notes/note_' . $noteid );
+
+				//User okay?
+				if( $newNote->isValue( ['userid'], $userid ) ){
+
+					//die groeßte Position suchen
+					$pos = 0;
+					foreach( $activeNotesList->getArray() as $note ){
+						if( $note['position'] > $pos ){
+							$pos = $note['position'];
+						}
+					}
+
+					//neue Notiz dem User zuordnen
+					//	ganz oben
+					$activeNotesList->setValue( [null], array(
+						'name' => $newNote->getValue(['name']),
+						'noteid' => $noteid,
+						'position' => $pos + 1
+					));
+				}
+				else{
+					add_error( 'UserID not owner of NoteID' );
+				}
+			}
+			else{
+				add_error( 'NoteID unknown' );
+			}
+		}
+
+	}
+	else{
+		add_error( 'Not allowed' );
+	}
+}
 else{
 	add_error( 'Incorrect Request' );
 }
