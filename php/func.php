@@ -323,7 +323,7 @@ function checkAdminLogin( $userid, $userlist ){
 		//gefunden?
 		if( $id !== false ){
 			//Admin lesen und auf wahr pruefen
-			if( $userlist->getValue( [$id, 'admin'] ) === true ){
+			if( $userlist->isValue( [$id, 'admin'], true ) ){
 				return true;
 			}
 		}

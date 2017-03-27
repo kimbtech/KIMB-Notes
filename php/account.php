@@ -71,8 +71,7 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'art' => 'strAZaz09'
 			if( $id !== false ){
 		
 				//Alles Codes des User lesen
-				$codes = $userlist->getValue( [$id] );
-				$codes = $codes['authcodes'];
+				$codes = $userlist->getValue( [$id,'authcodes'] );
 
 				//Uebergebenen Code (ID) prüfen
 				$codeID = preg_replace( '/[^a-z0-9]/', '', $_POST['id'] );

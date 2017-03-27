@@ -147,17 +147,17 @@ class JSONReader{
 		print_r( $this->data );
 	}
 
-	//Prüfen ob ein Wert vorhnanden
+	//Prüfen, ob ein Wert vorhanden
 	//	$index => array() der Indexe
 	//	$value => gewuenschter Wert
-	//	Return => true/false, gefunden und gleich $value
+	//	Return => true/false, gefunden und gleich $value (nicht typecht)
 	public function isValue( $index, $value = null ){
 		//Daten kopieren
 		$data = $this->data;
 		//nach und nach zu gesuchtem Wert gehen
 		foreach( $index as $i ){
 			//Wert vorhanden?
-			if( !empty( $data[$i] ) ){
+			if( isset( $data[$i] ) ){
 				//Immer einen Weiter
 				$data = $data[$i];
 			}
@@ -172,19 +172,25 @@ class JSONReader{
 	
 	//Einen Wert aus Array holen
 	//	$index => array() der Indexe
-	//	Return => Wert unter diesen Index
-	public function getValue( $index ){
+	//	$exception => true/ false Fehlermeldung werfen, wenn Index nicht gefunden
+	//	Return => Wert unter diesem Index, bzw. false
+	public function getValue( $index, $exception = false ){
 		//Daten kopieren
 		$data = $this->data;
 		//nach und nach zu gesuchtem Wert gehen
 		foreach( $index as $i ){
 			//Wert vorhanden?
-			if( !empty( $data[$i] ) ){
+			if( isset( $data[$i] ) ){
 				//Immer einen Weiter
 				$data = $data[$i];
 			}
 			else{
-				break;
+				//Exception?
+				if( $exception ){
+					throw new Exception( "Unknown Index" );
+				}
+				//Fehler
+				return false;
 			}
 		}
 		return $data;
