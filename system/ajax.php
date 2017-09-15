@@ -10,11 +10,6 @@ session_start();
 //	Fehler aus
 error_reporting( 0 );
 
-//Klassen
-require_once( __DIR__.'/php/json.php' );
-//	Einstellungen zu json.php
-JSONReader::changepath( __DIR__.'/data' );
-
 //Systembibilothek laden
 require_once( __DIR__ . '/php/systemInit.php' );
 
