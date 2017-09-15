@@ -1,10 +1,18 @@
 <?php
-error_reporting(0);
+//System laden
+//	Korrekt so!
+define("Notestool", "OKAY");
+//	Type Header
 header('Content-Type: text/html; charset=utf-8');
+//	Session
+session_name( "Notestool" );
+session_start();
+//	Fehler aus
+error_reporting( 0 );
 
 /**
  * =============================================================
- * Webanalyse-Code
+ * Webanalyse-Code <<HERE>>
  * =============================================================
  */
 
@@ -14,6 +22,7 @@ require_once( __DIR__ . '/php/systemInit.php' );
 $domain = SystemInit::get( 'domain' );
 //JSdivmin
 $jsdevmin = SystemInit::get( 'JSdevmin' );
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,14 +41,14 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<meta name="robots" content="none">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" type="text/css" href="//data.5d7.eu/fonts.css">
-		<link rel="stylesheet" type="text/css" href="//data.5d7.eu/jquery-ui.min.css">		
+		<link rel="stylesheet" type="text/css" href="<?php echo SystemInit::getExtLib( 'fonts' ); ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo SystemInit::getExtLib( 'jqueryuiCSS' ); ?>">		
 
-		<script src="//data.5d7.eu/jquery.min.js"></script>
-		<script src="//data.5d7.eu/jquery-ui.min.js"></script>
+		<script src="<?php echo SystemInit::getExtLib( 'jquery' ); ?>"></script>
+		<script src="<?php echo SystemInit::getExtLib( 'jqueryui' ); ?>"></script>
 
-		<script src="//data.5d7.eu/sjcl.min.js"></script>
-		<script src="//data.5d7.eu/qrcode.min.js"></script>
+		<script src="<?php echo SystemInit::getExtLib( 'sjcl' ); ?>"></script>
+		<script src="<?php echo SystemInit::getExtLib( 'qrcode' ); ?>"></script>
 
 		<script src="<?php echo $domain; ?>/load/marked.min.js"></script>	
 
@@ -133,7 +142,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 			</div>		
 		</div>
 		<div class="footer small">
-			<a href="https://about.5d7.eu" target="_blank">About, Datenschutz, Kontakt</a>
+			<a href="<?php echo SystemInit::get('impressumURL'); ?>" target="_blank"><?php echo SystemInit::get('impressumName'); ?></a>
 		</div>
 	</body>
 </html>
