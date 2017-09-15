@@ -22,3 +22,8 @@ es einfach nur versteckt wird.
 ## Veröffentlichung
 Nach Erreichen der Version 1 ist eine Veröffentlichung des Tools unter der GPLv3 geplant.
 Dazu wird noch ein [Installer und LibraryHoster](https://github.com/kimbtech/KIMB-Notes/issues/9) integriert.
+
+## Aufbau des Repository
+`/system/` Hauptsystem
+`/install/` Installer
+`/js-libs/` benötigte JS-Bibilotheken (extern und somit CDN-Nutzung möglich)
