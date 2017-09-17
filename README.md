@@ -12,6 +12,10 @@ Siehe [Issues](https://github.com/kimbtech/KIMB-Notes/issues)
 ### Testen
 Das Tool ist unter [notes.***REMOVED***](https://notes.***REMOVED***/) in der aktuellsten Version verfügbar.
 
+> Für die Veröffentlichung soll eine Testversion mittles GitHub Pages realisiert werden, welche keine
+> PHP-API benutzt und somit nichts speichern kann.
+
+
 ## Technisch
 Das Tool besteht aus einem HTML, CSS & JavaScript Client, welcher per AJAX mit einer PHP-API kommuniziert.
 
@@ -20,10 +24,10 @@ Außerdem ist die PHP-API so konzipiert, dass automatisch Notizverläufe angeleg
 es einfach nur versteckt wird.
 
 ## Veröffentlichung
-Nach Erreichen der Version 1 ist eine Veröffentlichung des Tools unter der GPLv3 geplant.
-Dazu wird noch ein [Installer und LibraryHoster](https://github.com/kimbtech/KIMB-Notes/issues/9) integriert.
+Nach Erreichen der Version 1 ist eine Veröffentlichung des Tools geplant.
+Dazu wird noch ein [Installer](https://github.com/kimbtech/KIMB-Notes/issues/9) integriert.
 
 ## Aufbau des Repository
-`/system/` Hauptsystem
-`/install/` Installer
-`/js-libs/` benötigte JS-Bibilotheken (extern und somit CDN-Nutzung möglich)
+- `/system/` Hauptsystem
+- `/install/` Installer
+- `/js-libs/` benötigte JS-Bibilotheken (extern und somit CDN-Nutzung möglich)
