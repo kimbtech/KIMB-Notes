@@ -740,7 +740,6 @@ function maker( noteid, notename ){
 	//bei jeder Änderung der Texte ausführen
 	function load_parser_preview(){
 
-
 		//Mit eigenem Renderer etwas am Markdown rumspielen
 		var markRend = new marked.Renderer();
 		//	Überschriften erst bei H3 beginnen
@@ -752,11 +751,28 @@ function maker( noteid, notename ){
 		markRend.link = function (href, title, text) {
 			return '<a href="' + href + '" title="' + title + '" target="_blank">' + text + '</a>';
 		}
+
 		//Markdown Parser init.
 		marked.setOptions({
 			renderer: markRend,
 			gfm: true,
-			tables: true
+			tables: true,
+			highlight: function (code, lang) {
+				//Languages Prism supports
+				var prismlanguages = [ 'markup', 'css' , 'clike' , 'javascript' , 'c' , 'bash' , 'cpp' , 'csharp' , 'ruby' , 'git' , 'ini' , 'java' , 'json' , 'lua' , 'markdown' , 'matlab' , 'objectivec' , 'perl' , 'php' , 'python' , 'r' , 'sql' , 'swift' ];
+
+				//LaTex Support für Codeblocks mit LaTex als Sprache
+				if( lang == 'tex' ){
+					return katex.renderToString( code );
+				}
+				//andere Sprachen mit Prism.js
+				else if( prismlanguages.indexOf( lang ) !== -1 ){
+					return Prism.highlight(code, Prism.languages[lang] );
+				}
+				else{
+					return code;
+				}
+			}
 		});
 
 		//Funktion, um immer aktuellen Inhalt zu parsen

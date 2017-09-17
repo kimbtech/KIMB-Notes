@@ -85,6 +85,12 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<script src="<?php echo $domain; ?>/load/codemirror/clike.js"></script>
 		<script src="<?php echo $domain; ?>/load/codemirror/meta.js"></script>
 
+		<link rel="stylesheet" href="<?php echo $domain; ?>/load/katex/katex.min.css">
+		<script src="<?php echo $domain; ?>/load/katex/katex.min.js"></script>
+
+		<link rel="stylesheet" href="<?php echo $domain; ?>/load/prism/prism.css">
+		<script src="<?php echo $domain; ?>/load/prism/prism.js"></script>
+
 		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.css">
 		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.js"></script>
 		<script>var domain = "<?php echo $domain; ?>", jsdevmin = "<?php echo $jsdevmin; ?>"; </script>

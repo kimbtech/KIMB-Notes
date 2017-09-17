@@ -43,9 +43,9 @@ abstract class SystemInit{
 		//laden der minimierten oder der vollen JavaScript Dateien (min/ dev)
 		'JSdevmin' => 'dev',
 		//URL zu Impressum
-		'impressumURL' => 'https://about.***REMOVED***',
+		'impressumURL' => 'https://impressum.example.com',
 		//Name für Impressum
-		'impressumName' => 'About, Datenschutz, Kontakt'
+		'impressumName' => 'Impressum &amp; Datenschutz'
 	);
 
 	//Array Externe Libs
