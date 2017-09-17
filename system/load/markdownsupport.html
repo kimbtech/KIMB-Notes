@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>***REMOVED*** - Notes</title>
+	<title>KIMB-Notes Markdown Übersicht</title>
 	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon; charset=binary">
 	<link rel="icon" href="../favicon.ico" type="image/x-icon; charset=binary">
 	<link rel="apple-touch-icon" href="../notes.png">
@@ -22,16 +22,36 @@
 <body>
 	<div class="main">
 		<h1>KIMB-Notes Markdown Übersicht</h1>
+		<ul>
+			<li>&darr; <a href="#allgemein">Allgemein<a></a></li>
+			<li>&darr; <a href="#codebloecke">Codeblöcke<a></a></li>
+		</ul>
 
 		<div class="box">
-			<h2>Codeblöcke</h2>
+			<h2 id="allgemein">Allgemein</h2>
+			<p>
+				Als Renderer für die Markdown Eingaben kommt <a href="https://github.com/chjj/marked" target="_blank">Marked</a>
+				zum Einsatz.
+			</p>
+			<p>
+				Dabei wird ein etwas veränderter Renderer sowie die Optionen GitHub Flavored Markdown <code>gfm</code> und Tabellen <code>tables</code> genutzt.
+				<br />
+				Ein gute Einleitung in die Syntax von Markdown befindet sich <a href="https://guides.github.com/features/mastering-markdown/#syntax" target="_blank">hier</a>.
+				<br/>
+				(Aktuell wird GitHub Flavored Markdown nicht vollständig untersützt, es fehlen: Task Lists, SHA references, Issue references within a repository, 
+				Username @mentions, Emoji - siehe <a href="https://github.com/kimbtech/KIMB-Notes/issues" target="_blank">Issues</a> für geplante Features)
+			</p>
+		</div>
+
+		<div class="box">
+			<h2 id="codebloecke">Codeblöcke</h2>
 				<pre>
-					```lang
-						// Code, Code, Code 
-							if( $var ){
-								do();
-							}
-					```
+	```lang
+		// Code, Code, Code 
+		if( $var ){
+			do();
+		}
+	```
 				</pre>
 				Wobei <code>lang</code> als Sprachangabe, siehe Liste, benötigt wird.
 			<ul>
@@ -65,11 +85,12 @@
 				<li>
 					Weiterhin werden Codeblöcke mit folgenden Sprachen gerendert:
 					<ul>
-						<li>LaTex (nur Mathe): <code>tex</code></li>
+						<li>LaTeX (nur Mathe): <code>tex</code></li>
 					</ul>
 				</li>
 			</ul>
-			Alle weiteren Sprachen sowie Codeblöcke ohne Sprachangabe werden als Monospace in einem Rahmen dargestellt.
+			Alle weiteren Sprachen sowie Codeblöcke ohne Sprachangabe werden als Monospace in einem Rahmen dargestellt.<br>
+			Basierend auf <a href="http://prismjs.com/index.html" target="_blank">PrismJS</a> und <a href="https://khan.github.io/KaTeX/" target="_blank">KaTeX</a>
 		</div>
 
 	</div>
