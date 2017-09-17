@@ -6,5 +6,17 @@
     [
         "# dd\nUnd hier dann der Text!!\n",
         "18:18:36 17.09.2017"
+    ],
+    [
+        "# dd\n\n```\n\tdsdsfdsfs\n    dsfs\n     \\sum\\limits_{3=3}\n```\n",
+        "18:19:07 17.09.2017"
+    ],
+    [
+        "# dd\n\n```php\n\t\/\/\tType Header\nheader( 'Content-type: application\/json; charset=utf-8' );\n\/\/\tSession\nsession_name( \"Notestool\" );\nsession_start();\n\/\/\tFehler aus\nerror_reporting( 0 );\n\/\/Systembibilothek laden\nrequire_once( __DIR__ . '\/php\/systemInit.php' );\n\/\/Funktionen\nrequire_once( __DIR__ . '\/php\/func.php' );\n\/\/GET preufen\ncheck_params( array_keys( $_GET ), array( 0 => 'strAZaz09' ), 'GET Parameter error' );\n\/\/Aufgaben\n$tasks = array(\n\t'login',\n```\n",
+        "18:41:38 17.09.2017"
+    ],
+    [
+        "# dd\n\n```java\n\tpackage break_out;\n\nimport break_out.controller.Controller;\nimport break_out.view.View;\n\n\/**\n * The entry point of the program. The game get started here and all components\n * are initialized here.\n * \n * @author dmlux, modified by I. Schumacher, Magnus Bender, Max Lorenz\n * \n *\/\npublic class Main {\n\t\n\t\/**\n\t * Den Pfad zu den JSONDateien mit Levelinformationen verwalten\n\t *\/\n\tprivate static String path = System.getProperty(\"user.home\") + \"\/.breakout\";\n\n\n\t\/**\n\t * The main method\n\t * \n\t * @param args The arguments that were passed by the command line.\n\t *\/\n\tpublic static void main(String[] args) {\n\t\t\/\/einen anderen Pfad nutzen\n\t\t\/\/\twenn per Terminal gewuenscht\n\t\tif( args.length > 0){\n\t\t\tMain.path = args[0];\n\t\t\tMain.path += \"\/breakoutdata\";\n\t\t}\n\t\t\n\t\t\/\/versuche im Programm-Order die Dateien\n\t\t\/\/\tdes Spiels abzulegen bzw. pruefe Existenz des\n\t\t\/\/\tOrdners\n\t\t\/\/\t\tnoch keine Fehler\n\t\tString error = \"\";\n\t\ttry{\n\t\t\t\/\/versuche mit Ordner\n\t\t\tnew MakeHome( path );\n\t\t\t\n\t\t} catch( Exception e ){\n\t\t\t\/\/doch ein Fehler\n\t\t\terror = e.getMessage();\n\t\t}\n\t\t\n\t\t\/\/ Create the view\n\t\tView view = new View();\n\t\t\/\/ Create the controller and pass the view object to it\n\t\tnew Controller(view);\n\t\t\n\t\t\/\/Wenn Programm-Order nicht erstellt werden konnte, zeige Fehler\n\t\tif( error != \"\" ){\n\t\t\tview.getStartScreen().showError( error );\n\t\t}\n\t}\n\t\n\t\/**\n\t * Den Pfad zu den JSONDateien fuer die Levelinformationen holen\n\t * @return Pfad (ohne \/ am Ende)\n\t *\/\n\tpublic static String getPath(){\n\t\treturn Main.path;\n\t}\n}\n```\n",
+        "18:42:20 17.09.2017"
     ]
 ]

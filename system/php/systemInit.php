@@ -45,7 +45,9 @@ abstract class SystemInit{
 		//URL zu Impressum
 		'impressumURL' => 'https://impressum.example.com',
 		//Name für Impressum
-		'impressumName' => 'Impressum &amp; Datenschutz'
+		'impressumName' => 'Impressum &amp; Datenschutz',
+		//Markdown Info Link anzeigen
+		'showMarkdownInfo' => true
 	);
 
 	//Array Externe Libs

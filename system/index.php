@@ -152,6 +152,14 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 
 					<textarea id="notesinput">
 					</textarea>
+
+<?php
+						if( SystemInit::get('showMarkdownInfo') ){
+							echo "\t\t\t\t\t".'<div style="height:0.8em;">'."\r\n";
+								echo "\t\t\t\t\t\t".'<a href="'.$domain.'/load/markdownsupport.html" target="_blank" style="float:right;" class="small">Über Markdown</a>'."\r\n";
+							echo "\t\t\t\t\t".'</div>'."\r\n";
+						}
+?>
 				</div>
 			</div>
 
