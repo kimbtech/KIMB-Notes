@@ -184,7 +184,7 @@ function loginsys(){
 			//das # wegmachen
 			code = code.substr( 1 );
 			//Soll die korrekte Form haben
-			//	https://notes.5d7.eu/#<username>:<authcode>
+			//	https://notes.example.com/#<username>:<authcode>
 			var expr = new RegExp( '[a-z]+:[a-z0-9]+' );
 			//prüfen
 			if( expr.test( code ) ){

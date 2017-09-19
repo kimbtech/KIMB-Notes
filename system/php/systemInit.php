@@ -65,6 +65,10 @@ abstract class SystemInit{
 	//	false oder URL
 	private static $globalfolder = 'http://localhost:8000/js-libs';
 
+	//Sytemversion
+	//	[ Hauptversionsnummer, Unternummer, Patch ] => [1, 23, 5] -> 1.23.5
+	const SYSTEMVERSION = [ 0, 0, 0 ];
+
 	/*
 		Auslesen der Konfiguration
 		==========================

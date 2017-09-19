@@ -1,20 +1,10 @@
 [
     {
         "username": "admin",
-        "password": "f073f9419055438a416b109f978574ed290bc14ec848f0a0384e46fc455a7e5e",
-        "salt": "LwqiryDFA5nRd6fhOoe7ewcCgRTtxVWcNjPoqfl8",
-        "userid": "sdfsdfsadfewrtgdfsgftrghdfgdftr",
+        "password": "62dce19f022000fd826a8fb7f5aefc7f0fb6b9b2d3f280f4d464ddeb11d1c790",
+        "salt": "gVwYJdCUJ6R41wuHGXXSVZ2wWSLdU5jy2QqAUKIp",
+        "userid": "iyykgaunqhzjrehbaghjrxauyuflwp",
         "admin": true,
-        "authcodes": {
-            "6c5d61de1da5a909a6252dbae1d2740c9b7c3e74d854b3fe838d9b862d0de502971e63c5bf": 1488585035
-        }
-    },
-    {
-        "username": "cc",
-        "password": "3dd7134c27ec1f129b5a8a9138f792c18e251b97594ce867b5dafbc91d516e58",
-        "salt": "YLO29jyzcXC381i8Itj4qAJwmBtndiVtpri4X5gn",
-        "userid": "zuyduzltdqvdtmvtjsdrekrladuscm",
-        "admin": false,
         "authcodes": []
     }
 ]
