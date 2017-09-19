@@ -48,7 +48,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>***REMOVED*** - Notes</title>
+		<title>KIMB-Notes</title>
 		<link rel="shortcut icon" href="<?php echo $domain; ?>/favicon.ico" type="image/x-icon; charset=binary">
 		<link rel="icon" href="<?php echo $domain; ?>/favicon.ico" type="image/x-icon; charset=binary">
 		<link rel="apple-touch-icon" href="<?php echo $domain; ?>/notes.png">
@@ -56,7 +56,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
-		<meta name="apple-mobile-web-app-title" content="***REMOVED*** - Notes">
+		<meta name="apple-mobile-web-app-title" content="KIMB-Notes">
 
 		<meta charset="utf-8">
 		<meta name="robots" content="none">
@@ -104,7 +104,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 	*/
 ?>
 		<div class="main">
-			<h1>***REMOVED*** - Notes</h1>
+			<h1>KIMB-Notes</h1>
 
 			<div class="global error message disable">
 				Fehler!
