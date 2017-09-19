@@ -24,7 +24,7 @@
 defined("Notestool") or die('No clean Request');
 
 //Datei lesen?
-if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09' ) ) ){
+if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09', 'history' => 'int' ) ) ){
 	//Userid
 	//	=> Konvention nur kleine Buchstaben!
 	$userid = preg_replace( '/[^a-z]/', '', $_POST['userid'] );
@@ -41,10 +41,10 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09' 
 
 		//ID okay?
 		if( $list->searchValue( [] , $noteid ) !== false ){ 
-		
+
 			//Note Öffnen
 			$note = new JSONReader( 'notes/note_' . $noteid );
-
+			
 			//Array holen
 			$notearr = $note->getArray();
 
@@ -56,15 +56,48 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09' 
 					&&
 					$note->isValue( ['userid'], $userid )
 				){
-					//Ausgabe
-					add_output(
-						array(
-							'name' => $note->getValue(['name']),
-							'id' => $note->getValue(['noteid']),
-							'content' => $note->getValue(['content']),
-							'empty' => false
-						)
-					);
+					//Notiz normal öffnen, keinen Verlauf
+					if( $_POST['history'] == 2 ){
+
+						//Ausgabe
+						add_output(
+							array(
+								'name' => $note->getValue(['name']),
+								'id' => $note->getValue(['noteid']),
+								'content' => $note->getValue(['content']),
+								'empty' => false
+							)
+						);
+					}
+					//Diffs des Verlauf erzeugen
+					else if( $_POST['history'] == 3 ){
+						//Verlauf öffnen
+						$noteHistory = new JSONReader( 'notes/note_' . $noteid . '.history' );
+						$allHistory = $noteHistory->getArray();
+
+						//aktuelle Notiz
+						$now = $note->getValue(['content']);
+
+						//Diffs in Array
+						$difflist = array();
+						//erstellen
+						foreach( $allHistory as $key => $hist ){
+								
+							$difflist[] = array(
+								 'diff' => KIMBNotesGenerateDiff( $hist[0], $now ),
+								 'time' => $hist[1],
+								 'text' => $hist[0]
+							);
+
+							$now = $hist[0];
+						}
+
+						//Ausgeben, anders herum, da chronologisch dazu geschrieben wurde
+						add_output( array_reverse( $difflist ) );
+					}
+					else{
+						add_error( 'Unknown History Parameter' );
+					}
 				}
 				else{
 					add_error( 'Not your note!' );
@@ -86,7 +119,6 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09' 
 				//und speichern
 				$note->setArray( $notearr );
 			}
-
 		}
 		else{
 			add_error( 'Unknown Note' );
