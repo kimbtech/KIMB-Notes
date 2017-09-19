@@ -620,7 +620,7 @@ function maker( noteid, notename ){
 
 		$( "div.noteview div.loading" ).removeClass( "disable" );
 		ajax_request( "view",
-	 		{"userid" : userinformation.id, "noteid" : noteid },
+	 		{"userid" : userinformation.id, "noteid" : noteid, "history" : 2 },
 			function ( data ) {
 				$( "div.noteview div.loading" ).addClass( "disable" );
 				//Abfrage okay?
@@ -895,7 +895,60 @@ function maker( noteid, notename ){
 
 	//Manager fuer Notizverläufe
 	function historyManager(){
-		alert( '\n!!!Funktion noch nicht vorhanden!!!\n' );
+		function errorOnLoading(){
+			errorMessage( 'Notizverlauf konnte nicht geladen werden.' );
+			$( "div.noteview div.loading" ).addClass( "disable" );
+		}
+
+		//Loading Balken
+		$( "div.noteview div.loading" ).removeClass( "disable" );
+		//Diff vom Server holen
+		ajax_request( "view",
+			{"userid" : userinformation.id, "noteid" : noteid, "history" : 3 },
+			function ( data ) { 
+				if( data.status === 'okay' ){
+					//Dialog Inhalt bauen
+					var html = '<table><tr><th>Änderungen</th><th>Zeitpunkt</th></tr>';
+					$.each( data.data, function( k,v ){  
+						html += '<tr><td>'+ v.diff +'</td>';
+						html += '<td>'+ v.time +'<button key="'+ k + '" class="takeInputFromHistory">Zurückkehren</button></td></tr>'
+					});
+					html += '</table>';
+					//an Seite anfügen
+					$( "body" ).append( '<div id="historyManagerDialog">'+ html +'</div>' );
+					//Ladebalken weg
+					$( "div.noteview div.loading" ).addClass( "disable" );
+					//Dialog öffnen
+					$( "div#historyManagerDialog" ).dialog({
+						resizable: false,
+						height: "auto",
+						width: "auto",
+						modal: true,
+						title : 'Notizverlauf',
+						close : function(){
+							$( this ).remove();
+						},
+						position: {
+							my: "center", at: "center", of: $("div.main")
+						}
+					});
+
+					//Texte aus Verlauf laden
+					$("button.takeInputFromHistory").click( function (){
+						var key = $( this ).attr('key');
+						var newtext = data.data[key]["text"];
+
+						cm_editor.setValue( newtext );
+						$( "div#historyManagerDialog" ).dialog("close");
+
+					});
+				}
+				else{
+					errorOnLoading();
+				}
+			},
+			errorOnLoading
+		);
 	}
 }
 

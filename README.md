@@ -10,18 +10,15 @@ Die Notizen werden in Markdown erstellt und sind über das responsive Interface 
 Siehe [Issues](https://github.com/kimbtech/KIMB-Notes/issues)
 
 ### Testen
-Das Tool ist unter [notes.***REMOVED***](https://notes.***REMOVED***/) in der aktuellsten Version verfügbar.
-
 > Für die Veröffentlichung soll eine Testversion mittles GitHub Pages realisiert werden, welche keine
 > PHP-API benutzt und somit nichts speichern kann.
-
 
 ## Technisch
 Das Tool besteht aus einem HTML, CSS & JavaScript Client, welcher per AJAX mit einer PHP-API kommuniziert.
 
 Um auch Verbindungsprobleme ausgleichen zu können wird der `localStorage` genutzt.
-Außerdem ist die PHP-API so konzipiert, dass automatisch Notizverläufe angelegt werden und statt etwas zu löschen,
-es einfach nur versteckt wird.
+Außerdem ist die PHP-API so konzipiert, dass automatisch Notizverläufe angelegt werden und somit alles wieder
+zurück geholt werden kann.
 
 ## Veröffentlichung
 Nach Erreichen der Version 1 ist eine Veröffentlichung des Tools geplant.

@@ -84,6 +84,15 @@ pre > code {
 	margin: 0;
 	padding: 0;
 }
+ins {
+	color:green;
+	text-decoration:none;
+	font-weight:bold;
+}
+del {
+	color:red;
+	text-decoration:line-through;
+}
 
 /* Wiederholdene Seitenelemente */
 
@@ -181,7 +190,11 @@ div#oldNotesDialog tr,
 div#mainAdminDialog table,
 div#mainAdminDialog td,
 div#mainAdminDialog th,
-div#mainAdminDialog tr{
+div#mainAdminDialog tr,
+div#historyManagerDialog table,
+div#historyManagerDialog td,
+div#historyManagerDialog th,
+div#historyManagerDialog tr{
 	border: 1px solid white;
 	border-collapse: collapse;
 }

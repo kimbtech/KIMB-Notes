@@ -23,10 +23,16 @@
 
 defined("Notestool") or die('No clean Request');
 
+//*************************
 //Klassen
+
+//	JSONReader
 require_once( __DIR__.'/json.php' );
-//	Einstellungen zu json.php
+//		Einstellungen zu JSONReader
 JSONReader::changepath( __DIR__.'/../data' );
+
+//	FineDiff
+require_once( __DIR__ . '/finediff.php' );
 
 // Klasse zur Speicherung von Systemeinstellungen
 abstract class SystemInit{
