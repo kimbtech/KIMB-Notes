@@ -110,6 +110,9 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 				Fehler!
 			</div>
 
+			<div class="globalloader loading message disable">
+			</div>
+
 			<p class="message error loggedout disable">Logout erfolgreich!</p>
 			<div class="login">
 				<p class="message important">Sie müssen sich einloggen!</p>
