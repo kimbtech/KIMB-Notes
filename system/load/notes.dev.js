@@ -35,6 +35,7 @@ function review( enabled ){
 	$( "div.login" ).addClass( "disable" );
 	$( "div.noteview" ).addClass( "disable" );
 	$( "div.noteslist" ).addClass( "disable" );
+	$( "div.globalloader" ).addClass( "disable" );
 
 	//eins wieder hin
 	$( "div." + enabled ).removeClass( "disable" );
@@ -121,12 +122,43 @@ function ajax_request( task, post, callback, errcallback ){
 //	Loginform und Login der Link machen
 //	per AJAX auf Server auth. (Session)
 function loginsys(){
-	//Loginform zeigen
-	review( "login" );
+	//Freigbe prüfen
+	function check_share(){
+		//allgemeiner Ladebalken
+		review('globalloader');
 
-	//3 Loginmethoden versuchen
-	//	bei Fehler wird automatisch nächste gemacht
-	loginlocalstorage();
+		//Link holen
+		var authcode = window.location.hash;
+		//Link vorhanden?
+		if( authcode != "" ){
+			//das # wegmachen
+			authcode = authcode.substr( 1 );
+			//Soll die korrekte Form haben
+			//	https://notes.example.com/#<authcode>
+			var expr = new RegExp( '[^A-Za-z0-9]' );
+			//okay?
+			if( !expr.test( authcode ) ){
+				//share laden
+				shareviewer( authcode, noshare );
+			}
+			else{
+				noshare();
+			}
+		}
+		else{
+			noshare();
+		}
+
+		function noshare() {
+			//Loginform zeigen
+			review( "login" );
+	
+			//3 Loginmethoden versuchen
+			//	bei Fehler wird automatisch nächste gemacht
+			loginlocalstorage();
+		}
+	}
+	check_share();
 
 	/**
 		LOGINMETHODEN
@@ -1373,6 +1405,35 @@ function oldNotesManager(){
 	//	Liste laden
 	loadList();
 
+}
 
+/**
+ * Laden einer Freigabe unter Angabe des Freigabecodes
+ * @param {String} authcode Authcode der Freigabe
+ * @param {function} errorcallback (optional) wird bei Fehler aufgerufen
+ */
+function shareviewer( authcode, errorcallback ) {
+	//Nachricht abrufen
+	ajax_request( 'share', { "authcode" : authcode },
+		function (data){
+			if( data.status === "okay" ){
+				alert( "Opening:\n\n" + JSON.stringify( data.data ) );
+			}
+			else{
+				errorMessage( "Nachricht lässt sich mittels Freigabelink nicht öffnen.", false );
+				shareerror();
+			}
+		},
+		function (data){
+			shareerror();
+		}
+	);
+
+	//Fehlercallback
+	function shareerror(){
+		if( typeof errorcallback === "function" ){
+			errorcallback();
+		}
+	}
 }
 
