@@ -30,6 +30,7 @@ defined("Notestool") or die('No clean Request');
 //	$type => 'GET', 'POST', zu prüfendes Array
 //	$schema => Array der Übergestruktur
 //		Array( 'Feldname' => Inhalt (weiteres Array, 'strAZaz09', 'strALL' 'int', 'empty' (leer), 'noarr'[alles nur kein weiteres Array] )
+//			Feldname kann mit einem Sternchen * beginnen, um als optional angesehen zu werden
 //	$diemsg => Bei Fehler eine Meldung geben und die; (null, um nur false zurückzugeben)
 //	Return => true (okay) // false bzw. 'die( $diemsg );' (Fehler)
 //	Diese Funktion lässt nur die Typen
@@ -60,6 +61,16 @@ function check_params( $type, $schema, $diemsg = null ){
 	}
 	//	Daten übergeben und gewünscht
 	elseif( is_array( $data ) && is_array( $schema ) ){
+
+		//Optionale Parameter raus, wenn nicht gegeben
+		foreach( $schema as $key => $val ){
+			if( substr( $key, 0, 1) === '*' ){
+				if( isset( $data[substr($key, 1)] ) ){
+					$schema[substr($key, 1)] = $val;
+				}
+				unset( $schema[$key] );	
+			}
+		}
 
 		//Anzahlen übereinbstimmend?
 		if( count( $data ) === count( $schema ) ){

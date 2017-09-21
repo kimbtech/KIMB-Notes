@@ -84,12 +84,12 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 						foreach( $allHistory as $key => $hist ){
 								
 							$difflist[] = array(
-								 'diff' => KIMBNotesGenerateDiff( $hist[0], $now ),
+								 'diff' => KIMBNotesGenerateDiff( $now, $hist[0] ),
 								 'time' => $hist[1],
 								 'text' => $hist[0]
 							);
 
-							$now = $hist[0];
+							//$now = $hist[0];
 						}
 
 						//Ausgeben, anders herum, da chronologisch dazu geschrieben wurde
@@ -113,8 +113,7 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 					'name' => "",
 					'content' => "",
 					'geandert' => time(),
-					'erstellt' => time(),
-					'freigaben' => array()
+					'erstellt' => time()
 				);
 				//und speichern
 				$note->setArray( $notearr );

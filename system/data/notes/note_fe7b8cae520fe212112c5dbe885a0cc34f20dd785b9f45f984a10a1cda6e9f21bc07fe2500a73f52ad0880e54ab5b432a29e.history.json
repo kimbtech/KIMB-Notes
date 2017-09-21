@@ -10,5 +10,21 @@
     [
         "# Test\nUnd hier dann der Text!!\n\n```tex\n\t-x^2 + x + 4 \\ln \\left\\vert x^2 - x + \\frac{5}{4} \\right\\vert + \\arctan\\left( \\frac{2x-1}{2} \\right) [+ c]\n\n```\n",
         "12:05:51 19.09.2017"
+    ],
+    [
+        "# Test\n\nErstmal etwas LaTex:\n\n```tex\n\t-x^2 + x + 4 \\ln \\left\\vert x^2 - x + \\frac{5}{4} \\right\\vert + \\arctan\\left( \\frac{2x-1}{2} \\right) [+ c]\n\n```\n\nUnd ein bisschen Java:\n\n```java\n\t\/\/Version von Ordner und Spiel identisch?\n\t\/\/\tVersionFile laden\n\tFile version = new File( pfad + \"\/Game.version\" );\n\t\/\/\tDatei vorhanden?\n\tif( version.isFile() ){\n\t\t\t\t\n\t\t\/\/Version aus Ordner lesen\n\t\t\/\/\tScanner oeffnen\n\t\tScanner versionInt = new Scanner( version );\n\t\tversionInt.useDelimiter( System.getProperty( \"line.separator\" ) );\n\t\tint ordnerVersion = Integer.parseInt( \n\t\t\t\tversionInt.next()\n\t\t\t);\n\t\tversionInt.close();\n\t\t\t\t\n\t\t\/\/Wenn Version unterschiedlich, neu schreiben\n\t\tif( ordnerVersion != this.version ){\n\t\t\t\t\t\n\t\t\t\/\/schreibe Dateien in Ordner\n\t\t\twriteJSON();\n\t\t\twriteBinary();\n\t\t\twriteVersion();\n\t\t}\n\t}\n\telse if( !version.isFile() ){\n\t\t\/\/schreibe Dateien in Ordner\n\t\twriteJSON();\n\t\twriteBinary();\n\t\twriteVersion();\n\t}\n\n```\n\n---\n\n## Weiter",
+        "12:08:35 19.09.2017"
+    ],
+    [
+        "# Test\n\nErstmal etwas LaTex:\n\n```tex\n\t-x^2 + x + 4 \\ln \\left\\vert x^2 - x + \\frac{5}{4} \\right\\vert + \\arcsin\\left( \\frac{2x-1}{2} \\right) [+ c]\n\n```\n\nUnd ein bisschen Java:\n\n```java\n\t\/\/Version von Ordner und Spiel identisch?\n\t\/\/\tVersionFile laden\n\tFile version = new File( pfad + \"\/Game.version\" );\n\t\/\/\tDatei vorhanden?\n\tif( version.isFile() ){\n\t\t\t\t\n\t\t\/\/Version aus Ordner lesen\n\t\t\/\/\tScanner oeffnen\n\t\tScanner versionInt = new Scanner( version );\n\t\tversionInt.useDelimiter( System.getProperty( \"line.separator\" ) );\n\t\tint ordnerVersion = Integer.parseInt( \n\t\t\t\tversionInt.next()\n\t\t\t);\n\t\tversionInt.close();\n\t\t\t\t\n\t\t\/\/Wenn Version unterschiedlich, neu schreiben\n\t\tif( ordnerVersion != this.version ){\n\t\t\t\t\t\n\t\t\t\/\/schreibe Dateien in Ordner\n\t\t\twriteJSON();\n\t\t\twriteBinary();\n\t\t\twriteVersion();\n\t\t}\n\t}\n\telse if( !version.isFile() ){\n\t\t\/\/schreibe Dateien in Ordner\n\t\twriteJSON();\n\t\twriteBinary();\n\t\twriteVersion();\n\t}\n\n```\n\n---\n\n## Weiter",
+        "13:19:18 21.09.2017"
+    ],
+    [
+        "# Test\n\nErstmal etwas LaTex:\n\n```tex\n\t-x^2 + x + 4 \\ln \\left\\vert x^2 - x + \\frac{5}{4} \\right\\vert + \\arcsin\\left( \\frac{2x-1}{2} \\right) [+ c]\n\n```\n\nUnd ein bisschen Java:\n\n---\n\n## Weiter",
+        "14:16:32 21.09.2017"
+    ],
+    [
+        "# Test\n\nErstmal etwas LaTex:\n\n```tex\n\t-x^2 + x + 4 \\ln \\left\\vert x^2 - x + \\frac{5}{4} \\right\\vert + \\arctan\\left( \\frac{2x-1}{2} \\right) [+ c]\n\n```\n\nUnd ein bisschen Java:\n\n```java\n\t\/\/Version von Ordner und Spiel identisch?\n\t\/\/\tVersionFile laden\n\tFile version = new File( pfad + \"\/Game.version\" );\n\t\/\/\tDatei vorhanden?\n\tif( version.isFile() ){\n\t\t\t\t\n\t\t\/\/Version aus Ordner lesen\n\t\t\/\/\tScanner oeffnen\n\t\tScanner versionInt = new Scanner( version );\n\t\tversionInt.useDelimiter( System.getProperty( \"line.separator\" ) );\n\t\tint ordnerVersion = Integer.parseInt( \n\t\t\t\tversionInt.next()\n\t\t\t);\n\t\tversionInt.close();\n\t\t\t\t\n\t\t\/\/Wenn Version unterschiedlich, neu schreiben\n\t\tif( ordnerVersion != this.version ){\n\t\t\t\t\t\n\t\t\t\/\/schreibe Dateien in Ordner\n\t\t\twriteJSON();\n\t\t\twriteBinary();\n\t\t\twriteVersion();\n\t\t}\n\t}\n\telse if( !version.isFile() ){\n\t\t\/\/schreibe Dateien in Ordner\n\t\twriteJSON();\n\t\twriteBinary();\n\t\twriteVersion();\n\t}\n\n```\nHuHuHuHuHu\n\ndsf\nsd\nf\nds\nf\n\nsdf\nds\n\ns\nf\ns\nf\nsd\nf\n\n\n\nsdfs\n\nf\n\n\n\n\n\ns\n\n\nrwe\n\n---\n\n## Weiter",
+        "14:20:59 21.09.2017"
     ]
 ]
