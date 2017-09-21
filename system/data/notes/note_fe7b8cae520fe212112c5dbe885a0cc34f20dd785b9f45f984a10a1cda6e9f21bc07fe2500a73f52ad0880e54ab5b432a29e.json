@@ -2,8 +2,8 @@
     "noteid": "fe7b8cae520fe212112c5dbe885a0cc34f20dd785b9f45f984a10a1cda6e9f21bc07fe2500a73f52ad0880e54ab5b432a29e",
     "userid": "iyykgaunqhzjrehbaghjrxauyuflwp",
     "name": "Test",
-    "content": "# Test\n\nErstmal etwas LaTex:\n\n```tex\n\t-x^2 + x + 4 \\ln \\left\\vert x^2 - x + \\frac{5}{4} \\right\\vert + \\arctan\\left( \\frac{2x-1}{2} \\right) [+ c]\n\n```\n\nUnd ein bisschen Java:\n\n```java\n\t\/\/Version von Ordner und Spiel identisch?\n\t\/\/\tVersionFile laden\n\tFile version = new File( pfad + \"\/Game.version\" );\n\t\/\/\tDatei vorhanden?\n\tif( version.isFile() ){\n\t\t\t\t\n\t\t\/\/Version aus Ordner lesen\n\t\t\/\/\tScanner oeffnen\n\t\tScanner versionInt = new Scanner( version );\n\t\tversionInt.useDelimiter( System.getProperty( \"line.separator\" ) );\n\t\tint ordnerVersion = Integer.parseInt( \n\t\t\t\tversionInt.next()\n\t\t\t);\n\t\tversionInt.close();\n\t\t\t\t\n\t\t\/\/Wenn Version unterschiedlich, neu schreiben\n\t\tif( ordnerVersion != this.version ){\n\t\t\t\t\t\n\t\t\t\/\/schreibe Dateien in Ordner\n\t\t\twriteJSON();\n\t\t\twriteBinary();\n\t\t\twriteVersion();\n\t\t}\n\t}\n\telse if( !version.isFile() ){\n\t\t\/\/schreibe Dateien in Ordner\n\t\twriteJSON();\n\t\twriteBinary();\n\t\twriteVersion();\n\t}\n\n```\n\n---\n\n## Weiter",
-    "geandert": 1505815715,
+    "content": "# Test\nUnd hier dann der Text!!\n\n```tex\n\t-x^2 + x + 4 \\ln \\left\\vert x^2 - x + \\frac{5}{4} \\right\\vert + \\arctan\\left( \\frac{2x-1}{2} \\right) [+ c]\n\n```\n",
+    "geandert": 1505996795,
     "erstellt": 1505815509,
     "freigaben": []
 }

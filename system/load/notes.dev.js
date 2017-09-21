@@ -606,7 +606,25 @@ function list(){
 var cm_editor;
 
 //Notesmaker
-function maker( noteid, notename ){
+function maker( noteid, notename, sharecont, savecallback){
+	//sharecont enthält Freigabeinhalt, wenn Freigabe geladen werden soll
+	//savecallback ist Funktion um veränderungen des Shares zu speichern
+
+	//	Erstelle zwei Variablen, die Zustand darstellen
+	if( typeof sharecont === "undefined" ){
+		var share = false;
+		var shareeditable = false;
+	}
+	else{
+		if( typeof savecallback === "function" ){
+			var shareeditable = true;
+		}
+		else{
+			var shareeditable = false;
+		}
+		var share = true;
+	}
+
 	//Notiz zeigen
 	review( "noteview" );
 
@@ -650,40 +668,54 @@ function maker( noteid, notename ){
 			}
 		}
 
-		$( "div.noteview div.loading" ).removeClass( "disable" );
-		ajax_request( "view",
-	 		{"userid" : userinformation.id, "noteid" : noteid, "history" : 2 },
-			function ( data ) {
-				$( "div.noteview div.loading" ).addClass( "disable" );
-				//Abfrage okay?
-				if( data.status === 'okay' ){
-					//neue Notiz (dann Server noch leer)
-					if( !data.data.empty ){
+		if( share ){
+			//Daten übernehmen
+			notedata = {
+				"name" : notename,
+				"id" : noteid,
+				"content" : sharecont
+			};
 
-						//Daten übernehmen
-						notedata = {
-							"name" : data.data.name,
-							"id" : data.data.id,
-							"content" : data.data.content
-						};
-					
-						//Eingabefeld
-						make_inputfield();
+			//kein Ladebalken
+			$( "div.noteview div.loading" ).addClass( "disable" );
+
+			//Eingabefeld
+			make_inputfield();
+		}
+		else{
+			$( "div.noteview div.loading" ).removeClass( "disable" );
+			ajax_request( "view",
+				{"userid" : userinformation.id, "noteid" : noteid, "history" : 2 },
+				function ( data ) {
+					$( "div.noteview div.loading" ).addClass( "disable" );
+					//Abfrage okay?
+					if( data.status === 'okay' ){
+						//neue Notiz (dann Server noch leer)
+						if( !data.data.empty ){
+
+							//Daten übernehmen
+							notedata = {
+								"name" : data.data.name,
+								"id" : data.data.id,
+								"content" : data.data.content
+							};
+						
+							//Eingabefeld
+							make_inputfield();
+						}
+						else{
+							getDataWithoutServer( true );	
+						}
 					}
 					else{
-						getDataWithoutServer( true );	
+						getDataWithoutServer( false );
 					}
-				}
-				else{
+				},
+				function ( data ){
 					getDataWithoutServer( false );
 				}
-			},
-			function ( data ){
-				getDataWithoutServer( false );
-			}
-		);
-		
-
+			);
+		}
 	}
 
 	//Schließen Button (und Freigabe) nutzbar machen
@@ -697,50 +729,68 @@ function maker( noteid, notename ){
 			//	Speicherung
 			cm_editor.off( "change", here_codemi_save );
 		
-	
-			//save (hier nur expliziet per AJAX)
-			//	localStorage wird ja immer bei jeder Änderung gemacht
-			ajaxsave( function ( okay ){
-				if( okay ){
-					//zur Notizliste
-					list();
-				}
-				else{
-					//Fehlermeldung
-					$( "body" ).append( '<div id="errorMessageNoteSave">Die Speicherung der Notiz auf dem Server schlug fehl!<br />Wollen Sie den Editor verlassen und einen Verlust der Änderungen in Kauf nehmen oder abbrechen?</div>' );
-					$( "#errorMessageNoteSave" ).dialog({
-						resizable: false,
-						height: "auto",
-						width: "auto",
-						modal: true,
-						title : 'Fehler beim Speichern!',
-						buttons: {
-							"Änderungen verwerfen": function() {
-								$( this ).dialog( "close" );
-								list();
+			if( share && shareeditable ){
+				savecallback( cm_editor.getValue() , true );
+			}
+			else if( share ){
+				//neues Login
+				window.location.hash = "";
+				loginsys();
+			}
+			else if( share === false ){
+				//save (hier nur expliziet per AJAX)
+				//	localStorage wird ja immer bei jeder Änderung gemacht
+				ajaxsave( function ( okay ){
+					if( okay ){
+						//zur Notizliste
+						list();
+					}
+					else{
+						//Fehlermeldung
+						$( "body" ).append( '<div id="errorMessageNoteSave">Die Speicherung der Notiz auf dem Server schlug fehl!<br />Wollen Sie den Editor verlassen und einen Verlust der Änderungen in Kauf nehmen oder abbrechen?</div>' );
+						$( "#errorMessageNoteSave" ).dialog({
+							resizable: false,
+							height: "auto",
+							width: "auto",
+							modal: true,
+							title : 'Fehler beim Speichern!',
+							buttons: {
+								"Änderungen verwerfen": function() {
+									$( this ).dialog( "close" );
+									list();
+								},
+								"Abbrechen" : function() {
+									$( this ).dialog( "close" );
+								}
 							},
-							"Abbrechen" : function() {
-								$( this ).dialog( "close" );
+							close : function(){
+								$( this ).remove();
 							}
-						},
-						close : function(){
-							$( this ).remove();
-						}
-					});
-				}
-			});		
+						});
+					}
+				});
+			}	
 		});
 
-		//Freigabe Manager laden
-		$( "button#publishnote" ).unbind( 'click' ).click( freigabeManager );
+		if( share ){
+			//Keine Freigabe und keinen Verlauf bei aufgerufener Freigabe
+			$( "button#publishnote" ).addClass( 'disable' );
+			$( "button#notehistory" ).addClass( 'disable' );
+		}
+		else{
+			$( "button#publishnote" ).removeClass( 'disable' );
+			$( "button#notehistory" ).removeClass( 'disable' );
 
-		//Verlaufs Manager laden
-		$( "button#notehistory" ).unbind( 'click' ).click( historyManager );
+			//Freigabe Manager laden
+			$( "button#publishnote" ).unbind( 'click' ).click( freigabeManager );
+
+			//Verlaufs Manager laden
+			$( "button#notehistory" ).unbind( 'click' ).click( historyManager );
+		}
 	}
 	// Die internen Funktione, die per Event von CodeMirror aufgerufen werden,
 	// müssen am Ende wieder aus dem Event (on...) weg.
 	var here_parser_reparse, here_codemi_save;
-
 
 	//Codemirror laden
 	//Textarea und Notizname setzen
@@ -795,7 +845,11 @@ function maker( noteid, notename ){
 
 				//LaTex Support für Codeblocks mit LaTex als Sprache
 				if( lang == 'tex' ){
-					return katex.renderToString( code );
+					try{
+						return katex.renderToString( code );
+					} catch ( e ){
+						return '<span style="color:red;">'+ e.message +'</span>';
+					}
 				}
 				//andere Sprachen mit Prism.js
 				else if( prismlanguages.indexOf( lang ) !== -1 ){
@@ -813,9 +867,17 @@ function maker( noteid, notename ){
 		}
 		//	einmal zu Beginn
 		reparse();
-		//	bei jeder Änderung
-		cm_editor.on( "change", reparse );
-
+		//Bei Freigabe ohne Bearbeitung Editor ausblenden
+		if( share && !shareeditable ){
+			$( "div.input.box" ).addClass( 'disable' );
+		}
+		else{
+			//Editor sichtbar
+			$( "div.input.box" ).removeClass( 'disable' );
+			//	bei jeder Änderung Vorschau updaten
+			cm_editor.on( "change", reparse );
+		}
+		
 		//	Funtktion für spätere Enfernung festhalten
 		here_parser_reparse = reparse;
 	}
@@ -883,34 +945,43 @@ function maker( noteid, notename ){
 
 		//Die Speicherung ausführen
 		function doSave(){
-			$( "div.noteview div.loading" ).removeClass( "disable" );
-			ajax_request( "view",
-				{"userid" : userinformation.id, "noteid" : noteid, "note" : { "name" : $( "input#notename" ).val(), "cont" : cm_editor.getValue() } },
-				function ( data ) {
-					$( "div.noteview div.loading" ).addClass( "disable" );
-					if(
-						data.status === 'okay'
-					){
+			if( share && shareeditable ){
+				//Zeitpunkt merken
+				lastajaxsave = Date.now();
 
-						console.log( 'Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.' );
+				//als Freigabe sichern
+				savecallback( cm_editor.getValue(), false );
+			}
+			else if( share === false ){
+				$( "div.noteview div.loading" ).removeClass( "disable" );
+				ajax_request( "view",
+					{"userid" : userinformation.id, "noteid" : noteid, "note" : { "name" : $( "input#notename" ).val(), "cont" : cm_editor.getValue() } },
+					function ( data ) {
+						$( "div.noteview div.loading" ).addClass( "disable" );
+						if(
+							data.status === 'okay'
+						){
 
-						//Zeitpunkt merken
-						lastajaxsave = Date.now();
+							console.log( 'Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.' );
 
+							//Zeitpunkt merken
+							lastajaxsave = Date.now();
+
+						}
+
+						//Callback vorhnaden?
+						if( typeof callback === "function" ){
+							callback( ( data.status === 'okay' ) );
+						}
+					},
+					function ( data ){
+						//Callback vorhnaden?
+						if( typeof callback === "function" ){
+							callback( false );
+						}
 					}
-
-					//Callback vorhnaden?
-					if( typeof callback === "function" ){
-						callback( ( data.status === 'okay' ) );
-					}
-				},
-				function ( data ){
-					//Callback vorhnaden?
-					if( typeof callback === "function" ){
-						callback( false );
-					}
-				}
-			);
+				);
+			}
 		}
 	}
 
@@ -1417,7 +1488,58 @@ function shareviewer( authcode, errorcallback ) {
 	ajax_request( 'share', { "authcode" : authcode },
 		function (data){
 			if( data.status === "okay" ){
-				alert( "Opening:\n\n" + JSON.stringify( data.data ) );
+				//Aufrufen
+				if( data.data.edit ){
+					maker(
+						data.data.id,
+						data.data.name,
+						data.data.content,
+						function ( newcont, close ){
+							$( "div.noteview div.loading" ).removeClass( "disable" );
+							//neuen Inhalt sichern
+							ajax_request( 'share', { "authcode" : authcode, "cont" : newcont },
+								function (data){
+									$( "div.noteview div.loading" ).addClass( "disable" );
+
+									if( data.status === "okay" ){
+										
+									}
+									else{
+										errorMessage( "Konnten Notiz nicht speichern!" );
+									}
+
+									//Schließen
+									doClose( !(data.status === "okay") );									
+								},
+								function (data){
+									$( "div.noteview div.loading" ).addClass( "disable" );
+
+									errorMessage( "Konnten Notiz nicht speichern!" );
+
+									doClose( true );
+								}
+							);
+							
+							function doClose( error ){
+								//Schließen
+								if( close ){
+									if( !error || confirm( "Konnte nicht Notiz speichern, trotzdem schließen?" ) ){
+										//neues Login
+										window.location.hash = "";
+										loginsys();
+									}
+								}
+							}
+						}
+					);
+				}
+				else{
+					maker(
+						data.data.id,
+						data.data.name,
+						data.data.content
+					);
+				}
 			}
 			else{
 				errorMessage( "Nachricht lässt sich mittels Freigabelink nicht öffnen.", false );
