@@ -993,7 +993,147 @@ function maker( noteid, notename, sharecont, savecallback){
 	
 	//Manager fuer das Freigeben von Notizen
 	function freigabeManager(){
-		alert( '\n!!!Funktion noch nicht vorhanden!!!\n' );
+		function errorOnLoading(){
+			errorMessage( 'Freigaben konnten nicht geladen werden.' );
+			$( "div.noteview div.loading" ).addClass( "disable" );
+		}
+
+		//Loading Balken
+		$( "div.noteview div.loading" ).removeClass( "disable" );
+		//Diff vom Server holen
+		ajax_request( "view",
+			{"userid" : userinformation.id, "noteid" : noteid },
+			function ( data ) { 
+				if( data.status === 'okay' ){
+					//Dialog Inhalt bauen
+
+					//	LISTE
+					var html = '<div class="message error freigabeDialog disable">Konnte Aktion nicht durchführen.</div>'
+						+ '<table><tr><th>Link</th><th>Name</th><th>Erstellt</th><th>Bearbeiten</th><th>Letzter Aufruf (Anzahl)</th><th>Löschen</th></tr>';
+					var inhalt = false;
+					$.each( data.data, function( k,v ){
+						inhalt = true;
+						html += '<tr><td><a href="'+ domain +'/#'+ v.authcode +'" target="_blank" style="color:lightblue;">Aufrufen</a> <button authcode="'+ v.authcode + '" class="freigabeQR">QR-Code</button></td>';
+						html += '<td>'+ v.name +'</td>';
+						html += '<td>'+ v.created +'</td>';
+						html += '<td><code style="color:black;">'+ v.edit +'</code></td>';
+						html += '<td>'+ v.lastAccessed +' (' + v.accesses + ')</td>';
+						html += '<td><button authcode="'+ v.authcode + '" class="deleteFreigabe">Löschen</button></td></tr>'
+					});
+					html += '</table>';
+					if( inhalt === false ){
+						html += '<p>Noch keine Freigaben!</p>';
+					}
+
+					//	NEU
+					html += '<h3>Neue Freigabe</h3>'
+						+ '<div class="loading freigabeDialog disable"></div>'
+						+ '<input type="text" placeholder="Name" id="freigabeManagerNewName"><br />' 
+						+ '<input type="radio" id="freigabeManagerNewEdit" name="freigabeManagerNewEdit" value="true"> true '
+						+ '<input type="radio" id="freigabeManagerNewEdit" name="freigabeManagerNewEdit" value="false" checked="checked"> false <br />'
+						+ '<button id="addFreigabe">Erstellen</button>';
+
+					//an Seite anfügen
+					$( "body" ).append( '<div id="freigabeManagerDialog">'+ html +'</div>' );
+					//Ladebalken weg
+					$( "div.noteview div.loading" ).addClass( "disable" );
+					//Dialog öffnen
+					$( "div#freigabeManagerDialog" ).dialog({
+						resizable: false,
+						height: "auto",
+						width: "auto",
+						modal: true,
+						title : 'Freigaben',
+						close : function(){
+							$( this ).remove();
+						},
+						position: {
+							my: "center", at: "center", of: $("div.main")
+						}
+					});
+
+					//Texte aus Verlauf laden
+					$("button.deleteFreigabe").click( function (){
+						var authcode = $( this ).attr('authcode');
+
+						$( "div.freigabeDialog.loading" ).removeClass( 'disable' );
+
+						ajax_request( "view",
+							{"userid" : userinformation.id, "noteid" : noteid, "share" : { "authcode" : authcode, "edit" : "leer", "name" : "leer" } },
+							function ( data ) { 
+								if( data.status === 'okay' ){
+									$( "div#freigabeManagerDialog" ).dialog( 'close' );
+									freigabeManager();
+								}
+								else{
+									$( "div.freigabeDialog.loading" ).addClass( 'disable' );
+									$( "div.freigabeDialog.error" ).removeClass( 'disable' );
+								}
+							});
+					});
+
+					//Neue Freigabe erstellen
+					$("button#addFreigabe").click( function (){
+						var name = $( "input#freigabeManagerNewName" ).val();
+						var edit = ( $("input#freigabeManagerNewEdit:checked").val() == 'true' ? true : false );
+						if( name == '' ){
+							return;
+						}
+
+						$( "div.freigabeDialog.loading" ).removeClass( 'disable' );
+
+						ajax_request( "view",
+							{"userid" : userinformation.id, "noteid" : noteid, "share" : { "authcode" : "leer", "edit" : edit, "name" : name } },
+							function ( data ) { 
+								if( data.status === 'okay' ){
+									$( "div#freigabeManagerDialog" ).dialog( 'close' );
+									freigabeManager();
+								}
+								else{
+									$( "div.freigabeDialog.loading" ).addClass( 'disable' );
+									$( "div.freigabeDialog.error" ).removeClass( 'disable' );
+								}
+							});
+					});
+
+					//Neue Freigabe erstellen
+					$("button.freigabeQR").click( function (){
+						var code = $( this ).attr('authcode');
+						var authlink = domain +'/#'+ code;
+
+						var html = '<p><b>Code:</b> <code style="color:black;">' + code + '</code></p>'
+							+ '<p><b>URL:</b> <input type="text" value="' + authlink +'" readonly="readonly" style="width:90%;"></p>'
+							+ '<p><b>Link:</b> <a href="' + authlink +'" target="_blank" style="color:lightblue;">Aufrufen</a></p>'
+							+ '<p><center><div style="background-color:white; padding:15px; border-radius:5px;" id="freigabeManagerQR"></div></center></p>';
+						//HTML
+						$("body").append('<div id="freigabeManagerQRDialog">'+ html +'</div>');
+						//Dialog
+						$("div#freigabeManagerQRDialog").dialog({
+							resizable: false,
+							height: "auto",
+							width: "auto",
+							modal: true,
+							title: 'Freigabelink',
+							close: function () {
+								$(this).remove();
+							},
+							position: {
+								my: "center", at: "center", of: $("div.main")
+							}
+						});
+						//QR-Code
+						new QRCode(
+							document.getElementById( "freigabeManagerQR" ),
+							authlink
+						)
+					});
+				}
+				else{
+					errorOnLoading();
+				}
+			},
+			errorOnLoading
+		);
 	}
 
 	//Manager fuer Notizverläufe
