@@ -194,7 +194,11 @@ div#mainAdminDialog tr,
 div#historyManagerDialog table,
 div#historyManagerDialog td,
 div#historyManagerDialog th,
-div#historyManagerDialog tr{
+div#historyManagerDialog tr,
+div#freigabeManagerDialog table,
+div#freigabeManagerDialog td,
+div#freigabeManagerDialog th,
+div#freigabeManagerDialog tr {
 	border: 1px solid white;
 	border-collapse: collapse;
 }
