@@ -862,7 +862,27 @@ function maker( noteid, notename, sharecont, savecallback){
 		});
 
 		//Funktion, um immer aktuellen Inhalt zu parsen
-		function reparse(){
+		function reparse(instance, change){
+
+			//Caps Lock Bug wokaround (dirty)
+			//	see https://github.com/kimbtech/KIMB-Notes/issues/16
+
+			//only for iOS
+			var isSafariOrWebview = /(iPhone|iPod|iPad).*AppleWebKit/i.test(navigator.userAgent);
+
+			//only after CodeMirror change
+			if( isSafariOrWebview && typeof change !== "undefined" ){
+				if(
+					change.text.length === 1
+					&&
+					(/^[A-Z]$/).test(change.text[0])
+				){
+					var focused = $(':focus');
+					focused.blur();
+					focused.focus();
+				}
+			}
+
 			$( "div#notespreview" ).html( marked( cm_editor.getValue() ) );
 		}
 		//	einmal zu Beginn
