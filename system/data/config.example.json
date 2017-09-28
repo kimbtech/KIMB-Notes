@@ -18,7 +18,8 @@
         "domain": "http:\/\/notes.example.com",
         "JSdevmin": "min",
         "impressumURL": "http:\/\/example.com\/impressum-datenschutz",
-        "impressumName": "Impressum &amp; Datenschutz"
+        "impressumName": "Impressum &amp; Datenschutz",
+        "showMarkdownInfo" : true                
     },
     "externeLibs": [
         false,
