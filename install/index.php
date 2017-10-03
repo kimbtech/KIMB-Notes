@@ -25,8 +25,11 @@
 //	Session
 session_name( "NotestoolInstaller" );
 session_start();
+
 //	Fehler aus
 error_reporting( 0 );
+//	Type Header
+header('Content-Type: text/html; charset=utf-8');
 
 //Ausgabe
 class Output{
@@ -50,6 +53,36 @@ class Output{
 }
 $out = new Output();
 
+//Zugriff prüfen
+$access = false;
+if(
+	is_dir( __DIR__.'/../system/data/' )
+){
+	if(
+		is_file( __DIR__.'/../system/data/config.json' )
+		&&
+		file_get_contents( __DIR__.'/../system/data/config.json' ) == '[]'
+	){
+		$access = true;
+	}
+	else if( !is_file( __DIR__.'/../system/data/config.json' ) ){
+		$access = true;
+	}
+	else if( !empty($_SESSION['config-allowed']) && $_SESSION['config-allowed'] + 600 > time() ){
+		$access = true;
+	}
+}
+if( !$access ){
+	$out->addBox( '<h2 class="error">Das Installationstool ist gesperrt!</h2>' );
+	$out->addBox( '<div class="message">Zum Freischalten löschen Sie die <code>config.json</code>.</div>' );
+	die();
+}
+else{
+	//nach dem Schreiben der Konfiguratiosndatei ist noch ein User zu erstellen,
+	//	daher Zugriff beibehalten!
+	$_SESSION['config-allowed'] = time();
+}
+
 //SiteURL
 //URL bestimmen
 if(isset($_SERVER['HTTPS'])){
@@ -71,10 +104,52 @@ else{
 	$step = 1;
 }
 
+//JSON-Klasse
+define("Notestool", "OKAY");
+require_once( __DIR__ . '/../system/php/json.php' );
+require_once( __DIR__ . '/../system/php/func.php' );
+//Pfad
+JSONReader::changepath( __DIR__ . '/../system/data/' );
+
 //Schritte
 if( $step == 1 ){
 	$out->addBox( '<h2>Willkommen beim KIMB-Notes Installer</h2>' );
 
+	$testout = '';
+	//PHP - Version OK?
+	if (version_compare(PHP_VERSION, '7.0.0' ) >= 0 ) {
+		$testout .= '<div class="message okay">Sie verwenden PHP 7</div>';
+	}
+	else{
+		$testout .= '<div class="message error">Dieses System wurde f&uuml;r PHP 7 entwickelt, bitte f&uuml;hren Sie ein PHP-Update durch!</div>';
+	}
+
+	//Schreibrechte
+	//nötige schreibbare Verzeichnisse und Dateien
+	$checkfolders = array(
+		'data/',
+		'data/userlist.json',
+		'data/config.json',
+		'data/user/',
+		'data/user/userslist.json',
+		'data/notes/',
+		'data/notes/noteslist.json',
+		'data/notes/sharecodes.json',
+		'data/notes/shareslist.json',
+	);
+	//alle Verzeichnisse testen und Meldung
+	$noerr = true;
+	foreach( $checkfolders as $folder ){
+		if( !is_writable( __DIR__.'/../system/'.$folder ) ){
+			$testout .= '<div class="message error">"'.$folder.'" ist nicht schreibbar</div>';
+			$noerr = false;
+		}
+	}
+	if( $noerr ){
+		$testout .= '<div class="message okay">Die benötigten Verzeichnisse sind schreibbar</div>';
+	}
+
+	$out->addBox( $testout );
 	$out->addBox( '<a href="?step=2"><button>&rarr; Weiter</button></a>' );
 }
 else if( $step == 2 ){
@@ -153,13 +228,18 @@ else if( $step == 3 ){
 		);
 
 		$abfr = '<form action="?step=4" method="post">';
-		$abfr .= '<p><input type="radio" value="verzeichnis" name="modus" checked="checked"> Verzeichnis angeben <input type="radio" value="einzeln" name="modus"> Einzeln angeben</p>';
+		$abfr .= '<p><input type="radio" value="verzeichnis" name="modus" checked="checked" onclick="document.getElementById(\'libsVerzeichnis\').style.display = \'block\'; document.getElementById(\'libsEinzeln\').style.display = \'none\';"> Verzeichnis angeben <input type="radio" value="einzeln" name="modus" onclick="document.getElementById(\'libsVerzeichnis\').style.display = \'none\'; document.getElementById(\'libsEinzeln\').style.display = \'block\'; document.getElementById(\'libsVerzeichnisInput\').value = \'\';"> Einzeln angeben</p>';
 		
-		/**
-			TODO
-			
-			extLibs Eingabe
-		**/
+		$abfr .= '<div id="libsVerzeichnis">';
+		$abfr .= '<input type="text" id="libsVerzeichnisInput" name="libfolder" value="'.$siteurl.'/js-libs">';
+		$abfr .= '</div><div id="libsEinzeln" style="display:none;">';
+		$abfr .= '<input type="text" name="fonts" placeholder="Fonts"><br />';
+		$abfr .= '<input type="text" name="jqueryuiCSS" placeholder="jQuery-UI CSS"><br />';
+		$abfr .= '<input type="text" name="jqueryui" placeholder="jQuery-UI"><br />';
+		$abfr .= '<input type="text" name="jquery" placeholder="jQuery"><br />';
+		$abfr .= '<input type="text" name="sjcl" placeholder="SJCL"><br />';
+		$abfr .= '<input type="text" name="qrcode" placeholder="QR-Code"><br />';
+		$abfr .= '</div>';
 
 		$abfr .= '<p><input type="submit" value="&rarr; Weiter"></p></form>';
 	
@@ -176,30 +256,71 @@ else if( $step == 4 ){
 	if(
 		!empty( $_POST['modus'] )
 		&&
-		!empty( $_POST['xxx'] )
+		(
+			!empty( $_POST['libfolder'] )
+			||
+			(
+				!empty( $_POST['fonts'] )
+				&&
+				!empty( $_POST['jqueryuiCSS'] )
+				&&
+				!empty( $_POST['jqueryui'] )
+				&&
+				!empty( $_POST['jquery'] )
+				&&
+				!empty( $_POST['sjcl'] )
+				&&
+				!empty( $_POST['qrcode'] )
+			)	
+		)
 	){
 		//Werte von 3 verarbeiten
-		$_SESSION['confarray']["externeLibs"] = array();
+		$extarray = array();
+		// Verzeichnis oder einzeln?
+		if( !empty( $_POST['libfolder'] ) ){
+			$extarray = array( $_POST['libfolder'] );
+		}
+		else{
+			$extarray = array(
+				false,
+				array(
+				    "fonts" => $_POST['fonts'],
+				    "jqueryuiCSS" => $_POST['jqueryuiCSS'],
+				    "jqueryui" => $_POST['jqueryui'],
+				    "jquery" => $_POST['jquery'],
+				    "sjcl" => $_POST['sjcl'],
+				    "qrcode" => $_POST['qrcode']
+				)
+			);
+		}
+		//in die Config rein
+		$_SESSION['confarray']["externeLibs"] = $extarray;
 
-		/**
-			TODO
 
-			extlibs in JSON
-			alles schreiben
-		**/
-
+		//neue Config öffnen und schreiben
+		$conf = new JSONReader( 'config' );
+		//	schreiben
+		if( $conf->setArray( $_SESSION['confarray'] ) ){
+			$out->addBox( '<div class="message okay">Konfigurationsdatei geschrieben!</div>' );
+			$out->addBox( '<a href="?step=5"><button>&rarr; Weiter</button></a>' );
+		}
+		else{
+			$out->addBox( '<div class="message error">Konnte Konfigurationsdatei nicht erstellen!</div>' );
+			$out->addBox( 'Bitte erstellen Sie eine Datei <code>/system/data/config.json</code> mit folgendem Inhalt: <pre>'. json_encode( $_SESSION['confarray'], JSON_PRETTY_PRINT) .'</pre>' );
+			$out->addBox( '<a href="?step=5"><button>&rarr; Weiter</button></a>' );
+		}
 	}
 	else{
-		$out->addBox( '<div class="message error">Konnte Systemkonfiguration nicht sichern!</div>' );
+		$out->addBox( '<div class="message error">Konnte External Libraries nicht übernehmen!</div>' );
 		$out->addBox( '<a href="?step=3"><button>&larr; Zurück</button></a>' );
 	}
 }
 else if( $step == 5 ){
 	//Admin-Account
-	$out->addBox( '<h2>Adminiostrator einrichten</h2>' );
+	$out->addBox( '<h2>Administrator einrichten</h2>' );
 	
 	$abfr = '<form action="?step=6" method="post">';
-	$abfr .= '<p>Username: <input type="text" value="admin" name="username"></p>';
+	$abfr .= '<p>Username: <input type="text" value="admin" name="username"> (Kleinbuchstaben)</p>';
 	$abfr .= '<p>Passwort: <input type="password" value="" name="pass1"></p>';
 	$abfr .= '<p>Passwort (wdh.): <input type="password" value="" name="pass2"></p>';
 	$abfr .= '<p><input type="submit" value="Weiter"></p></form>';
@@ -207,19 +328,56 @@ else if( $step == 5 ){
 	$out->addBox( $abfr );
 }
 else if( $step == 6 ){
-	$out->addBox( '<h2>KIMB-Notes wurde installiert!</h2>' );
-	
-	/**
-		TODO
-		User erstellen
-	**/
-	
+	//Username Konvention
+	$name = preg_replace( '/[^a-z]/', '', $_POST['username'] );
+	$password = $_POST['pass1'];
 
-	$out->addBox( '<a href="'.$_SESSION['confarray']["config"]["domain"].'"><button>Notes aufrufen</button></a>' );
+	if( 
+		!empty( $name )
+		&&
+		!empty( $password )
+		&&
+		$password === $_POST['pass2']
+	){
+		$out->addBox( '<h2>KIMB-Notes wurde installiert!</h2>' );
+		
+		//Userdaten laden
+		$userlist = new JSONReader( 'userlist' );
+
+		//UserID Liste laden
+		$list = new JSONReader( '/user/userslist' );
+		
+		//Neue ID erstellen
+		do{
+			$newid = makepassw(30, 1);
+		}while( $list->searchValue( [] , $newid) !== false );
+		
+		//neue ID merken
+		$list->setValue( [null], $newid );
+
+		//Passwort Hash
+		$salt = makepassw( 40 );
+		$passhash = hash( 'sha256', hash( 'sha256', $password ) . '+' . $salt );
+
+		//Neuen User erstellen
+		$userarray = array(
+			"username" => $name,
+			"password" => $passhash,
+			"salt" => $salt,
+			"userid" => $newid,
+			"admin" => true,
+			"authcodes" => array()
+		);
+	
+		//User erstellen
+		$userlist->setValue( [null], $userarray );
+
+		$out->addBox( '<a href="'. ( empty( $_SESSION['confarray']["config"]["domain"] ) ? $siteurl . '/system/' : $_SESSION['confarray']["config"]["domain"] ) .'"><button>Notes aufrufen</button></a>' );
+	}
+	else{
+		$out->addBox( '<div class="message error">Bitte füllen Sie alle Felder und geben Sie zwei identsiche Passwörter ein!</div>' );
+		$out->addBox( '<a href="?step=5"><button>&larr; Zurück</button></a>' );
+	}
 }
-
-
-$out->addBox( '<pre>'. print_r( $_SESSION['confarray'], true ) .'</pre>' );
-
 
 ?>
