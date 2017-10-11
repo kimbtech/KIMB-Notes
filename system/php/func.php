@@ -315,6 +315,27 @@ function output_sys(){
 	//	"error" => Fehler
 	//	"data" => Daten
 	echo json_encode( $system_output_array, JSON_PRETTY_PRINT );
+
+	//Serverantworten für Demo Loggen
+	if( false ){
+		//Erstellen einer ID für die aktuelle Anfrage
+		//	SHA256 der POST-Daten als JSON und des $task (erster GET Parameter)
+		$requestid = hash( 'sha256', json_encode( $_POST ) . $task );
+		
+		//schon Serverantworten geloggt?
+		if( is_file( __DIR__ . '/../request.log.json' ) ){
+			//öffnen
+			$requestdata = json_decode( file_get_contents( __DIR__ . '/../request.log.json' ), true );
+		}
+		else{
+			//sonst, leere Liste
+			$requestdata = array();
+		}
+		//neue Daten dazu, unter der ID speichern (überschreiben ist ok)
+		$requestdata[$requestid] = $system_output_array;
+		//neues Daten-Array speichern
+		file_put_contents( __DIR__ . '/../request.log.json', json_encode( $requestdata ) );
+	}
 }
 
 /**
