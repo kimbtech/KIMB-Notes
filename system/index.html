@@ -48,10 +48,17 @@
 		<link rel="stylesheet" type="text/css" href="load/notes.dev.css">
 		<script src="load/notes.dev.js"></script>
 		<script>
-			var domain = "http://localhost:8888/system", jsdevmin = "dev";
+			var domain = window.location.href.substr( 0, window.location.href.length-1 ), jsdevmin = "dev";
+
+			//immer eine / am Ende!!
 			if( window.location.href.substr( -1 ) !== '/' ){
 				window.location.href = window.location.href + '/';
 			}
+			//JSON mit den Requests laden
+			var JSONDataAJAXReplace = [];
+			$.getJSON( domain + "/request.log.json" , function( data ) {
+				JSONDataAJAXReplace = data;
+			});
 		</script>
 	</head>
 	<body>

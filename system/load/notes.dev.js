@@ -79,7 +79,7 @@ function errorMessage( message, remove ){
  * @param {function (JSON)} errcallback (optional) Funktion bei fehlerhafter Anfrage, JSON Rückgabe wenn möglich
  */
 function ajax_request( task, post, callback, errcallback ){
-	$.post( domain + "/ajax.php?" + task , post,
+	fakeRequest( task , post,
 		function (data) {
 			//Serveranwort okay?
 			if( typeof data === "object" ){
@@ -99,23 +99,39 @@ function ajax_request( task, post, callback, errcallback ){
 			}
 			else{
 				//globale Fehlermeldung
-				errorMessage('Sever antwortet nicht korrekt!', false);
+				errorMessage('Server antwortet nicht korrekt!', false);
 
 				//Callback vorhanden?
 				if( typeof errcallback === "function" ){
 					errcallback( data );
 				}
 			}
-		}
-	).fail( function() {
-		//globale Fehlermeldung
-		errorMessage('Verbindung zum Sever verloren!', false);
+		},
+		function() {
+			//globale Fehlermeldung
+			errorMessage('Funktion in der Demo nicht unterstützt!', false);
 
-		//Callback vorhanden?
-		if( typeof errcallback === "function" ){
-			errcallback( {} );
+			//Callback vorhanden?
+			if( typeof errcallback === "function" ){
+				errcallback( {} );
+			}
+		});
+
+	//Fake Request erstellen, mittels JSON file
+	function fakeRequest(  task , post, cllback, errorcallback ){
+		//Hashing
+		var requestid = sjcl.codec.hex.fromBits( sjcl.hash.sha256.hash( JSON.stringify( post ) + task ) );
+
+		console.log( post, task, requestid, JSON.stringify( post ) + task );
+
+		//Diese Anfrage gespeichert?
+		if( typeof JSONDataAJAXReplace[requestid] === "undefined" ){
+			errorcallback();
 		}
-	} );
+		else{
+			cllback( data );
+		}		
+	}
 }
 
 //Login
