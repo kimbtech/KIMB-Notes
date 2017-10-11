@@ -1,6 +1,0 @@
-#Deny from all
-
-ErrorDocument 404 '<!DOCTYPE html><html><head><title>Error 404 - Not found</title></head><body><h1>Error 404 - Not found</h1></body></html>'
-ErrorDocument 403 '<!DOCTYPE html><html><head><title>Error 403 - Not allowed</title></head><body><h1>Error 403 - Not allowed</h1></body></html>'
-
-Options -Indexes

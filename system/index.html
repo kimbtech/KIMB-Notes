@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>KIMB-Notes</title>
+		<link rel="shortcut icon" href="favicon.ico" type="image/x-icon; charset=binary">
+		<link rel="icon" href="favicon.ico" type="image/x-icon; charset=binary">
+		<link rel="apple-touch-icon" href="notes.png">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-title" content="KIMB-Notes">
+
+		<meta charset="utf-8">
+		<meta name="robots" content="none">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" type="text/css" href="../js-libs/fonts.css">
+		<link rel="stylesheet" type="text/css" href="../js-libs/jquery-ui.min.css">		
+
+		<script src="../js-libs/jquery.min.js"></script>
+		<script src="../js-libs/jquery-ui.min.js"></script>
+
+		<script src="../js-libs/sjcl.min.js"></script>
+		<script src="../js-libs/qrcode.min.js"></script>
+
+
+		<script src="load/marked.min.js"></script>	
+
+		<link rel="stylesheet" href="./load/codemirror/codemirror.css">
+		<script src="load/codemirror/codemirror.js"></script>
+		<script src="load/codemirror/overlay.js"></script>
+		<script src="load/codemirror/xml.js"></script>
+		<script src="load/codemirror/markdown.js"></script>
+		<script src="load/codemirror/gfm.js"></script>
+		<script src="load/codemirror/javascript.js"></script>
+		<script src="load/codemirror/css.js"></script>
+		<script src="load/codemirror/htmlmixed.js"></script>
+		<script src="load/codemirror/clike.js"></script>
+		<script src="load/codemirror/meta.js"></script>
+
+		<link rel="stylesheet" href="load/katex/katex.min.css">
+		<script src="load/katex/katex.min.js"></script>
+
+		<link rel="stylesheet" href="load/prism/prism.css">
+		<script src="load/prism/prism.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="load/notes.dev.css">
+		<script src="load/notes.dev.js"></script>
+		<script>
+			var domain = "http://localhost:8888/system", jsdevmin = "dev";
+			if( window.location.href.substr( -1 ) !== '/' ){
+				window.location.href = window.location.href + '/';
+			}
+		</script>
+	</head>
+	<body>
+		<div class="main">
+			<h1>KIMB-Notes</h1>
+
+			<div class="global error message disable">
+				Fehler!
+			</div>
+
+			<div class="globalloader loading message disable">
+			</div>
+
+			<p class="message error loggedout disable">Logout erfolgreich!</p>
+			<div class="login">
+				<p class="message important">Sie müssen sich einloggen!</p>
+				<p class="message error disable">Login nicht erfolgreich!</p>
+				<p class="message okay disable">Login erfolgreich!</p>
+				<div class="input box">
+					<div class="loading disable"></div>
+					<div id="loginform">
+						<input type="text" id="username" placeholder="Username"><br />
+						<input type="password" id="userpassword" placeholder="Password"><br />
+						<button id="userlogin">Login</button><br />
+					</div>
+				</div>
+			</div>
+			<div class="logout disable box">
+				<button id="logout">Logout</button><br />
+				<span class="small">
+					<input type="checkbox" id="logouttype" checked="checked"> Inhalte im Browser behalten
+				</span>
+				<span class="usertools">
+					<span class="ui-icon ui-icon-person" title="Authentifizierungslinks verwalten sowie Passwort ändern"></span>
+					<span class="ui-icon ui-icon-wrench disable" title="Administration des Systems"></span>
+				</span>
+			</div>
+
+			<div class="noteview disable box">
+				Notiz: <input type="text" readonly="readonly" id="notename">
+				<button id="closenote">Schließen</button>
+				<button id="publishnote">Freigabe</button>
+				<button id="notehistory">Verlauf</button>
+				<div class="parsed box">
+					<div class="loading"></div>
+
+					<div id="notespreview">
+					</div>
+   
+				</div>
+				<div class="input box">
+					<div class="loading"></div>
+
+					<textarea id="notesinput">
+					</textarea>
+					
+					<div style="height:0.8em;">
+						<a href="load/markdownsupport.html" target="_blank" style="float:right;" class="small">Über Markdown</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="noteslist disable box">
+				<div class="toolbar">
+					<input type="text" id="newnotename" placeholder="Notizname">
+					<button id="newnote">Neu</button>
+					<button id="notesarchive">Notizarchiv</button>
+				</div>
+
+				<div class="listpart">
+					<div class="loading"></div>
+					<div class="list"></div>
+				</div>
+			</div>		
+		</div>
+		<div class="footer small">
+			<a href="https://github.com/kimbtech/KIMB-Notes/" target="_blank">Über</a>
+		</div>
+	</body>
+</html>
