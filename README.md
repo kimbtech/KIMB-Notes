@@ -15,7 +15,7 @@ Das Tool kann direkt im Browser ausgefüghrt werden, weiterhin gibt es eine [Des
 
 ### Testen
 > Es soll Testversion mittles GitHub Pages realisiert werden, welche keine
-> PHP-API benutzt und somit nichts speichern kann, aber ein Gefühl für das Tool > vermittelt.
+> PHP-API benutzt und somit nichts speichern kann, aber ein Gefühl für das Tool vermittelt.
 
 ### Entwicklung
 Siehe [Issues](https://github.com/kimbtech/KIMB-Notes/issues)
