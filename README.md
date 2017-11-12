@@ -14,8 +14,15 @@ Das Tool kann direkt im Browser ausgefüghrt werden, weiterhin gibt es eine [Des
 &rarr; alles weitere im [Wiki](https://github.com/kimbtech/KIMB-Notes/wiki/)
 
 ### Testen
-> Es soll Testversion mittles GitHub Pages realisiert werden, welche keine
-> PHP-API benutzt und somit nichts speichern kann, aber ein Gefühl für das Tool vermittelt.
+Eine Demo des Tools befindet sich [hier](https://kimbtech.github.io/KIMB-Notes/system/).
+
+Username: `admin`  
+Passwort: `admin`
+
+>
+> **Achtung:** Es handelt sich um eine statische Version (ohne Server), es sind also nicht alle Funktionen verfügbar 
+> und keine Änderungen möglich.
+>
 
 ### Entwicklung
 Siehe [Issues](https://github.com/kimbtech/KIMB-Notes/issues)
