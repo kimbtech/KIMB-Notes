@@ -317,10 +317,24 @@ function output_sys(){
 	echo json_encode( $system_output_array, JSON_PRETTY_PRINT );
 
 	//Serverantworten für Demo Loggen
-	if( false ){
+	if( true ){
+		//Inhalte von Notizen sind hier
+		//	unglücklich zu schreiben
+		if( isset($_POST['note']['cont']) ){
+			$_POST['note']['cont'] = 'cont';
+		}
+		if( isset($_POST['cont']) ){
+			$_POST['cont'] = 'cont';
+		}
+		//POST-Daten zu 1dtg String
+		$poststring = '';
+		foreach( $_POST as $key => $val ){
+			$poststring .= $key.substr( preg_replace( '/[^A-Z0-9a-z]/', '', $val), 0, 10 );
+		}
+
 		//Erstellen einer ID für die aktuelle Anfrage
-		//	SHA256 der POST-Daten als JSON und des $task (erster GET Parameter)
-		$requestid = hash( 'sha256', json_encode( $_POST ) . $task );
+		//	SHA256 der POST-Daten und des $task (erster GET Parameter)
+		$requestid = hash( 'sha256', $poststring . $task );
 		
 		//schon Serverantworten geloggt?
 		if( is_file( __DIR__ . '/../request.log.json' ) ){
