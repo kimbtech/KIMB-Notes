@@ -119,17 +119,36 @@ function ajax_request( task, post, callback, errcallback ){
 
 	//Fake Request erstellen, mittels JSON file
 	function fakeRequest(  task , post, cllback, errorcallback ){
-		//Hashing
-		var requestid = sjcl.codec.hex.fromBits( sjcl.hash.sha256.hash( JSON.stringify( post ) + task ) );
 
-		console.log( post, task, requestid, JSON.stringify( post ) + task );
+		//Inhalte von Notizen sind hier
+		//	unglücklich zu schreiben
+		if( typeof post.note !== "undefined" && typeof post.note.cont !== "undefined" ){
+			post.note.cont = 'cont';
+		}
+		if( typeof post.cont !== "undefined" ){			
+			post.cont = 'cont';
+		}
+		//POST-Daten zu 1dtg String
+		var poststring = '';
+		$.each( post, function(key, val){
+			if( typeof val === "object" ){
+				$.each( val, function(k, v){
+					poststring += k + String( v ).replace( /[^A-Z0-9a-z]/g, '').substr( 0, 10 );
+				});
+			}
+			else{
+				poststring += key + String( val ).replace( /[^A-Z0-9a-z]/g, '').substr( 0, 10 );
+			}
+		});
+		//Hashing
+		var requestid = sjcl.codec.hex.fromBits( sjcl.hash.sha256.hash( poststring + task ) );
 
 		//Diese Anfrage gespeichert?
 		if( typeof JSONDataAJAXReplace[requestid] === "undefined" ){
 			errorcallback();
 		}
 		else{
-			cllback( data );
+			cllback( JSONDataAJAXReplace[requestid] );
 		}		
 	}
 }
