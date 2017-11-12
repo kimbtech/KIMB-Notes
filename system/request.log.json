@@ -1,1 +1,253 @@
-{"d85f59589ae04a1f9ad205028d5639abb01c66d60975e00f92122c13ce6f6d5c":{"error":[],"status":"okay","data":true},"d1aca168d0aa2e14968be1185cf9d28ee07353d906d8277bbbfacf61b6d2dc94":{"error":[],"status":"okay","data":[{"name":"Test","noteid":"1af0dda38b2500532430b1277f9cc9a4f8cd17cf5caa9f7722cb3fe4a243d731da281f7859ea511ca14a9f37e8e6435e4f4f","position":3},{"name":"Markdown","noteid":"b9dfee3c092e4655f5cf6f92a716718e9d5f6c32cb23770e84a484a5f72f9c4db5c6b622606ce6a5d66c67740575558dcef7","position":2},{"name":"Quellcode","noteid":"fee76ca6cd664895b10a2d122a29a7de56da29354bb6431be496e045032a18bae7d0a9f14e8a736d5d90e83699fe22fb8c49","position":1}]},"fb7aad23d2cf2d83bad31bbc159ddeefe9a8769f32b9c7fd1c0d51a1612afb7c":{"error":[],"status":"okay","data":[]},"df02feb16757647ba25c5ffe68e2a27d683003aa8f6142db52c01e8349395e72":{"error":[],"status":"okay","data":{"name":"admin","id":"dtuhrcpdsccjraqrsqrnlwgrtbwkah","admin":true}}}
+{
+    "b199b1ac1970a81868fd11ba6b3bf2bf127976b6c407ab3534cf067f81d62786": {
+        "error": [],
+        "status": "okay",
+        "data": true
+    },
+    "17eee2d7b1c141a5c32f1f7d196a853640e5b0b9f5237eaabf3cdd91cd0eb959": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            {
+                "name": "Test",
+                "noteid": "2ba0ddba38d1dff26d94c9d494e94c5e9b740871e36980f3d55dd4f203d4f87f76efe34fcefea0709814e9f07e3846efb707",
+                "position": 2
+            },
+            {
+                "name": "Test 2",
+                "noteid": "39b8b2fd37d61dcf48a4c1fa5001b76f6d05446630e7ee34af7387a994ac13394540891ef1846c3741892951904ed8a8fc53",
+                "position": 1
+            }
+        ]
+    },
+    "90197465cece948022c5a2d6bc7c7de65e0ce737e16c4d35d8b08080f3795698": {
+        "error": [],
+        "status": "okay",
+        "data": []
+    },
+    "1a4f2aec7357e7a7a3f75b4c6d79dad615a41a9f8a1f94bf09c2ff081b0eefbe": {
+        "error": [],
+        "status": "okay",
+        "data": {
+            "name": "admin",
+            "id": "pqiideagzvurtbnntjjvwfzxfmbuuo",
+            "admin": true
+        }
+    },
+    "09bd670601e3ce334af73b7b24bbf4bc29d42c1eb7154913fe1b384cb17b2cd3": {
+        "error": [],
+        "status": "okay",
+        "data": {
+            "name": "Test",
+            "id": "2ba0ddba38d1dff26d94c9d494e94c5e9b740871e36980f3d55dd4f203d4f87f76efe34fcefea0709814e9f07e3846efb707",
+            "content": "# Test\n\nUnd hier dann der Text!!\n",
+            "empty": false
+        }
+    },
+    "3487850cd48641ce19088eddd34197f422a05d299408d2d822939713c139357f": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            true,
+            "Aenderung",
+            "Keine History geschrieben! (Aehnlichkeit: 97.058823529412% | Zeitdifferenz: 8sec)"
+        ]
+    },
+    "9c7e084a964ed29eab9dcc2141cca2f5964c89620265bf1341d355d07a832170": {
+        "error": [],
+        "status": "okay",
+        "data": {
+            "id": "39b8b2fd37d61dcf48a4c1fa5001b76f6d05446630e7ee34af7387a994ac13394540891ef1846c3741892951904ed8a8fc53"
+        }
+    },
+    "1a08b93070f90934df66e0fe74470eb3bfe13934940d08754a994a1b7db90299": {
+        "error": [],
+        "status": "okay",
+        "data": {
+            "name": "Test 2",
+            "id": "39b8b2fd37d61dcf48a4c1fa5001b76f6d05446630e7ee34af7387a994ac13394540891ef1846c3741892951904ed8a8fc53",
+            "content": "# Test 2\n\n- Hallo\n- Hier \n- ist\n\n```tex\n\\int\\limits_a^b \\frac{1}{2} x = ?\n```\n\n```java\npublic class Main{\n\tpublic staic main(String[] args){\n    \tSystem.out.println(\"Hallo KIMB-Notes.\");\n    }\n}\n\n```",
+            "empty": false
+        }
+    },
+    "2bd1ef224ea60aa4b5b17ed4d58382d5fdad843ff8e43fb14b83d622118c128d": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            true,
+            "Keine Aenderung"
+        ]
+    },
+    "40125007e6a9ae5cf77ba8a0ad4b228b0999cfaa997b782dafd1e64fc64d691b": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            {
+                "authcode": "SFWa9TupXvjalbbIn9esABVGW0r91MvkfRe3g4O874q9N1mJDwyw7iAx742hblLzpk50EVyRFv5",
+                "edit": false,
+                "lastAccessed": "19:49:52 12.11.2017",
+                "created": "19:49:50 12.11.2017",
+                "name": "Test",
+                "accesses": 1
+            }
+        ]
+    },
+    "aa270b868802af21b41c1514e01fa234bf5b171315dd2f7ba3474530244e21a6": {
+        "error": [],
+        "status": "okay",
+        "data": "added"
+    },
+    "d768008d7a97f096aa36db5b2862b47da8f6028dd1209424ddb5cbc81e966e5b": {
+        "error": [],
+        "status": "okay",
+        "data": {
+            "name": "Test 2",
+            "id": "39b8b2fd37d61dcf48a4c1fa5001b76f6d05446630e7ee34af7387a994ac13394540891ef1846c3741892951904ed8a8fc53",
+            "content": "# Test 2\n\n- Hallo\n- Hier \n- ist\n\n```tex\n\\int\\limits_a^b \\frac{1}{2} x = ?\n```\n\n```java\npublic class Main{\n\tpublic staic main(String[] args){\n    \tS\n    }\n}\n\n```",
+            "edit": false
+        }
+    },
+    "22502116d709351cb38719d48eae5bdc0c860e2ba048eb56e07d01e6f64b78cb": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            {
+                "diff": "# Test 2\n\n- Hallo\n- Hier \n- ist\n\n```tex\n\\int\\limits_a^b \\frac{1}{2} x = ?\n```\n\n```j<del>ava\npublic class Main{\n\tpublic staic main(String[] args){\n    \tS\n    }\n}\n\n```<\/del>",
+                "time": "19:48:55 12.11.2017",
+                "text": "# Test 2\n\n- Hallo\n- Hier \n- ist\n\n```tex\n\\int\\limits_a^b \\frac{1}{2} x = ?\n```\n\n```j"
+            },
+            {
+                "diff": "# Test 2\n<del>\\n-<\/del><ins>Und<\/ins> <del>Hallo\n- H<\/del><ins>h<\/ins>ier <del>\\n-<\/del><ins>dann<\/ins> <del>ist\n\n```t<\/del><ins>der T<\/ins>ex<del>\\n\\in<\/del>t<del>\\limits_a^b \\frac{1}{2} x = ?<\/del><ins>!!<\/ins>\n<del>```\n\n```java\npublic class Main{\n\tpublic staic main(String[] args){\n    \tS\n    }\n}\n\n```<\/del>",
+                "time": "19:47:55 12.11.2017",
+                "text": "# Test 2\nUnd hier dann der Text!!\n"
+            },
+            {
+                "diff": "<del># Test 2\n\n- Hallo\n- Hier \n- ist\n\n```tex\n\\int\\limits_a^b \\frac{1}{2} x = ?\n```\n\n```java\npublic class Main{\n\tpublic staic main(String[] args){\n    \tS\n    }\n}\n\n```<\/del>",
+                "time": "19:47:54 12.11.2017",
+                "text": ""
+            }
+        ]
+    },
+    "40a175cd117599d598b06432c577abdc7df5a9a235afe42ed3a5942b13a04673": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            true,
+            "Notiz wurde verschoben!"
+        ]
+    },
+    "2b9971f85244e9b84ae9afa15005a650d116d11868d753ec8677458542655e8f": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            true,
+            "Notiz wurde verschoben!"
+        ]
+    },
+    "c61d80cf52c83721d2e7818bf0a3f0d8c245cc3a105f07d2ab0e63779ece2979": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            true,
+            "Notiz wurde geschloescht!"
+        ]
+    },
+    "9a09b58ca2f26182d420d8f030262191276cff54578d6df87252d5ea6827dfab": {
+        "error": [],
+        "status": "okay",
+        "data": []
+    },
+    "0fff9de14d07d3dd7315d9d9297bfca636f1253c6c5797ee72d467933af0ff30": {
+        "error": [],
+        "status": "okay",
+        "data": []
+    },
+    "aa47880e83ac0958547b6cdc09e392458f77759ad3aa8f26c7d7b62cd86e78fc": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            true,
+            "Notiz wurde geschloescht!"
+        ]
+    },
+    "3abd17ea81861859f66e33a323f74bbc3570b68039c477438e7f59d2b4229b17": {
+        "error": [],
+        "status": "okay",
+        "data": []
+    },
+    "a74f20faf9ae69f882e8a409c51299b87b06ad3975280d27218456b55fe9dfce": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            {
+                "authcode": "15dCh7XCe8oVLQ3VfM5H1gyljRP0vXcMiBDhUBYdVw6QsSB6r6QQk3C4NqupFobyvjx8XnNtn1o",
+                "edit": true,
+                "lastAccessed": "19:50:39 12.11.2017",
+                "created": "19:50:38 12.11.2017",
+                "name": "Test 2",
+                "accesses": 1
+            }
+        ]
+    },
+    "ff073ea490b6da3255b03f7835ef2d1ad725c839c43bc5cd55b8addca2fd6bb1": {
+        "error": [],
+        "status": "okay",
+        "data": "added"
+    },
+    "0b1bf8e046f75d105165a10b8eb0568b79a9d50e0a00739093e2abce0d469a8a": {
+        "error": [],
+        "status": "okay",
+        "data": {
+            "name": "Test",
+            "id": "2ba0ddba38d1dff26d94c9d494e94c5e9b740871e36980f3d55dd4f203d4f87f76efe34fcefea0709814e9f07e3846efb707",
+            "content": "# Test\n\nUnd hier dann der Text!!\n",
+            "edit": true
+        }
+    },
+    "25708d5a71509ca0762a11f6102caf2b091773c8685df8a36ee18f7bac64b433": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            true,
+            "Aenderung",
+            "History geschrieben! (Aehnlichkeit: 97.058823529412% | Zeitdifferenz: 2528sec)"
+        ]
+    },
+    "11f99cf12b992bbce281c30a85a65b06faf9b6b5817401a14b9fada322b5a949": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            {
+                "diff": "# Test\n\nUnd hier dann der Text!!\n<del>\\n\\n<\/del>",
+                "time": "19:08:36 12.11.2017",
+                "text": "# Test\n\nUnd hier dann der Text!!\n"
+            },
+            {
+                "diff": "<del># Test\n\nUnd hier dann der Text!!\n\n\n<\/del>",
+                "time": "19:08:33 12.11.2017",
+                "text": ""
+            }
+        ]
+    },
+    "2be2e1eb8f31e138da53806cd2c188b288cea399e351b663b18259ee4ebeec7a": {
+        "error": [],
+        "status": "okay",
+        "data": [
+            {
+                "time": "01.01.1970 01:00:00",
+                "code": "4za0oq2af2",
+                "id": "2bc53bb7b5ecc9b7a01c936c247c1c0cac7768a71bedb26d065065a2ec6e91f6"
+            },
+            {
+                "time": "01.01.1970 01:00:00",
+                "code": "9rx2qtjlb3",
+                "id": "36c151ed9fb3e763ac1078418bd9ebdd6b5a20fa2dbb749b85afb9bf0a5934da"
+            }
+        ]
+    },
+    "c74fe2150802d6ef6f300235f3bfb267673ce7f620076341a7927351df1e9a0a": {
+        "error": [],
+        "status": "okay",
+        "data": "9rx2qtjlb3vrx07rz39r8bmn3dijthjtoykcte5yntixz3ccqpxv01m8cgnm37lk5kbq4znzonn"
+    }
+}
