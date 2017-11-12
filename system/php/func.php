@@ -309,7 +309,7 @@ function add_error( $data ){
 }
 
 function output_sys(){
-	global $system_output_array;
+	global $system_output_array, $task;
 	
 	//Ausgabe
 	//	"error" => Fehler
@@ -317,19 +317,26 @@ function output_sys(){
 	echo json_encode( $system_output_array, JSON_PRETTY_PRINT );
 
 	//Serverantworten für Demo Loggen
-	if( true ){
+	if( false ){
 		//Inhalte von Notizen sind hier
 		//	unglücklich zu schreiben
 		if( isset($_POST['note']['cont']) ){
 			$_POST['note']['cont'] = 'cont';
 		}
-		if( isset($_POST['cont']) ){
+		if( isset($_POST['cont']) && !is_array( $_POST['cont'] ) ){
 			$_POST['cont'] = 'cont';
 		}
 		//POST-Daten zu 1dtg String
 		$poststring = '';
 		foreach( $_POST as $key => $val ){
-			$poststring .= $key.substr( preg_replace( '/[^A-Z0-9a-z]/', '', $val), 0, 10 );
+			if( is_array( $val ) ){
+				foreach( $val as $k => $v ){
+					$poststring .= $k.substr( preg_replace( '/[^A-Z0-9a-z]/', '', $v), 0, 10 );
+				}
+			}
+			else{
+				$poststring .= $key.substr( preg_replace( '/[^A-Z0-9a-z]/', '', $val), 0, 10 );
+			}
 		}
 
 		//Erstellen einer ID für die aktuelle Anfrage
@@ -348,7 +355,7 @@ function output_sys(){
 		//neue Daten dazu, unter der ID speichern (überschreiben ist ok)
 		$requestdata[$requestid] = $system_output_array;
 		//neues Daten-Array speichern
-		file_put_contents( __DIR__ . '/../request.log.json', json_encode( $requestdata ) );
+		file_put_contents( __DIR__ . '/../request.log.json', json_encode( $requestdata, JSON_PRETTY_PRINT ) );
 	}
 }
 
