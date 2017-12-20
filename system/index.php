@@ -92,8 +92,8 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<script src="<?php echo $domain; ?>/load/prism/prism.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.css">
-		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.js"></script>
 		<script>var domain = "<?php echo $domain; ?>", jsdevmin = "<?php echo $jsdevmin; ?>"; </script>
+		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.js"></script>
 	</head>
 	<body>
 <?php
