@@ -1,3 +1,15 @@
+/*
+BUILD-NOTE:
+> $(function(){loginsys()});
+>> devjs/globals.js
+>> devjs/fun_loginsys.js
+>> devjs/fun_list.js
+>> devjs/fun_maker.js
+>> devjs/fun_authCodeManager.js
+>> devjs/fun_oldNotesManager.js
+>> devjs/fun_shareviewer.js
+*/
+
 /*************************************************/
 // KIMB-Notes
 // Copyright (c) 2017 by KIMB-technologies
@@ -29,17 +41,6 @@
 			loginsys();
 		});
 	noch dazu !!!
-*/
-
-/* Build-Hiweis:
-> $(function(){loginsys()});
->> devjs/globals.js
->> devjs/fun_loginsys.js
->> devjs/fun_list.js
->> devjs/fun_maker.js
->> devjs/fun_authCodeManager.js
->> devjs/fun_oldNotesManager.js
->> devjs/fun_shareviewer.js
 */
 
 function loadJSFile(file, callback) {
