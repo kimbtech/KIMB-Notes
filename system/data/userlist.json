@@ -1,1 +1,10 @@
-[]
+[
+    {
+        "username": "admin",
+        "password": "6ae659ef03c9b9785dc49b9e9219b4f84be64eaa758477ed8ac87971ab928afd",
+        "salt": "BDtssPP9UfZpAkxF5vT52LMmHCIsXDmWpam3yCOI",
+        "userid": "qassixxeldvqflejmkbmsmkbixaonp",
+        "admin": true,
+        "authcodes": []
+    }
+]

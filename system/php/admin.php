@@ -72,32 +72,42 @@ if( checkAdminLogin( $userid, $userlist ) ){
 				//UserID Liste laden
 				$list = new JSONReader( '/user/userslist' );
 
-				//Neue ID erstellen
-				do{
-					$newid = makepassw(30, 1);
-				}while( $list->searchValue( [] , $newid) !== false );
+				//Username konvention einhalten
+				$_POST['user']['name'] = preg_replace( '/[^a-z]/', '', $_POST['user']['name'] );
 
-				//neue ID merken
-				$list->setValue( [null], $newid );
+				//Username muss eindeutig sein
+				if( $userlist->searchValue( [], $_POST['user']['name'], 'username' ) === false ){
 
-				//Admin Rechte
-				$admin = ( $_POST['user']['admin'] === 'true' ) ? true : false ;
+					//Neue ID erstellen
+					do{
+						$newid = makepassw(30, 1);
+					}while( $list->searchValue( [] , $newid) !== false );
 
-				//Neuen User erstellen
-				$userarray = array(
-					"username" => $_POST['user']['name'],
-					"password" => $_POST['user']['password'],
-					"salt" => $_POST['user']['salt'],
-					"userid" => $newid,
-					"admin" => $admin,
-					"authcodes" => array()
-				);
+					//neue ID merken
+					$list->setValue( [null], $newid );
 
-				//User erstellen
-				$userlist->setValue( [null], $userarray );
+					//Admin Rechte
+					$admin = ( $_POST['user']['admin'] === 'true' ) ? true : false ;
 
-				//Ausgabe
-				add_output( array( 'done' => true ) );
+					//Neuen User erstellen
+					$userarray = array(
+						"username" => $_POST['user']['name'],
+						"password" => $_POST['user']['password'],
+						"salt" => $_POST['user']['salt'],
+						"userid" => $newid,
+						"admin" => $admin,
+						"authcodes" => array()
+					);
+
+					//User erstellen
+					$userlist->setValue( [null], $userarray );
+
+					//Ausgabe
+					add_output( array( 'done' => true ) );
+				}
+				else{
+					add_error( 'Username already assigned!' );
+				}
 			}
 			else{
 				add_error( 'Invalid Data' );

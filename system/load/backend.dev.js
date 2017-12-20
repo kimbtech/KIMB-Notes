@@ -134,6 +134,10 @@ function adminDialog(){
 							//Liste neu laden
 							mainView();
 						}
+						//Username nicht doppelt Fehlermeldung
+						if(  typeof data.error[0] === "string" && data.error[0] === "Username already assigned!" ){
+							alert("Username bereits vergeben!");
+						}
 					});
 				});
 
