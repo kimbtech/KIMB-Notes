@@ -334,10 +334,15 @@ function loginsys(){
 
 				//Auf Click hoeren
 				$( "div.logout span.usertools span.ui-icon-wrench" ).unbind('click').click( function() {
-					//Admin JS laden
-					$.getScript( domain + "/load/backend."+ jsdevmin +".js", function(){
-						//AdminDialog offnen
-						adminDialog();
+					$.ajax({
+						type: "GET",
+						url: domain + "/load/backend."+ jsdevmin +".js",
+						success: function(){
+							//AdminDialog öffnen
+							adminDialog();
+						},
+						dataType: "script",
+						cache: true
 					});
 				});
 			}
