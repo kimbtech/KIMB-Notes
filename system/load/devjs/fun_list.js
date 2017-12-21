@@ -3,6 +3,13 @@ function list(){
 	//Liste zeigen
 	review( "noteslist" );
 
+	//Eine bestimmte Notiz zuletzt geöffnet, dann zu dieser zurückkehren
+	if( localStorage.getItem( "note_maker_reopen" ) != null && localStorage.getItem( "note_maker_reopen" ) != 'none' ){
+		var lastopend = JSON.parse( localStorage.getItem( "note_maker_reopen" ) );
+		maker( lastopend.noteid, lastopend.name );
+	}
+	
+
 	//machen
 	get_userdata();
 

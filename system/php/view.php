@@ -57,6 +57,7 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 					$note->isValue( ['userid'], $userid )
 				){
 					//Notiz normal öffnen, keinen Verlauf
+					//	0 und 1 überspringen, da diese true, false repräsentieren
 					if( $_POST['history'] == 2 ){
 
 						//Ausgabe
@@ -65,6 +66,7 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 								'name' => $note->getValue(['name']),
 								'id' => $note->getValue(['noteid']),
 								'content' => $note->getValue(['content']),
+								'geandert' => $note->getValue(['geandert']),
 								'empty' => false
 							)
 						);
@@ -94,6 +96,11 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 
 						//Ausgeben, anders herum, da chronologisch dazu geschrieben wurde
 						add_output( array_reverse( $difflist ) );
+					}
+					//Zeitpunkt der letzten Änderung feststellen
+					else if( $_POST['history'] == 4 ){
+						//Zeitpunkt letzte Änderung
+						add_output( $note->getValue(['geandert']) );
 					}
 					else{
 						add_error( 'Unknown History Parameter' );

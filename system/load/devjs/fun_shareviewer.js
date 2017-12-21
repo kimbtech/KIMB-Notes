@@ -57,7 +57,10 @@ function shareviewer( authcode, errorcallback ) {
 					maker(
 						data.data.id,
 						data.data.name,
-						data.data.content
+						{
+							content : data.data.content,
+							lastchanged : data.data.geaendert
+						}
 					);
 				}
 			}

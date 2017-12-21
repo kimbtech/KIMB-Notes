@@ -79,6 +79,7 @@ if( check_params( POST, array( 'authcode' => 'strAZaz09', '*cont' => 'strALL' ) 
 									'name' => $note->getValue(['name']),
 									'id' => $note->getValue(['noteid']),
 									'content' => $note->getValue(['content']),
+									'geandert' => $note->getValue(['geandert']),
 									'edit' => $shareinfo['edit']
 								)
 							);

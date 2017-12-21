@@ -306,19 +306,51 @@ function loginsys(){
 		//	erneuern
 		function keepSessionAlive(){
 			//alle 5 Minuten Session wiederbeleben ;)
+			//		und dabei nach Änderungen in den Notes gucken!
 			keepAliveInterval = setInterval( function(){
-				ajax_request(
-					"login",
-					{ "status" : userinformation.id },
-					function (data){
-						if( data.data != true ){
-							//Fehler!
-							errorMessage( 'Die Session ist abgelaufen!', false );
+				//aktuell eine Notiz geöffnet??
+				if( localStorage.getItem( "note_maker_reopen" ) != null && localStorage.getItem( "note_maker_reopen" ) != 'none' ){
+					var lastopend = JSON.parse( localStorage.getItem( "note_maker_reopen" ) );
+					//das zuletzt geändert der Notiz abrufen
+					ajax_request(
+						"view",
+						{ "userid" : userinformation.id, "noteid" : lastopend.noteid, history : 4 },
+						function (data){
+							if( data.status === 'error' ){
+								//Fehler!
+								errorMessage( 'Die Session ist abgelaufen!', false );
+							}
+							else{
+								if( JSON.parse( localStorage.getItem( "note_autosave_"+lastopend.noteid ) ) != null ){
+									var lastsync = JSON.parse( localStorage.getItem( "note_autosave_"+lastopend.noteid ) ).lastserverchanged
+									var lastch = data.data;
+
+									if( lastch - lastsync > 5 ){
+										alert('Neuer auf Server');
+										/*
+											TODO: Dialog mit Medldung und neu laden Button.
+										*/
+									}
+								}
+							}
 						}
-					}
-				);
+					);
+				}
+				else{
+					//normal wiederherstellen, einfach mal den Status abfragen
+					ajax_request(
+						"login",
+						{ "status" : userinformation.id },
+						function (data){
+							if( data.data != true ){
+								//Fehler!
+								errorMessage( 'Die Session ist abgelaufen!', false );
+							}
+						}
+					);
+				}
 			//5 Minuten in 1000-stel sec
-			}, 300000 );
+			}, /*300000*/ 3000 );
 		}
 
 		//Administratoren den Admin-Button

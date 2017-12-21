@@ -9,6 +9,9 @@ function maker( noteid, notename, sharecont, savecallback){
 	if( typeof sharecont === "undefined" ){
 		var share = false;
 		var shareeditable = false;
+
+		//diese Notiz als geöffnete speichern
+		localStorage.setItem( "note_maker_reopen", JSON.stringify( { noteid : noteid, name : notename } ) );
 	}
 	else{
 		if( typeof savecallback === "function" ){
@@ -55,7 +58,8 @@ function maker( noteid, notename, sharecont, savecallback){
 				notedata = {
 					"name" : notename,
 					"id" : noteid,
-					"content" : "# "+notename+"\nUnd hier dann der Text!!\n"
+					"content" : "# "+notename+"\nUnd hier dann der Text!!\n",
+					"lastserverchanged" : Math.floor(Date.now() / 1000)
 				};
 
 				//Eingabefeld
@@ -68,7 +72,8 @@ function maker( noteid, notename, sharecont, savecallback){
 			notedata = {
 				"name" : notename,
 				"id" : noteid,
-				"content" : sharecont
+				"content" : sharecont.content,
+				"lastserverchanged" : sharecont.lastchanged
 			};
 
 			//kein Ladebalken
@@ -92,7 +97,8 @@ function maker( noteid, notename, sharecont, savecallback){
 							notedata = {
 								"name" : data.data.name,
 								"id" : data.data.id,
-								"content" : data.data.content
+								"content" : data.data.content,
+								"lastserverchanged" : data.data.geandert
 							};
 						
 							//Eingabefeld
@@ -138,6 +144,7 @@ function maker( noteid, notename, sharecont, savecallback){
 				ajaxsave( function ( okay ){
 					if( okay ){
 						//zur Notizliste
+						localStorage.setItem( "note_maker_reopen", 'none' );
 						list();
 					}
 					else{
@@ -168,7 +175,7 @@ function maker( noteid, notename, sharecont, savecallback){
 		});
 
 		if( share ){
-			//Keine Freigabe und keinen Verlauf bei aufgerufener Freigabe
+			//Keine Freigabe und keinen Verlauf Button bei aufgerufener Freigabe
 			$( "button#publishnote" ).addClass( 'disable' );
 			$( "button#notehistory" ).addClass( 'disable' );
 		}
@@ -183,7 +190,7 @@ function maker( noteid, notename, sharecont, savecallback){
 			$( "button#notehistory" ).unbind( 'click' ).click( historyManager );
 		}
 	}
-	// Die internen Funktione, die per Event von CodeMirror aufgerufen werden,
+	// Die internen Funktionen, die per Event von CodeMirror aufgerufen werden,
 	// müssen am Ende wieder aus dem Event (on...) weg.
 	var here_parser_reparse, here_codemi_save;
 
@@ -301,22 +308,25 @@ function maker( noteid, notename, sharecont, savecallback){
 	function autosave_changes(){
 		//Funktion fuer Speicherung
 		function save(){
+			//jetzt wieder per AJAX sichern?
+			var newajaxsave = Date.now() - ( 30 * 1000 ) > lastajaxsave;
 			//Datensatz erstellen
 			var savedata = {
 				"name" : $( "input#notename" ).val(),
 				"id" : notedata.id,
-				"content" : cm_editor.getValue()
+				"content" : cm_editor.getValue(),
+				"lastserverchanged" : newajaxsave ? Math.floor(Date.now() / 1000) : notedata.lastserverchanged
 			};
 			//als JSON in localStorage
 			localStorage.setItem( "note_autosave_"+notedata.id , JSON.stringify( savedata ) );
 
 			//auch per ajax sichern (aber nicht allzu oft, alle 30sec)
-			if( Date.now() - ( 30 * 1000 ) > lastajaxsave ){
+			if( newajaxsave ){
 				ajaxsave();
 			}
 		}
-		//einmal zu Beginn
-		save();
+		//			einmal zu Beginn					--- erstmal nichtmehr
+		//			save();
 		//bei jeder Änderung
 		cm_editor.on( "change", save );
 
