@@ -35,7 +35,7 @@ function loginsys(){
 	
 			//3 Loginmethoden versuchen
 			//	bei Fehler wird automatisch nächste gemacht
-			loginlocalstorage();
+			loginlocalStorage();
 		}
 	}
 	check_share();
@@ -45,7 +45,7 @@ function loginsys(){
 	**/
 
 	//Login per Userdata in localStorage (wenn Session noch okay)
-	function loginlocalstorage(){
+	function loginlocalStorage(){
 		//noch was drin?
 		if(
 			localStorage.getItem( "userinformation_id" ) != '' && localStorage.getItem( "userinformation_id" ) != null
@@ -321,15 +321,15 @@ function loginsys(){
 								errorMessage( 'Die Session ist abgelaufen!', false );
 							}
 							else{
+								//aktuell geöffnete Notiz im localStorage?
 								if( JSON.parse( localStorage.getItem( "note_autosave_"+lastopend.noteid ) ) != null ){
-									var lastsync = JSON.parse( localStorage.getItem( "note_autosave_"+lastopend.noteid ) ).lastserverchanged
-									var lastch = data.data;
-
-									if( lastch - lastsync > 5 ){
-										alert('Neuer auf Server');
-										/*
-											TODO: Dialog mit Medldung und neu laden Button.
-										*/
+									//Zeitpunkt der letzten Synchronisation bestimmen
+									var lastsync = JSON.parse( localStorage.getItem( "note_autosave_"+lastopend.noteid ) ).lastserverchanged;									
+									//Notiz auf dem Server aktuelle als Zeitpunkt der letzten
+									//	Synchronisierung?
+									if( data.data - lastsync > 5 ){
+										//console.log( data.data - lastsync, data.data, lastsync);
+										newerNoteOnServerFound();
 									}
 								}
 							}
@@ -349,8 +349,8 @@ function loginsys(){
 						}
 					);
 				}
-			//5 Minuten in 1000-stel sec
-			}, /*300000*/ 3000 );
+			//1 Minute in 1000-stel sec
+			}, 60000 );
 		}
 
 		//Administratoren den Admin-Button

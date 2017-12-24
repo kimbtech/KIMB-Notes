@@ -155,14 +155,18 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 
 					<textarea id="notesinput">
 					</textarea>
+					<div style="height:0.8em;">
+						<span style="float:left;">
+							<span class="notesaved" title="Aktuelle Version auf dem Server gespeichert!">&#10004;</span>
+							<span class="noteunsaved disable" title="Aktuelle Version nicht auf dem Server gespeichert! (Klicken zum abspeichern.)">&#10008;</span>
+						</span>
 
 <?php
 						if( SystemInit::get('showMarkdownInfo') ){
-							echo "\t\t\t\t\t".'<div style="height:0.8em;">'."\r\n";
-								echo "\t\t\t\t\t\t".'<a href="'.$domain.'/load/markdownsupport.html" target="_blank" style="float:right;" class="small">Über Markdown</a>'."\r\n";
-							echo "\t\t\t\t\t".'</div>'."\r\n";
+							echo "\t\t\t\t\t\t".'<a href="'.$domain.'/load/markdownsupport.html" target="_blank" style="float:right;" class="small">Über Markdown</a>'."\r\n";
 						}
 ?>
+					</div>
 				</div>
 			</div>
 
@@ -181,6 +185,8 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		</div>
 		<div class="footer small">
 			<a href="<?php echo SystemInit::get('impressumURL'); ?>" target="_blank"><?php echo SystemInit::get('impressumName'); ?></a>
+		</div>
+		<div class="globalDialog disable">
 		</div>
 	</body>
 </html>

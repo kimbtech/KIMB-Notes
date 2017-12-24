@@ -116,7 +116,7 @@ if( check_params( POST, array( 'authcode' => 'strAZaz09', '*cont' => 'strALL' ) 
 								$note->setValue( ['content'], $_POST['cont'] );
 								$note->setValue( ['geandert'], time() );
 
-								add_output( array( true, 'Aenderung', $hist ) );
+								add_output( array( true, 'Aenderung', $hist, $note->getValue( ['geandert'] ) ) );
 							}
 							else{
 								add_output( array( true, 'Keine Aenderung' ) );

@@ -111,8 +111,6 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 				}
 			}
 			else{
-				//leer Meldung (JS soll Vorgabe nutzen)
-				add_output( array( 'empty' => true ) );
 				//jetzt Grunggerüst erstellen
 				$notearr = array(
 					'noteid' => $noteid,
@@ -122,6 +120,8 @@ if( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz09',
 					'geandert' => time(),
 					'erstellt' => time()
 				);
+				//leer Meldung (JS soll Vorgabe nutzen)
+				add_output( array( 'empty' => true, 'geandert' => $notearr['geandert'] ) );
 				//und speichern
 				$note->setArray( $notearr );
 			}
@@ -200,7 +200,7 @@ elseif( check_params( POST, array( 'userid' => 'strAZaz09', 'noteid' => 'strAZaz
 						$note->setValue( ['content'], $_POST['note']['cont'] );
 						$note->setValue( ['geandert'], time() );
 
-						add_output( array( true, 'Aenderung', $hist ) );
+						add_output( array( true, 'Aenderung', $hist, $note->getValue( ['geandert'] ) ) );
 					}
 					else{
 						add_output( array( true, 'Keine Aenderung' ) );

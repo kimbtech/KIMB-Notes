@@ -3,7 +3,10 @@ var userinformation = { "name": null, "id": null, "admin" : false };
 //Speicher fuer Timeout
 var errorMessageTimeOut = null;
 
-//Ein und Ausblendungen überarbeiten
+/**
+ * Aktuellen DOM-Bereich sichtbar machen
+ * @param review {String} Bereich (aus: login, noteview, noteslist, globalloader)
+ */
 function review( enabled ){
 	//erstmal alles weg
 	$( "div.login" ).addClass( "disable" );
@@ -90,4 +93,56 @@ function ajax_request( task, post, callback, errcallback ){
 			errcallback( {} );
 		}
 	} );
+}
+
+/**
+ * Dialog anzeigen
+ * @param {String} cont Inhalt des Dialogs
+ * @param {JSON} buttons (optional) Buttons auf dem Dilog {Name: Callback}
+ * 						(im Callback $(this).dialog("close"); zum schließen)
+ * @param {String} title (optional) Titel des Dialogs
+ * @returns {function} Inhalt ändern (Parameter ist neuer Inhalt)
+ */
+function confirmDialog(cont, buttons, title){
+	if( typeof buttons == "undefined" ){
+		var buttons = {
+			"OK" : function (){},
+			"Abbrechen" : function (){}
+		};
+	}
+	if( typeof title == "undefined" ){
+		var title = "Wichtig!"
+	}
+
+	//Element anzeigen
+	$("div.globalDialog").removeClass("disable");
+	//Dialog erstellen
+	$("div.globalDialog").dialog({
+		resizable: false,
+		height: "auto",
+		width: "auto",
+		minWidth: 200,
+		minHeight: 150,
+		modal: true,
+		title: title,
+		close: function () {
+			$("div.globalDialog").html("");
+			$("div.globalDialog").addClass("disable");
+		},
+		position: {
+			my: "center", at: "center", of: $("div.main")
+		},
+		buttons : buttons
+	});
+
+	/**
+	 * HTML Inhalt des Dialogs ändern
+	 * @param {String} content neuer Inhalt
+	 */
+	function changeHTML( content ){
+		$("div.globalDialog").html( content );
+	}
+	changeHTML(cont);
+
+	return changeHTML;
 }
