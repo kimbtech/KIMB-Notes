@@ -20,32 +20,38 @@ function review( enabled ){
 
 /**
  * globale Fehlermeldung anzeigen
- * @param {String} message Text der Fehlermeldung
+ * @param {String} message Text der Fehlermeldung (bei null wird Fehlermeldung entfernt!)
  * @param {int} remove (optional) Wann soll die Nachricht wieder verschwinden (Sekunden oder false; Standard 10)
  */
 function errorMessage( message, remove ){
-	//Remove gegeben?
-	if( typeof remove == "undefined" ){
-		remove = 10;
-	}
-	//Meldung setzen
-	$( "div.global.error.message" ).html( message );
-	//Medlung anzeigen
-	$( "div.global.error.message" ).removeClass( "disable" );
-
 	//altes Timeout weg
 	if( errorMessageTimeOut !== null ){
 		clearTimeout( errorMessageTimeOut );
 	}
+	if( message === null ){
+		//Meldung weg
+		$( "div.global.error.message" ).html( "Fehler!" );
+		$( "div.global.error.message" ).addClass( "disable" );
+	}
+	else{
+		//Remove gegeben?
+		if( typeof remove == "undefined" ){
+			remove = 10;
+		}
+		//Meldung setzen
+		$( "div.global.error.message" ).html( message );
+		//Medlung anzeigen
+		$( "div.global.error.message" ).removeClass( "disable" );
 
-	//Soll Meldung ueberhaupt verschwinden
-	if( remove !== false ){
-		//per timeOut wieder loeschen
-		errorMessageTimeOut = setTimeout( function(){
-			//wieder weg
-			$( "div.global.error.message" ).addClass( "disable" );
-		}, remove * 1000 );
-	}	
+		//Soll Meldung ueberhaupt verschwinden
+		if( remove !== false ){
+			//per timeOut wieder loeschen
+			errorMessageTimeOut = setTimeout( function(){
+				//wieder weg
+				$( "div.global.error.message" ).addClass( "disable" );
+			}, remove * 1000 );
+		}
+	}
 }
 
 /**
@@ -67,7 +73,7 @@ function ajax_request( task, post, callback, errcallback ){
 				}
 				else{
 					//Fehlermeldungen wegnehmen
-					errorMessage('', 0);
+					errorMessage(null);
 				}
 				//Callback vorhanden?
 				if( typeof callback === "function" ){

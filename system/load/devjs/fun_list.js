@@ -22,10 +22,22 @@ function list(){
 			function ( data ) {
 				$( "div.noteslist div.listpart div.loading" ).addClass( "disable" );
 				if( data.status === 'okay' ){
+					localStorage.setItem( "note_list_notes", JSON.stringify( data.data ) );
 					showlist( data.data );
 				}
-			}
+				else{
+					errorfallback();
+				}
+			},
+			errorfallback
 		);
+
+		//wenn keiner Serveranfrage möglich, versuche Liste aus localStorage zu beziehen
+		function errorfallback(){
+			if( localStorage.getItem( "note_list_notes" ) != null ){
+				showlist( JSON.parse( localStorage.getItem( "note_list_notes" ) ) );
+			}
+		}
 	}
 
 	//Liste mit allen Notizen zeigen

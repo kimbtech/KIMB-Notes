@@ -92,7 +92,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<script src="<?php echo $domain; ?>/load/prism/prism.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.css">
-		<script>var domain = "<?php echo $domain; ?>", jsdevmin = "<?php echo $jsdevmin; ?>"; </script>
+		<script>var domain = "<?php echo $domain; ?>", jsdevmin = "<?php echo $jsdevmin; ?>", global_polling_secs = 60; </script>
 		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.js"></script>
 	</head>
 	<body>

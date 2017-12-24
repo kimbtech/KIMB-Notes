@@ -271,7 +271,7 @@ function loginsys(){
 				clearInterval( keepAliveInterval );
 			}
 			//Fehlermeldungen verschwinden lassen
-			errorMessage( "Fehler!", 0);
+			errorMessage( null );
 
 			//DOM bereinigen
 			if( typeof cm_editor !== "undefined" ){
@@ -349,8 +349,7 @@ function loginsys(){
 						}
 					);
 				}
-			//1 Minute in 1000-stel sec
-			}, 60000 );
+			}, global_polling_secs * 1000 );
 		}
 
 		//Administratoren den Admin-Button

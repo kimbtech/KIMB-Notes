@@ -167,8 +167,9 @@ function maker(noteid, notename, sharecont, savecallback) {
 							title: 'Fehler beim Speichern!',
 							buttons: {
 								"Änderungen verwerfen": function () {
-									$(this).dialog("close");
+									localStorage.setItem("note_maker_reopen", 'none');
 									list();
+									$(this).dialog("close");
 								},
 								"Abbrechen": function () {
 									$(this).dialog("close");
@@ -357,89 +358,98 @@ function maker(noteid, notename, sharecont, savecallback) {
 	}
 	//Speicherung per AJAX durchführen
 	function ajaxsave(callback) {
-		//Gefahr des Überschreibens?
-		if (noteOverrideDanger) {
-			//User darauf hinweisen
-
-			$("body").append('<div id="dangerMessageNoteSave">Beim Speichern der Notiz kann es eventuell zu Datenverlust kommen, da die aktuellste Version nicht vom Server geladen werden konnte!</div>');
-			$("#dangerMessageNoteSave").dialog({
-				resizable: false,
-				height: "auto",
-				width: "auto",
-				modal: true,
-				title: 'Gefahr des Datenverlustes!',
-				buttons: {
-					"Trotzdem Speichern": function () {
-						$(this).dialog("close");
-						//jetzt keine Gefahr mehr
-						noteOverrideDanger = false;
-						//Speichern
-						doSave();
-					},
-					"Erstmal nicht": function () {
-						$(this).dialog("close");
-					}
-				},
-				close: function () {
-					$(this).remove();
-				}
-			});
-		}
-		else {
-			//immer speichern!
-			doSave();
-		}
-
-		//Die Speicherung ausführen
-		function doSave() {
-			if (share && shareeditable) {
-				//Zeitpunkt merken
-				lastajaxsave = Date.now();
-
-				//als Freigabe sichern
-				savecallback(cm_editor.getValue(), false);
+		//überhaupt Änderungen?
+		if( noteconthash == sjcl.codec.hex.fromBits( sjcl.hash.sha256.hash( cm_editor.getValue() ) ) ){
+			//Callback vorhnaden?
+			if (typeof callback === "function") {
+				callback(true);
 			}
-			else if (share === false) {
-				$("div.noteview div.loading").removeClass("disable");
-				ajax_request("view",
-					{ "userid": userinformation.id, "noteid": noteid, "note": { "name": $("input#notename").val(), "cont": cm_editor.getValue() } },
-					function (data) {
-						$("div.noteview div.loading").addClass("disable");
-						if (
-							data.status === 'okay'
-						) {
-							console.log('Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.');
+		}
+		else{
+			//Gefahr des Überschreibens?
+			if (noteOverrideDanger) {
+				//User darauf hinweisen
 
-							//Zeitpunkt merken
-							lastajaxsave = Date.now();
+				$("body").append('<div id="dangerMessageNoteSave">Beim Speichern der Notiz kann es eventuell zu Datenverlust kommen, da die aktuellste Version nicht vom Server geladen werden konnte!</div>');
+				$("#dangerMessageNoteSave").dialog({
+					resizable: false,
+					height: "auto",
+					width: "auto",
+					modal: true,
+					title: 'Gefahr des Datenverlustes!',
+					buttons: {
+						"Trotzdem Speichern": function () {
+							$(this).dialog("close");
+							//jetzt keine Gefahr mehr
+							noteOverrideDanger = false;
+							//Speichern
+							doSave();
+						},
+						"Erstmal nicht": function () {
+							$(this).dialog("close");
+						}
+					},
+					close: function () {
+						$(this).remove();
+					}
+				});
+			}
+			else {
+				//immer speichern!
+				doSave();
+			}
 
-							//nur bei Änderung sinnvoll
-							if (data.data.length == 4) {
-								//lastsync dieser Notiz anpassen
-								notedata.lastserverchanged = data.data[3];
-								//JSON in localStorage (lastserverch) updaten
-								var newdat = JSON.parse(localStorage.getItem("note_autosave_" + noteid));
-								newdat.lastserverchanged = data.data[3];
-								localStorage.setItem("note_autosave_" + noteid, JSON.stringify(newdat));
+			//Die Speicherung ausführen
+			function doSave() {
+				if (share && shareeditable) {
+					//Zeitpunkt merken
+					lastajaxsave = Date.now();
+
+					//als Freigabe sichern
+					savecallback(cm_editor.getValue(), false);
+				}
+				else if (share === false) {
+					$("div.noteview div.loading").removeClass("disable");
+					ajax_request("view",
+						{ "userid": userinformation.id, "noteid": noteid, "note": { "name": $("input#notename").val(), "cont": cm_editor.getValue() } },
+						function (data) {
+							$("div.noteview div.loading").addClass("disable");
+							if (
+								data.status === 'okay'
+							) {
+								console.log('Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.');
+
+								//Zeitpunkt merken
+								lastajaxsave = Date.now();
+
+								//nur bei Änderung sinnvoll
+								if (data.data.length == 4) {
+									//lastsync dieser Notiz anpassen
+									notedata.lastserverchanged = data.data[3];
+									//JSON in localStorage (lastserverch) updaten
+									var newdat = JSON.parse(localStorage.getItem("note_autosave_" + noteid));
+									newdat.lastserverchanged = data.data[3];
+									localStorage.setItem("note_autosave_" + noteid, JSON.stringify(newdat));
+								}
+
+								//jetzt wieder gespeichert
+								$("span.notesaved").removeClass("disable");
+								$("span.noteunsaved").addClass("disable");
 							}
 
-							//jetzt wieder gespeichert
-							$("span.notesaved").removeClass("disable");
-							$("span.noteunsaved").addClass("disable");
+							//Callback vorhnaden?
+							if (typeof callback === "function") {
+								callback((data.status === 'okay'));
+							}
+						},
+						function (data) {
+							//Callback vorhnaden?
+							if (typeof callback === "function") {
+								callback(false);
+							}
 						}
-
-						//Callback vorhnaden?
-						if (typeof callback === "function") {
-							callback((data.status === 'okay'));
-						}
-					},
-					function (data) {
-						//Callback vorhnaden?
-						if (typeof callback === "function") {
-							callback(false);
-						}
-					}
-				);
+					);
+				}
 			}
 		}
 	}
