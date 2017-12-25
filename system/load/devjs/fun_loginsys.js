@@ -67,23 +67,40 @@ function loginsys(){
 
 					$( "div.login div.input div.loading" ).addClass( "disable" );
 
-					if( data.data == true ){
-
+					//Offline
+					if( systemOfflineMode ){
 						//Logoutbutton
 						logout_enable();
-
 						//Notizliste
 						list();
-
-				
 					}
 					else{
-						loginlink();
+
+						if( data.data == true ){
+
+							//Logoutbutton
+							logout_enable();
+
+							//Notizliste
+							list();
+
+					
+						}
+						else{
+							loginlink();
+						}
 					}
 				});
 		}
 		else{
-			loginlink()
+			//wenn offline und keine Infos im localStrorage, dann kann
+			//	gleich das Form gezeigt werden, Authcode lässt sich ja nicht prüfen
+			if( systemOfflineMode ){
+				loginform();
+			}
+			else{
+				loginlink();
+			}
 		}
 	}
 
@@ -154,24 +171,41 @@ function loginsys(){
 	//Loginformular
 	function loginform(){
 		//zeigen
-		$( "div.login p.message.important" ).removeClass( "disable" );
+		if( systemOfflineMode ){
+			$( "div.login p.message.important.offline" ).removeClass( "disable" );
+			$( "div.login p.message.important.online" ).addClass( "disable" );
+			$( "div.login div.input div#loginform" ).addClass( "disable" );
+		}
+		else{
+			//evtl. doch offline?
+			ajax_request(
+				"login",
+				{ "status" : userinformation.id },
+				function ( data ){ if( systemOfflineMode){loginform();} }
+			);
+
+			$( "div.login p.message.important.offline" ).addClass( "disable" )
+			$( "div.login p.message.important.online" ).removeClass( "disable" );
+		}
 
 		$( "div.login p.message.error" ).addClass( "disable" );
 		$( "div.login p.message.okay" ).addClass( "disable" );
 		$( "div.login div.input div.loading" ).addClass( "disable" );
 
-		$( "div.login div.input div#loginform" ).removeClass( "disable" );
-		$( "div.login div.input" ).removeClass( "disable" );
+		if( !systemOfflineMode ){
+			$( "div.login div.input div#loginform" ).removeClass( "disable" );
+			$( "div.login div.input" ).removeClass( "disable" );
 
-		//Listener
-		//	Klick
-		$( "button#userlogin" ).unbind("click").click( try_login );
-		//	Enter
-		$( "input#userpassword" ).unbind("keyup").keyup( function( event ) {
-			if(event.keyCode == 13){
-				try_login();
-			}
-		});
+			//Listener
+			//	Klick
+			$( "button#userlogin" ).unbind("click").click( try_login );
+			//	Enter
+			$( "input#userpassword" ).unbind("keyup").keyup( function( event ) {
+				if(event.keyCode == 13){
+					try_login();
+				}
+			});
+		}
 
 		//Ajax
 		function try_login(){
@@ -236,18 +270,20 @@ function loginsys(){
 		var keepAliveInterval = null;
 
 		function do_logout(){
-			//ajax
-			ajax_request( "login",
-				 	{"logout" : null},
-					function ( data ) {
-						if( data.status === 'okay' ){
-							$( "p.message.error.loggedout" ).removeClass( "disable" );
-							setTimeout( function() {
-									$( "p.message.error.loggedout" ).addClass( "disable" );
-								}, 20000 );
+			if( !systemOfflineMode ){
+				//ajax
+				ajax_request( "login",
+						{"logout" : null},
+						function ( data ) {
+							if( data.status === 'okay' ){
+								$( "p.message.error.loggedout" ).removeClass( "disable" );
+								setTimeout( function() {
+										$( "p.message.error.loggedout" ).addClass( "disable" );
+									}, 20000 );
+							}
 						}
-					}
-				);
+					);
+			}
 
 			//Storage löschen
 			//	alles?
@@ -358,35 +394,42 @@ function loginsys(){
 			//Beschriftungen
 			$( "div.logout span.usertools" ).tooltip();
 
-			//Admin?
-			if( userinformation.admin ){
-				//Systemadministration zeigen
-				$( "div.logout span.usertools span.ui-icon-wrench" ).removeClass( "disable" );
-
-				//Auf Click hoeren
-				$( "div.logout span.usertools span.ui-icon-wrench" ).unbind('click').click( function() {
-					$.ajax({
-						type: "GET",
-						url: domain + "/load/backend."+ jsdevmin +".js",
-						success: function(){
-							//AdminDialog öffnen
-							adminDialog();
-						},
-						dataType: "script",
-						cache: true
-					});
-				});
+			if( systemOfflineMode ){
+				//keine Serverdialoge möglich!
+				$( "div.logout span.usertools span.ui-icon-wrench" ).addClass( "disable" );
+				$( "div.logout span.usertools span.ui-icon-person" ).addClass( "disable" );
 			}
 			else{
-				//keine Administratoion
-				$( "div.logout span.usertools span.ui-icon-wrench" ).addClass( "disable" );
-			}
+				//Admin?
+				if( userinformation.admin ){
+					//Systemadministration zeigen
+					$( "div.logout span.usertools span.ui-icon-wrench" ).removeClass( "disable" );
 
-			//Useradministration
-			$( "div.logout span.usertools span.ui-icon-person" ).unbind('click').click( function() {
-				//authocode Manager oeffnen
-				authCodeManager();
-			});
+					//Auf Click hoeren
+					$( "div.logout span.usertools span.ui-icon-wrench" ).unbind('click').click( function() {
+						$.ajax({
+							type: "GET",
+							url: domain + "/load/backend."+ jsdevmin +".js",
+							success: function(){
+								//AdminDialog öffnen
+								adminDialog();
+							},
+							dataType: "script",
+							cache: true
+						});
+					});
+				}
+				else{
+					//keine Administratoion
+					$( "div.logout span.usertools span.ui-icon-wrench" ).addClass( "disable" );
+				}
+
+				//Useradministration
+				$( "div.logout span.usertools span.ui-icon-person" ).unbind('click').click( function() {
+					//authocode Manager oeffnen
+					authCodeManager();
+				});
+			}
 		}
 
 		display_and_listen();

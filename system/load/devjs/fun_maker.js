@@ -321,6 +321,9 @@ function maker(noteid, notename, sharecont, savecallback) {
 	//Änderungen speichern
 	var lastajaxsave = 0;
 	function autosave_changes() {
+		$("span.noteunsaved").tooltip();
+		$("span.notesaved").tooltip();
+
 		//Funktion fuer Speicherung
 		function save() {
 			//jetzt wieder per AJAX sichern?

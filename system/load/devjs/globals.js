@@ -2,6 +2,10 @@
 var userinformation = { "name": null, "id": null, "admin" : false };
 //Speicher fuer Timeout
 var errorMessageTimeOut = null;
+//Offline oder online?
+var systemOfflineMode = false;
+//REST oder Session API?
+var systemRESTAPI = false;
 
 /**
  * Aktuellen DOM-Bereich sichtbar machen
@@ -64,6 +68,8 @@ function errorMessage( message, remove ){
 function ajax_request( task, post, callback, errcallback ){
 	$.post( domain + "/ajax.php?" + task , post,
 		function (data) {
+			//hier online
+			systemOfflineMode = false;
 			//Serveranwort okay?
 			if( typeof data === "object" ){
 				//Fehler?
@@ -92,11 +98,14 @@ function ajax_request( task, post, callback, errcallback ){
 		}
 	).fail( function() {
 		//globale Fehlermeldung
-		errorMessage('Verbindung zum Sever verloren!', false);
+		errorMessage('Offlinemodus', false);
+
+		//jetzt offline
+		systemOfflineMode = true;
 
 		//Callback vorhanden?
-		if( typeof errcallback === "function" ){
-			errcallback( {} );
+		if( typeof callback === "function" ){
+			callback( { data : {} } );
 		}
 	} );
 }

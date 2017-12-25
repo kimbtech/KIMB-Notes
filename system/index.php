@@ -46,7 +46,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 
 ?>
 <!DOCTYPE html>
-<html>
+<html manifest="<?php echo $domain; ?>/appcache.php">
 	<head>
 		<title>KIMB-Notes</title>
 		<link rel="shortcut icon" href="<?php echo $domain; ?>/favicon.ico" type="image/x-icon; charset=binary">
@@ -62,15 +62,13 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<meta name="robots" content="none">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" type="text/css" href="<?php echo SystemInit::getExtLib( 'fonts' ); ?>">
-		<link rel="stylesheet" type="text/css" href="<?php echo SystemInit::getExtLib( 'jqueryuiCSS' ); ?>">		
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/js-libs/fonts.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/js-libs/jquery-ui.min.css">		
 
-		<script src="<?php echo SystemInit::getExtLib( 'jquery' ); ?>"></script>
-		<script src="<?php echo SystemInit::getExtLib( 'jqueryui' ); ?>"></script>
-
-		<script src="<?php echo SystemInit::getExtLib( 'sjcl' ); ?>"></script>
-		<script src="<?php echo SystemInit::getExtLib( 'qrcode' ); ?>"></script>
-
+		<script src="<?php echo $domain; ?>/load/js-libs/jquery.min.js"></script>
+		<script src="<?php echo $domain; ?>/load/js-libs/jquery-ui.min.js"></script>
+		<script src="<?php echo $domain; ?>/load/js-libs/sjcl.min.js"></script>
+		<script src="<?php echo $domain; ?>/load/js-libs/qrcode.min.js"></script>
 		<script src="<?php echo $domain; ?>/load/marked.min.js"></script>	
 
 		<link rel="stylesheet" href="<?php echo $domain; ?>/load/codemirror/codemirror.css">
@@ -115,7 +113,8 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 
 			<p class="message error loggedout disable">Logout erfolgreich!</p>
 			<div class="login">
-				<p class="message important">Sie müssen sich einloggen!</p>
+				<p class="message important online">Sie müssen sich einloggen!</p>
+				<p class="message important offline">Sie können sich leider offline nicht einloggen!</p>
 				<p class="message error disable">Login nicht erfolgreich!</p>
 				<p class="message okay disable">Login erfolgreich!</p>
 				<div class="input box">

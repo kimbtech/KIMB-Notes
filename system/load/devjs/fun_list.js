@@ -16,24 +16,30 @@ function list(){
 	//Userdaten holen 
 	//	alle Notizen
 	function get_userdata(){
-		$( "div.noteslist div.listpart div.loading" ).removeClass( "disable" );
-		ajax_request( "list",
-		 	{"userid" : userinformation.id},
-			function ( data ) {
-				$( "div.noteslist div.listpart div.loading" ).addClass( "disable" );
-				if( data.status === 'okay' ){
-					localStorage.setItem( "note_list_notes", JSON.stringify( data.data ) );
-					showlist( data.data );
-				}
-				else{
-					errorfallback();
-				}
-			},
-			errorfallback
-		);
+		if( systemOfflineMode ){
+			errorfallback();
+		}
+		else{
+			$( "div.noteslist div.listpart div.loading" ).removeClass( "disable" );
+			ajax_request( "list",
+				{"userid" : userinformation.id},
+				function ( data ) {
+					$( "div.noteslist div.listpart div.loading" ).addClass( "disable" );
+					if( data.status === 'okay' ){
+						localStorage.setItem( "note_list_notes", JSON.stringify( data.data ) );
+						showlist( data.data );
+					}
+					else{
+						errorfallback();
+					}
+				},
+				errorfallback
+			);
+		}
 
 		//wenn keiner Serveranfrage möglich, versuche Liste aus localStorage zu beziehen
 		function errorfallback(){
+			$( "div.noteslist div.listpart div.loading" ).addClass( "disable" );
 			if( localStorage.getItem( "note_list_notes" ) != null ){
 				showlist( JSON.parse( localStorage.getItem( "note_list_notes" ) ) );
 			}
@@ -43,19 +49,26 @@ function list(){
 	//Liste mit allen Notizen zeigen
 	function showlist( notes ){
 
-		//Neue Notiz Button
-		$( "button#newnote" ).unbind("click").click( function (){
-			var name = $( "input#newnotename" ).val();
-			if( name != '' ){
-				makenew( name )
-			}
-		});
+		if( systemOfflineMode ){
+			$( "div.toolbar" ).addClass("disable");
+		}
+		else{
+			$( "div.toolbar" ).removeClass("disable");
 
-		//Archivbutton
-		$( "button#notesarchive" ).unbind("click").click( function (){
-			//Manager fuer alte Notizen laden
-			oldNotesManager();
-		});
+			//Neue Notiz Button
+			$( "button#newnote" ).unbind("click").click( function (){
+				var name = $( "input#newnotename" ).val();
+				if( name != '' ){
+					makenew( name )
+				}
+			});
+
+			//Archivbutton
+			$( "button#notesarchive" ).unbind("click").click( function (){
+				//Manager fuer alte Notizen laden
+				oldNotesManager();
+			});
+		}
 
 		//Notizen
 		//	Liste erstellen
@@ -92,27 +105,35 @@ function list(){
 			console.log( 'Oeffne: "'+ name + '" ("' + noteid + '")' );
 			maker( noteid, name );
 		});
-		//	sotieren, delete (nur unsichtbar machen)
-		$( "span.noteseditbuttons button" ).unbind("click").click(function(){
-			var art = $( this ).attr( "art" );
-			var noteid = $( this ).parent().parent().attr( "noteid" );
-			
-			$( "div.noteslist div.listpart div.loading" ).removeClass( "disable" );
 
-			ajax_request( "list",
-		 		{"userid" : userinformation.id, "art" : art, "noteid" : noteid },
-				function ( data ) {
-					$( "div.noteslist div.listpart div.loading" ).addClass( "disable" );
-					if( data.status === 'okay' ){
-						//Log
-						console.log( 'Notiz: "' + noteid + '" wurde '+ ( art == 'del' ? 'gelöscht' : ( art == 'up' ? 'nach oben verschoben' : 'nach unten verschoben' ) ) );
+		if( systemOfflineMode ){
+			$( "span.noteseditbuttons" ).addClass("disable");
+		}
+		else{
+			$( "span.noteseditbuttons" ).removeClass("disable");
+			//	sotieren, delete (nur unsichtbar machen)
+			$( "span.noteseditbuttons button" ).unbind("click").click(function(){
+				var art = $( this ).attr( "art" );
+				var noteid = $( this ).parent().parent().attr( "noteid" );
+				
+				$( "div.noteslist div.listpart div.loading" ).removeClass( "disable" );
 
-						//neue Liste machen
-						list();
+				ajax_request( "list",
+					{"userid" : userinformation.id, "art" : art, "noteid" : noteid },
+					function ( data ) {
+						$( "div.noteslist div.listpart div.loading" ).addClass( "disable" );
+						if( data.status === 'okay' ){
+							//Log
+							console.log( 'Notiz: "' + noteid + '" wurde '+ ( art == 'del' ? 'gelöscht' : ( art == 'up' ? 'nach oben verschoben' : 'nach unten verschoben' ) ) );
+
+							//neue Liste machen
+							list();
+						}
 					}
-				}
-			);
-		});
+				);
+			});
+		}
+		
 
 
 	}
