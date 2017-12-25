@@ -96,6 +96,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 			make_inputfield();
 		}
 		else if( systemOfflineMode ){
+			$("div.noteview div.loading").addClass("disable");
 			getDataWithoutServer(false);
 		}
 		else {
@@ -429,7 +430,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 				else if (share === false) {
 					if( systemOfflineMode ){
 						//Änderunge merken, um später zu pushen
-						systemOfflineManager.saveNote( noteid, cm_editor.getValue() );
+						systemOfflineManager.saveNote( noteid, cm_editor.getValue(), $("input#notename").val() );
 
 						//Zeitpunkt merken
 						lastajaxsave = Date.now();

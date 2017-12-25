@@ -75,7 +75,6 @@ function loginsys(){
 						list();
 					}
 					else{
-
 						if( data.data == true ){
 
 							//Logoutbutton
@@ -83,8 +82,6 @@ function loginsys(){
 
 							//Notizliste
 							list();
-
-					
 						}
 						else{
 							loginlink();
@@ -175,6 +172,7 @@ function loginsys(){
 			$( "div.login p.message.important.offline" ).removeClass( "disable" );
 			$( "div.login p.message.important.online" ).addClass( "disable" );
 			$( "div.login div.input div#loginform" ).addClass( "disable" );
+			$( "div.login div.input" ).addClass( "disable" );
 		}
 		else{
 			//evtl. doch offline?

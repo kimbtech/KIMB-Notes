@@ -72,10 +72,6 @@ function errorMessage( message, remove ){
 function ajax_request( task, post, callback, errcallback ){
 	$.post( domain + "/ajax.php?" + task , post,
 		function (data) {
-			//hier online
-			systemOfflineMode = false;
-			systemOfflineManager.statusChanged( false );
-			
 			//Serveranwort okay?
 			if( typeof data === "object" ){
 				//Fehler?
@@ -84,6 +80,10 @@ function ajax_request( task, post, callback, errcallback ){
 					console.log( data.error );
 				}
 				else{
+					//hier online
+					systemOfflineMode = false;
+					systemOfflineManager.statusChanged( false );
+
 					//Fehlermeldungen wegnehmen
 					errorMessage(null);
 				}

@@ -45,11 +45,13 @@ class OfflineManager{
 	 * (tut nur was, wenn System offline ist)
 	 * @param {String} id NoteID der Notiz
 	 * @param {String} cont Neuer Inhalt
+	 * @param {String} name Name der Notiz
 	 */
-	saveNote( id, cont ){
+	saveNote( id, cont, name ){
 		if( this.status ){
 			this.data[id] = {
-				content : cont
+				content : cont,
+				name : name
 			};
 			this.saveLocalStorage();
 		}
@@ -72,15 +74,34 @@ class OfflineManager{
 			this.data = {};
 			this.saveLocalStorage();
 		}
-		else{
+		//nicht offline?
+		else if( this.status == false ){
+			var THIS = this;
+			
 			//pushen!!!!
+			$.each( this.data, function (id, content){
+				ajax_request("view",
+							{ "userid": userinformation.id, "noteid": id, "note": { "name": content.name, "cont": content.content } },
+							function (data) {
+								$("div.noteview div.loading").addClass("disable");
+								if (
+									data.status === 'okay'
+								) {
 
-			console.log( "Pushe: " + JSON.stringify( this.data ) );
-				/*
-					this.data = {};
-					saveLocalStorage();
-				*/
+									//bei Änderung auf Server, Zeitpunkt für maker aktualieren
+									if (data.data.length == 4) {
+										//JSON in localStorage (lastserverch) updaten
+										var newdat = JSON.parse(localStorage.getItem("note_autosave_" + id));
+										newdat.lastserverchanged = data.data[3];
+										localStorage.setItem("note_autosave_" + id, JSON.stringify(newdat));
+									}
 
+									delete THIS.data[id];
+									THIS.saveLocalStorage();
+								}
+							}
+				);
+			});
 		}
 	}
 }

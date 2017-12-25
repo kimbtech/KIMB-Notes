@@ -3,6 +3,9 @@ function list(){
 	//Liste zeigen
 	review( "noteslist" );
 
+	//jetzt korrekt eingeloggt
+	systemOfflineManager.pushToServer();
+
 	//Eine bestimmte Notiz zuletzt geöffnet, dann zu dieser zurückkehren
 	if( localStorage.getItem( "note_maker_reopen" ) != null && localStorage.getItem( "note_maker_reopen" ) != 'none' ){
 		var lastopend = JSON.parse( localStorage.getItem( "note_maker_reopen" ) );

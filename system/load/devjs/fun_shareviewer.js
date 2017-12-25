@@ -12,77 +12,83 @@ function shareviewer( authcode, errorcallback ) {
 		//Nachricht abrufen
 		ajax_request( 'share', { "authcode" : authcode },
 			function (data){
-				if( data.status === "okay" ){
-					lastchanged = data.data.geandert;
-					editable = data.data.edit;
-					//Aufrufen
-					if( data.data.edit ){
-						maker(
-							data.data.id,
-							data.data.name,
-							{
-								content : data.data.content,
-								lastchanged : data.data.geandert
-							},
-							function ( newcont, close ){
-								$( "div.noteview div.loading" ).removeClass( "disable" );
-								//neuen Inhalt sichern
-								ajax_request( 'share', { "authcode" : authcode, "cont" : newcont },
-									function (data){
-										$( "div.noteview div.loading" ).addClass( "disable" );
-										lastchanged = data.data[3];
+				if( systemOfflineMode ){
+					errorMessage( "Offline können keine Freigaben geöffnet werden!" );
+					shareerror();			
+				}
+				else{
+					if( data.status === "okay" ){
+						lastchanged = data.data.geandert;
+						editable = data.data.edit;
+						//Aufrufen
+						if( data.data.edit ){
+							maker(
+								data.data.id,
+								data.data.name,
+								{
+									content : data.data.content,
+									lastchanged : data.data.geandert
+								},
+								function ( newcont, close ){
+									$( "div.noteview div.loading" ).removeClass( "disable" );
+									//neuen Inhalt sichern
+									ajax_request( 'share', { "authcode" : authcode, "cont" : newcont },
+										function (data){
+											$( "div.noteview div.loading" ).addClass( "disable" );
+											lastchanged = data.data[3];
 
-										if( data.status === "okay" ){
-											//jetzt wieder gespeichert
-											$("span.notesaved").removeClass("disable");
-											$("span.noteunsaved").addClass("disable");
-										}
-										else{
+											if( data.status === "okay" ){
+												//jetzt wieder gespeichert
+												$("span.notesaved").removeClass("disable");
+												$("span.noteunsaved").addClass("disable");
+											}
+											else{
+												errorMessage( "Konnte Notiz nicht speichern!" );
+											}
+
+											//Schließen
+											doClose( !(data.status === "okay") );									
+										},
+										function (data){
+											$( "div.noteview div.loading" ).addClass( "disable" );
+
 											errorMessage( "Konnte Notiz nicht speichern!" );
+
+											doClose( true );
 										}
-
+									);
+									
+									function doClose( error ){
 										//Schließen
-										doClose( !(data.status === "okay") );									
-									},
-									function (data){
-										$( "div.noteview div.loading" ).addClass( "disable" );
-
-										errorMessage( "Konnte Notiz nicht speichern!" );
-
-										doClose( true );
-									}
-								);
-								
-								function doClose( error ){
-									//Schließen
-									if( close ){
-										if( !error || confirm( "Konnte nicht Notiz speichern, trotzdem schließen?" ) ){
-											clearInterval( sharepoll );
-											//neues Login
-											window.location.hash = "";
-											loginsys();
+										if( close ){
+											if( !error || confirm( "Konnte nicht Notiz speichern, trotzdem schließen?" ) ){
+												clearInterval( sharepoll );
+												//neues Login
+												window.location.hash = "";
+												loginsys();
+											}
 										}
 									}
 								}
-							}
-						);
-						checkForChanges();
+							);
+							checkForChanges();
+						}
+						else{
+							maker(
+								data.data.id,
+								data.data.name,
+								{
+									content : data.data.content,
+									lastchanged : data.data.geandert
+								}
+							);
+							checkForChanges();
+						}
 					}
 					else{
-						maker(
-							data.data.id,
-							data.data.name,
-							{
-								content : data.data.content,
-								lastchanged : data.data.geandert
-							}
-						);
-						checkForChanges();
+						errorMessage( "Nachricht lässt sich mittels Freigabelink nicht öffnen.", false );
+						shareerror();
 					}
-				}
-				else{
-					errorMessage( "Nachricht lässt sich mittels Freigabelink nicht öffnen.", false );
-					shareerror();
 				}
 			},
 			function (data){
