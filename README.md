@@ -39,4 +39,4 @@ Außerdem ist die PHP-API so konzipiert, dass automatisch Notizverläufe angeleg
 #### Aufbau des Repository
 - `/system/` Hauptsystem
 - `/install/` Installer
-- `/js-libs/` benötigte JS-Bibilotheken (extern und somit CDN-Nutzung möglich)
+- `/build/` NodeJS Skript für Buildvorgang (bei getaggten Releases ist dies schon ausgeführt)
