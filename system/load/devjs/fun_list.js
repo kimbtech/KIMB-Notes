@@ -94,7 +94,33 @@ function list(){
 		//Buttons Design
 		$( "span.noteseditbuttons" ).css({ "float" : "right", "cursor" : "pointer" });
 		//Design Name
-		$( "div.noteslist div.listpart div.list ul li span.notesnames" ).css({ "display" : "inline-block", "cursor" : "pointer" });
+		$( "div.noteslist div.listpart div.list ul li span.notesnames" ).css({ "display" : "inline-block", "cursor" : "pointer", "width" :
+			( $("div.noteslist div.listpart div.list ul li").width() - $("div.noteslist div.listpart div.list ul li span.noteseditbuttons").width() - 5 ) + "px"
+		});
+
+		// hefte resize an
+		if( list_first_load ){
+			$( window ).resize(function() {
+				$( "div.noteslist div.listpart div.list ul li span.notesnames" ).css({ "display" : "inline-block", "cursor" : "pointer", "width" :
+					( $("div.noteslist div.listpart div.list ul li").width() - $("div.noteslist div.listpart div.list ul li span.noteseditbuttons").width() - 5 ) + "px"
+				});
+
+				var notesarchive = $("button#notesarchive").width();
+				var toolbar = $("div.toolbar").width();
+				var newnote = $("input#newnotename").width() + $("button#newnote").width() + 36;
+
+				if( toolbar - ( notesarchive + newnote ) < 10 ){
+					$("button#notesarchive").css("float", "none");
+					$("div.toolbar").css("line-height", "28px" );
+				}
+				else{
+					$("button#notesarchive").css("float", "right");
+					$("div.toolbar").css("line-height", "inherit" );
+				}
+			});
+			//nicht mehr der erste Durchgang
+			list_first_load = false;
+		}
 
 		//Listener
 		//	Open
@@ -159,3 +185,6 @@ function list(){
 		);
 	}
 }
+
+//das erste mal, dass list() aufgerufen wird
+var list_first_load = true;
