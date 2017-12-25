@@ -1,9 +1,13 @@
 //Allgemein fuer Userid und Namen
 var userinformation = { "name": null, "id": null, "admin" : false };
+
 //Speicher fuer Timeout
 var errorMessageTimeOut = null;
+
 //Offline oder online?
 var systemOfflineMode = false;
+var systemOfflineManager = new OfflineManager();
+
 //REST oder Session API?
 var systemRESTAPI = false;
 
@@ -70,6 +74,8 @@ function ajax_request( task, post, callback, errcallback ){
 		function (data) {
 			//hier online
 			systemOfflineMode = false;
+			systemOfflineManager.statusChanged( false );
+			
 			//Serveranwort okay?
 			if( typeof data === "object" ){
 				//Fehler?
@@ -102,6 +108,7 @@ function ajax_request( task, post, callback, errcallback ){
 
 		//jetzt offline
 		systemOfflineMode = true;
+		systemOfflineManager.statusChanged( true );
 
 		//Callback vorhanden?
 		if( typeof callback === "function" ){

@@ -287,7 +287,7 @@ function loginsys(){
 
 			//Storage löschen
 			//	alles?
-			if( $( "input#logouttype:checked" ).length == 0 ){
+			if( $( "input#logouttype:checked" ).length == 0  ){
 				localStorage.clear();
 			}
 			else{

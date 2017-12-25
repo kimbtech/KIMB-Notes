@@ -39,8 +39,8 @@ function maker(noteid, notename, sharecont, savecallback) {
 		//Daten ohne Server aus localStorage oder Vorgabe nehmen
 		// empty => Ist der Server leer?
 		function getDataWithoutServer(empty, geandert) {
-			//Dateien 
-			if (!empty) {
+			//Datei konnte nicht synchroniesert werden, hätte aber klappen müssen
+			if ( !empty && !systemOfflineMode ) {
 				//Gefahr merken
 				noteOverrideDanger = true;
 				//Meldung
@@ -56,16 +56,27 @@ function maker(noteid, notename, sharecont, savecallback) {
 				make_inputfield();
 			}
 			else {
-				//Fallback (Vorgabe)
-				notedata = {
-					"name": notename,
-					"id": noteid,
-					"content": "# " + notename + "\nUnd hier dann der Text!!\n",
-					"lastserverchanged": (typeof geandert != "undefined") ? geandert : 0
-				};
+				//leer
+				if( !systemOfflineMode ){
+					//Fallback (Vorgabe)
+					notedata = {
+						"name": notename,
+						"id": noteid,
+						"content": "# " + notename + "\nUnd hier dann der Text!!\n",
+						"lastserverchanged": (typeof geandert != "undefined") ? geandert : 0
+					};
 
-				//Eingabefeld
-				make_inputfield();
+					//Eingabefeld
+					make_inputfield();
+				}
+				else{
+					//Offline nicht verfügbar
+					confirmDialog('Die gewäöhlte Notiz ist auf diesem Gerät leider nicht offline verfügbar!',
+						{ "OK" : function (){$(this).dialog("close");} },
+						'Offlinemodus'
+					);
+					list();
+				}
 			}
 		}
 
@@ -83,6 +94,9 @@ function maker(noteid, notename, sharecont, savecallback) {
 
 			//Eingabefeld
 			make_inputfield();
+		}
+		else if( systemOfflineMode ){
+			getDataWithoutServer(false);
 		}
 		else {
 			$("div.noteview div.loading").removeClass("disable");
@@ -184,8 +198,9 @@ function maker(noteid, notename, sharecont, savecallback) {
 			}
 		});
 
-		if (share) {
-			//Keine Freigabe und keinen Verlauf Button bei aufgerufener Freigabe
+		if (share || systemOfflineMode ) {
+			//Keine Freigabe und keinen Verlauf Button bei aufgerufener Freigabe,
+			//	bzw. wenn offline
 			$("button#publishnote").addClass('disable');
 			$("button#notehistory").addClass('disable');
 		}
@@ -412,46 +427,60 @@ function maker(noteid, notename, sharecont, savecallback) {
 					savecallback(cm_editor.getValue(), false);
 				}
 				else if (share === false) {
-					$("div.noteview div.loading").removeClass("disable");
-					ajax_request("view",
-						{ "userid": userinformation.id, "noteid": noteid, "note": { "name": $("input#notename").val(), "cont": cm_editor.getValue() } },
-						function (data) {
-							$("div.noteview div.loading").addClass("disable");
-							if (
-								data.status === 'okay'
-							) {
-								console.log('Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.');
+					if( systemOfflineMode ){
+						//Änderunge merken, um später zu pushen
+						systemOfflineManager.saveNote( noteid, cm_editor.getValue() );
 
-								//Zeitpunkt merken
-								lastajaxsave = Date.now();
+						//Zeitpunkt merken
+						lastajaxsave = Date.now();
 
-								//nur bei Änderung sinnvoll
-								if (data.data.length == 4) {
-									//lastsync dieser Notiz anpassen
-									notedata.lastserverchanged = data.data[3];
-									//JSON in localStorage (lastserverch) updaten
-									var newdat = JSON.parse(localStorage.getItem("note_autosave_" + noteid));
-									newdat.lastserverchanged = data.data[3];
-									localStorage.setItem("note_autosave_" + noteid, JSON.stringify(newdat));
+						//Callback vorhnaden?
+						if (typeof callback === "function") {
+							callback( true );
+						}
+					}
+					else{
+						$("div.noteview div.loading").removeClass("disable");
+						ajax_request("view",
+							{ "userid": userinformation.id, "noteid": noteid, "note": { "name": $("input#notename").val(), "cont": cm_editor.getValue() } },
+							function (data) {
+								$("div.noteview div.loading").addClass("disable");
+								if (
+									data.status === 'okay'
+								) {
+									console.log('Notiz: "' + notename + '" ("' + noteid + '") auf Server gespeichert.');
+
+									//Zeitpunkt merken
+									lastajaxsave = Date.now();
+
+									//nur bei Änderung sinnvoll
+									if (data.data.length == 4) {
+										//lastsync dieser Notiz anpassen
+										notedata.lastserverchanged = data.data[3];
+										//JSON in localStorage (lastserverch) updaten
+										var newdat = JSON.parse(localStorage.getItem("note_autosave_" + noteid));
+										newdat.lastserverchanged = data.data[3];
+										localStorage.setItem("note_autosave_" + noteid, JSON.stringify(newdat));
+									}
+
+									//jetzt wieder gespeichert
+									$("span.notesaved").removeClass("disable");
+									$("span.noteunsaved").addClass("disable");
 								}
 
-								//jetzt wieder gespeichert
-								$("span.notesaved").removeClass("disable");
-								$("span.noteunsaved").addClass("disable");
+								//Callback vorhnaden?
+								if (typeof callback === "function") {
+									callback((data.status === 'okay'));
+								}
+							},
+							function (data) {
+								//Callback vorhnaden?
+								if (typeof callback === "function") {
+									callback(false);
+								}
 							}
-
-							//Callback vorhnaden?
-							if (typeof callback === "function") {
-								callback((data.status === 'okay'));
-							}
-						},
-						function (data) {
-							//Callback vorhnaden?
-							if (typeof callback === "function") {
-								callback(false);
-							}
-						}
-					);
+						);
+					}
 				}
 			}
 		}

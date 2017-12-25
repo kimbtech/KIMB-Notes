@@ -42,7 +42,7 @@ echo "# Version ".$versnum."\r\n";
 	// Code fuer JS dev
 	foreach( scandir( __DIR__ . '/load/devjs/' ) as $fona ){
 		if( $fona != '.' && $fona != '..' && is_file( __DIR__ . '/load/devjs/'. $fona ) ){
-			echo "# ".filemtime( __DIR__ . '/load/devjs/'. $fona )."\r\n";
+			echo "# ". $fona ." ".filemtime( __DIR__ . '/load/devjs/'. $fona )."\r\n";
 		}
 	}
 echo "\r\n";
@@ -93,6 +93,7 @@ echo $domain."/load/backend.min.js"."\r\n";
 if( $jsdevmin == 'dev' ){
 	echo $domain."/load/notes.dev.css"."\r\n";
 	echo $domain."/load/notes.dev.js"."\r\n";
+	echo $domain."/load/devjs/cla_offlinemanager.js"."\r\n";
 	echo $domain."/load/devjs/globals.js"."\r\n";
 	echo $domain."/load/devjs/fun_loginsys.js"."\r\n";
 	echo $domain."/load/devjs/fun_list.js"."\r\n";
