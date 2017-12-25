@@ -172,7 +172,7 @@ function authCodeManager(){
 				var html = '<p><b>Neuer Authentifizierungslink wurde erstellt:</b></p>'
 					+ '<p><b>Code:</b> <code style="color:black;">' + code + '</code></p>'
 					+ '<p><b>URL:</b> <input type="text" value="' + authlink +'" readonly="readonly" style="width:90%;"></p>'
-					+ '<p><b>Link:</b> <a href="' + authlink +'" target="_blank" style="color:lightblue;">Aufrufen</a></p>'
+					+ '<p><b>Link:</b> <a href="' + authlink +'" target="_blank">Aufrufen</a></p>'
 					+ '<p><center><div style="background-color:white; padding:15px; border-radius:5px;" id="authCodeManagerNewCodeDialogQR"></div></center></p>'
 					+ '<p><em><u>Achtung:</u> Dieser Link und Code wird nur ein einziges Mal angezeigt!!</em></p>';
 				//HTML

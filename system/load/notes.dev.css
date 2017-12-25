@@ -199,7 +199,7 @@ div#freigabeManagerDialog table,
 div#freigabeManagerDialog td,
 div#freigabeManagerDialog th,
 div#freigabeManagerDialog tr {
-	border: 1px solid white;
+	border: 1px solid black;
 	border-collapse: collapse;
 }
 

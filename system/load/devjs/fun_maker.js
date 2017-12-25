@@ -514,7 +514,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 					var inhalt = false;
 					$.each(data.data, function (k, v) {
 						inhalt = true;
-						html += '<tr><td><a href="' + domain + '/#' + v.authcode + '" target="_blank" style="color:lightblue;">Aufrufen</a> <button authcode="' + v.authcode + '" class="freigabeQR">QR-Code</button></td>';
+						html += '<tr><td><a href="' + domain + '/#' + v.authcode + '" target="_blank">Aufrufen</a> <button authcode="' + v.authcode + '" class="freigabeQR">QR-Code</button></td>';
 						html += '<td>' + v.name + '</td>';
 						html += '<td>' + v.created + '</td>';
 						html += '<td><code style="color:black;">' + v.edit + '</code></td>';
@@ -604,7 +604,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 
 						var html = '<p><b>Code:</b> <code style="color:black;">' + code + '</code></p>'
 							+ '<p><b>URL:</b> <input type="text" value="' + authlink + '" readonly="readonly" style="width:90%;"></p>'
-							+ '<p><b>Link:</b> <a href="' + authlink + '" target="_blank" style="color:lightblue;">Aufrufen</a></p>'
+							+ '<p><b>Link:</b> <a href="' + authlink + '" target="_blank">Aufrufen</a></p>'
 							+ '<p><center><div style="background-color:white; padding:15px; border-radius:5px;" id="freigabeManagerQR"></div></center></p>';
 						//HTML
 						$("body").append('<div id="freigabeManagerQRDialog">' + html + '</div>');

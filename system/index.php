@@ -132,8 +132,8 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 					<input type="checkbox" id="logouttype" checked="checked"> Inhalte im Browser behalten
 				</span>
 				<span class="usertools">
-					<span class="ui-icon ui-icon-person" title="Authentifizierungslinks verwalten sowie Passwort ändern"></span>
-					<span class="ui-icon ui-icon-wrench disable" title="Administration des Systems"></span>
+					<span class="ui-icon ui-icon-person ui-state-hover ui-corner-all" title="Authentifizierungslinks verwalten sowie Passwort ändern"></span>
+					<span class="ui-icon ui-icon-wrench ui-state-hover ui-corner-all disable" title="Administration des Systems"></span>
 				</span>
 			</div>
 
