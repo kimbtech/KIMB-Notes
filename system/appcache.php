@@ -39,12 +39,14 @@ $versnum = json_encode( SystemInit::SYSTEMVERSION );
 
 echo "CACHE MANIFEST"."\r\n";
 echo "# Version ".$versnum."\r\n";
-	// Code fuer JS dev
+if( $jsdevmin == 'dev' ){
+	// Weiterer Versionscode für JS dev
 	foreach( scandir( __DIR__ . '/load/devjs/' ) as $fona ){
 		if( $fona != '.' && $fona != '..' && is_file( __DIR__ . '/load/devjs/'. $fona ) ){
 			echo "# ". $fona ." ".filemtime( __DIR__ . '/load/devjs/'. $fona )."\r\n";
 		}
 	}
+}
 echo "\r\n";
 echo "CACHE:"."\r\n";
 echo $domain."/index.php"."\r\n";

@@ -41,12 +41,14 @@ error_reporting( 0 );
 require_once( __DIR__ . '/php/systemInit.php' );
 //Domain holen
 $domain = SystemInit::get( 'domain' );
-//JSdivmin
+//JSdevmin
 $jsdevmin = SystemInit::get( 'JSdevmin' );
+//AppCache
+$manifest = SystemInit::get( 'AppCache' ) ? ' manifest="'.$domain.'/appcache.php"' : '';
 
 ?>
 <!DOCTYPE html>
-<html manifest="<?php echo $domain; ?>/appcache.php">
+<html<?php echo $manifest ?>>
 	<head>
 		<title>KIMB-Notes</title>
 		<link rel="shortcut icon" href="<?php echo $domain; ?>/favicon.ico" type="image/x-icon; charset=binary">
@@ -90,7 +92,7 @@ $jsdevmin = SystemInit::get( 'JSdevmin' );
 		<script src="<?php echo $domain; ?>/load/prism/prism.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.css">
-		<script>var domain = "<?php echo $domain; ?>", jsdevmin = "<?php echo $jsdevmin; ?>", global_polling_secs = 60; </script>
+		<script>var domain = "<?php echo $domain; ?>", jsdevmin = "<?php echo $jsdevmin; ?>", global_polling_secs = <?php echo SystemInit::get( 'sysPoll' ); ?> </script>
 		<script src="<?php echo $domain; ?>/load/notes.<?php echo $jsdevmin; ?>.js"></script>
 	</head>
 	<body>

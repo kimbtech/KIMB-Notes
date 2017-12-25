@@ -162,6 +162,8 @@ else if( $step == 2 ){
 	$abfr .= '<p>URL zu Impressum/ Support: <input type="text" value="http://example.com/impressum-datenschutz" name="impressumURL"></p>';
 	$abfr .= '<p>Beschriftung des Links zu Impressum/ Support: <input type="text" value="Impressum &amp; Datenschutz" name="impressumName"></p>';
 	$abfr .= '<p>Hinweise zur Syntax der Notizen anzeigen: <input type="radio" value="true" name="showMarkdownInfo" checked="checked"> Anzeigen <input type="radio" value="false" name="showMarkdownInfo"> Ausblenden </p>';
+	$abfr .= '<p>Prüfen nach Ändrungen alle <input type="number" value="60" name="sysPoll"> Sekunden.</p>';
+	$abfr .= '<p>OfflineApp durch CacheManifest anbieten: <input type="radio" value="true" name="AppCache" checked="checked"> Aktvieren <input type="radio" value="false" name="AppCache"> Deaktivieren</p>';
 	$abfr .= '<p><input type="hidden" value="yes" name="from2"></p>';
 	$abfr .= '<p><input type="submit" value="&rarr; Weiter"></p></form>';
 
@@ -169,24 +171,13 @@ else if( $step == 2 ){
 
 	//Konfiguration Gerüst erstellen:
 	$_SESSION['confarray'] = array(
-		"config" => array(
-			"domain" => "",
-			"JSdevmin" => "",
-			"impressumURL" => "",
-			"impressumName" => "",
-			"showMarkdownInfo" => ""
-		),
-		"externeLibs" => array(
-			"",
-			array(
-			    "fonts" => "",
-			    "jqueryuiCSS" => "",
-			    "jqueryui" => "",
-			    "jquery" => "",
-			    "sjcl" => "",
-			    "qrcode" => ""
-			)
-		)
+		"domain" => "",
+		"JSdevmin" => "",
+		"impressumURL" => "",
+		"impressumName" => "",
+		"showMarkdownInfo" => "",
+		"sysPoll" => "",
+		"AppCache" => ""
 	);
 }
 else if( $step == 3 ){
@@ -204,99 +195,26 @@ else if( $step == 3 ){
 			!empty( $_POST['impressumName'] )
 			&&
 			( $_POST['showMarkdownInfo'] == 'true' || $_POST['showMarkdownInfo'] == 'false' )
+			&&
+			is_numeric( $_POST['sysPoll'] )
+			&&
+			( $_POST['AppCache'] == 'true' || $_POST['AppCache'] == 'false' )
 		)
 	){
 		if( !empty( $_POST['from2'] ) ){
 			//Werte von 2 verarbeiten
-			$_SESSION['confarray']["config"] = array(
+			$_SESSION['confarray'] = array(
 				"domain" => $_POST['domain'],
 				"JSdevmin" => ( $_POST['JSdemvin'] == "dev" ? "dev" : "min" ),
 				"impressumURL" => $_POST["impressumURL"],
 				"impressumName" => $_POST["impressumName"],
-				"showMarkdownInfo" => ( $_POST['showMarkdownInfo'] == 'false' ? false : true )
+				"showMarkdownInfo" => ( $_POST['showMarkdownInfo'] == 'false' ? false : true ),
+				"sysPoll" => intval( $_POST['sysPoll'] ),
+				"AppCache" => ( $_POST['AppCache'] == 'false' ? false : true ),
 			);
-		}
-
-		//Libraries abfragen
-		$out->addBox( '<h2>External Libraries</h2>' );
-
-		$out->addBox(
-			 'KIMB-Notes benötigt externe JS-Bibilotheken, die Quelle dieser muss hier angegeben werden.<br />'
-			.'Siehe <a href="https://github.com/kimbtech/KIMB-Notes/blob/master/js-libs/README.md" target="_blank">ReadMe</a><br />'
-			.'Es gibt zwei Möglichkeiten, entweder geben Sie zu jeder dieser Bibilotheken die genaue URL an oder Sie definieren ein Verzeichnis'
-			.'in dem die Bibilotheken nach vorgegebener Struktur liegen (ein solches Verzeichnis finden sie unter <code>/js-libs/</code>).'
-		);
-
-		$abfr = '<form action="?step=4" method="post">';
-		$abfr .= '<p><input type="radio" value="verzeichnis" name="modus" checked="checked" onclick="document.getElementById(\'libsVerzeichnis\').style.display = \'block\'; document.getElementById(\'libsEinzeln\').style.display = \'none\';"> Verzeichnis angeben <input type="radio" value="einzeln" name="modus" onclick="document.getElementById(\'libsVerzeichnis\').style.display = \'none\'; document.getElementById(\'libsEinzeln\').style.display = \'block\'; document.getElementById(\'libsVerzeichnisInput\').value = \'\';"> Einzeln angeben</p>';
 		
-		$abfr .= '<div id="libsVerzeichnis">';
-		$abfr .= '<input type="text" id="libsVerzeichnisInput" name="libfolder" value="'.$siteurl.'/js-libs">';
-		$abfr .= '</div><div id="libsEinzeln" style="display:none;">';
-		$abfr .= '<input type="text" name="fonts" placeholder="Fonts"><br />';
-		$abfr .= '<input type="text" name="jqueryuiCSS" placeholder="jQuery-UI CSS"><br />';
-		$abfr .= '<input type="text" name="jqueryui" placeholder="jQuery-UI"><br />';
-		$abfr .= '<input type="text" name="jquery" placeholder="jQuery"><br />';
-		$abfr .= '<input type="text" name="sjcl" placeholder="SJCL"><br />';
-		$abfr .= '<input type="text" name="qrcode" placeholder="QR-Code"><br />';
-		$abfr .= '</div>';
-
-		$abfr .= '<p><input type="submit" value="&rarr; Weiter"></p></form>';
-	
-		$out->addBox( $abfr );
-
-	}
-	else{
-		$out->addBox( '<div class="message error">Konnte Systemkonfiguration nicht sichern!</div>' );
-		$out->addBox( '<a href="?step=2"><button>&larr; Zurück</button></a>' );
-	}
-}
-else if( $step == 4 ){
-	//Übergaben okay?
-	if(
-		!empty( $_POST['modus'] )
-		&&
-		(
-			!empty( $_POST['libfolder'] )
-			||
-			(
-				!empty( $_POST['fonts'] )
-				&&
-				!empty( $_POST['jqueryuiCSS'] )
-				&&
-				!empty( $_POST['jqueryui'] )
-				&&
-				!empty( $_POST['jquery'] )
-				&&
-				!empty( $_POST['sjcl'] )
-				&&
-				!empty( $_POST['qrcode'] )
-			)	
-		)
-	){
-		//Werte von 3 verarbeiten
-		$extarray = array();
-		// Verzeichnis oder einzeln?
-		if( !empty( $_POST['libfolder'] ) ){
-			$extarray = array( $_POST['libfolder'] );
 		}
-		else{
-			$extarray = array(
-				false,
-				array(
-				    "fonts" => $_POST['fonts'],
-				    "jqueryuiCSS" => $_POST['jqueryuiCSS'],
-				    "jqueryui" => $_POST['jqueryui'],
-				    "jquery" => $_POST['jquery'],
-				    "sjcl" => $_POST['sjcl'],
-				    "qrcode" => $_POST['qrcode']
-				)
-			);
-		}
-		//in die Config rein
-		$_SESSION['confarray']["externeLibs"] = $extarray;
-
-
+		
 		//neue Config öffnen und schreiben
 		$conf = new JSONReader( 'config' );
 		//	schreiben
@@ -311,8 +229,8 @@ else if( $step == 4 ){
 		}
 	}
 	else{
-		$out->addBox( '<div class="message error">Konnte External Libraries nicht übernehmen!</div>' );
-		$out->addBox( '<a href="?step=3"><button>&larr; Zurück</button></a>' );
+		$out->addBox( '<div class="message error">Konnte Systemkonfiguration nicht sichern!</div>' );
+		$out->addBox( '<a href="?step=2"><button>&larr; Zurück</button></a>' );
 	}
 }
 else if( $step == 5 ){

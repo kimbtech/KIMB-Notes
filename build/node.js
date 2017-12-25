@@ -11,7 +11,7 @@ console.log( "=> 1. Minify" );
 {
 	//JS
 	console.log( "===> 1.1 JavaScript" );
-	var UglifyJS = require("uglify-js");
+	var UglifyJS = require("uglify-es");
 
 	[
 		__dirname + "/../system/load/backend",

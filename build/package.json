@@ -11,6 +11,6 @@
   "license": "GPL-3.0",
   "dependencies": {
     "clean-css": "^4.1.9",
-    "uglify-js": "^3.2.2"
+    "uglify-es": "^3.3.1"
   }
 }
