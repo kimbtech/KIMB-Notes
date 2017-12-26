@@ -62,6 +62,8 @@ function loginsys(){
 				userinformation.authcode = localStorage.getItem( "userinformation_authcode" );
 				systemRESTAPI = true;
 
+				//Logoutbutton
+				logout_enable();
 				//gleich zur Liste, kein Login nötig!
 				list();
 			}
@@ -79,8 +81,10 @@ function loginsys(){
 
 						//Offline
 						if( systemOfflineMode ){
+
 							//Logoutbutton
 							logout_enable();
+
 							//Notizliste
 							list();
 						}
@@ -132,10 +136,11 @@ function loginsys(){
 				var auth = parts[1];
 
 				//Versuch einzuloggen
+				//	REST nutzen! (Username muss zu UserID werden)
 				console.log( 'Versuche User "'+user+'" mit Loginlink einzuloggen.' );
 				$( "div.login div.input div.loading" ).removeClass( "disable" );
 				ajax_request(
-					"login",
+					"auth",
 					{ "username" : user, "authcode" : auth },
 					function ( data ){
 						$( "div.login div.input div.loading" ).addClass( "disable" );
@@ -283,7 +288,7 @@ function loginsys(){
 		var keepAliveInterval = null;
 
 		function do_logout(){
-			if( !systemOfflineMode ){
+			if( !systemOfflineMode && !systemRESTAPI ){
 				//ajax
 				ajax_request( "login",
 						{"logout" : null},
@@ -308,6 +313,7 @@ function loginsys(){
 				localStorage.removeItem( "userinformation_id" );
 				localStorage.removeItem( "userinformation_name" );
 				localStorage.removeItem( "userinformation_authcode" );
+				localStorage.removeItem( "userinformation_admin" );
 			}
 
 			//Userifos zuruecksetzen
@@ -390,17 +396,20 @@ function loginsys(){
 					);
 				}
 				else{
-					//normal wiederherstellen, einfach mal den Status abfragen
-					ajax_request(
-						"login",
-						{ "status" : userinformation.id },
-						function (data){
-							if( data.data != true ){
-								//Fehler!
-								errorMessage( 'Die Session ist abgelaufen!', false );
+					//bei REST keine Session
+					if( !systemRESTAPI ){
+						//normal wiederherstellen, einfach mal den Status abfragen
+						ajax_request(
+							"login",
+							{ "status" : userinformation.id },
+							function (data){
+								if( data.data != true ){
+									//Fehler!
+									errorMessage( 'Die Session ist abgelaufen!', false );
+								}
 							}
-						}
-					);
+						);
+					}
 				}
 			}, global_polling_secs * 1000 );
 		}

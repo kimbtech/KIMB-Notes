@@ -247,7 +247,7 @@ function log_user_in( $id ){
 
 	if( RESTMODE ){
 		$_REST_LOGINS['loggedin'] = true;
-		$_REST_LOGINS['userid'] = true;
+		$_REST_LOGINS['userid'] = $id;
 	}
 	else{
 		$_SESSION['loggedin'] = true;
@@ -263,6 +263,8 @@ function log_user_in( $id ){
 //		= 'null' fuer alle User
 //	Return => true/ false
 function check_logged_in( $id = null ){
+	global $_REST_LOGINS;
+
 	if( RESTMODE ){
 		if( $_REST_LOGINS['loggedin'] ){
 			if( $id === null || $id === $_REST_LOGINS['userid'] ){
@@ -298,6 +300,8 @@ function check_logged_in( $id = null ){
 
 //User ausloggen (einfach Session destroy)
 function log_user_out(){
+	global $_REST_LOGINS;
+
 	if( RESTMODE ){
 		$_REST_LOGINS = array(
 			'loggedin' => false,
