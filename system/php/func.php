@@ -235,13 +235,26 @@ function check_params( $type, $schema, $diemsg = null ){
 	LOGIN
 **/
 
+$_REST_LOGINS = array(
+	'loggedin' => false,
+	'userid' => null
+);
+
 //User per Session einloggen
 //	USERID wird benutzt!
 function log_user_in( $id ){
-	$_SESSION['loggedin'] = true;
-	$_SESSION['loggedintime'] = time();
-	$_SESSION['userid'] = $id;
-	$_SESSION['browserid'] = sha1( $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] );
+	global $_REST_LOGINS;
+
+	if( RESTMODE ){
+		$_REST_LOGINS['loggedin'] = true;
+		$_REST_LOGINS['userid'] = true;
+	}
+	else{
+		$_SESSION['loggedin'] = true;
+		$_SESSION['loggedintime'] = time();
+		$_SESSION['userid'] = $id;
+		$_SESSION['browserid'] = sha1( $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] );
+	}
 }
 
 //User Login pruefen 
@@ -250,33 +263,56 @@ function log_user_in( $id ){
 //		= 'null' fuer alle User
 //	Return => true/ false
 function check_logged_in( $id = null ){
-	//allgemein preufen
-	if(
-			$_SESSION['loggedin'] 
-		&&
-			$_SESSION['loggedintime'] + 600 > time()
-		&&
-			$_SESSION['browserid'] == sha1( $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] )
-	){
-		//Zeit neu setzen
-		$_SESSION['loggedintime'] = time();
-		//Rueckgabe
-		return ( is_null( $id ) ? true : ( $_SESSION['userid'] == $id ) ); 
+	if( RESTMODE ){
+		if( $_REST_LOGINS['loggedin'] ){
+			if( $id === null || $id === $_REST_LOGINS['userid'] ){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
 	}
 	else{
-		return false;
+		//allgemein preufen
+		if(
+				$_SESSION['loggedin'] 
+			&&
+				$_SESSION['loggedintime'] + 600 > time()
+			&&
+				$_SESSION['browserid'] == sha1( $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'] )
+		){
+			//Zeit neu setzen
+			$_SESSION['loggedintime'] = time();
+			//Rueckgabe
+			return ( is_null( $id ) ? true : ( $_SESSION['userid'] == $id ) ); 
+		}
+		else{
+			return false;
+		}
 	}
 }
 
 //User ausloggen (einfach Session destroy)
 function log_user_out(){
-	//Session leeren
-	session_unset();
-	//Session zerstören
-	session_destroy();
-	//Session neu aufesetzen
-	//	jetzt ist alles, was mit dem User zu tun hatte weg
-	session_start();
+	if( RESTMODE ){
+		$_REST_LOGINS = array(
+			'loggedin' => false,
+			'userid' => null
+		);
+	}
+	else{
+		//Session leeren
+		session_unset();
+		//Session zerstören
+		session_destroy();
+		//Session neu aufesetzen
+		//	jetzt ist alles, was mit dem User zu tun hatte weg
+		session_start();
+	}
 }
 
 

@@ -34,6 +34,9 @@ error_reporting( 0 );
 //Systembibilothek laden
 require_once( __DIR__ . '/php/systemInit.php' );
 
+//AJAX API mit Session
+define("RESTMODE", false);
+
 //Funktionen
 require_once( __DIR__ . '/php/func.php' );
 //GET preufen

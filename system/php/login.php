@@ -22,6 +22,7 @@
 /*************************************************/
 
 defined("Notestool") or die('No clean Request');
+if( RESTMODE ) die('Not for REST Mode');
 
 //Userdaten laden
 $userlist = new JSONReader( 'userlist' );

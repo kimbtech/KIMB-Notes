@@ -22,6 +22,7 @@
 /*************************************************/
 
 defined("Notestool") or die('No clean Request');
+if( RESTMODE ) die('Not for REST Mode');
 
 //Datei lesen?
 if( check_params( POST, array( 'authcode' => 'strAZaz09', '*cont' => 'strALL' ) ) ){
