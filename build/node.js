@@ -118,7 +118,7 @@ console.log( "=> 1. Minify" );
 	};
 
 	function readdir( path, relpath ){
-		fs.readdirSync( path , 'uft8').forEach( function( file ){
+		fs.readdirSync( path , 'utf8').forEach( function( file ){
 			if( fs.lstatSync( path + "/" + file ).isDirectory() ){
 				readdir( path + "/" + file, relpath + file + "/" );
 			}
