@@ -34,6 +34,8 @@ function maker(noteid, notename, sharecont, savecallback) {
 	//	wird?
 	//		(zB: wenn Server nicht antwortet, aber noch eine Nachricht im localStorage)
 	var noteOverrideDanger = false;
+	//Leere Notiz geladen?
+	var onLoadEmpty = false;
 	function get_notedata() {
 
 		//Daten ohne Server aus localStorage oder Vorgabe nehmen
@@ -107,6 +109,8 @@ function maker(noteid, notename, sharecont, savecallback) {
 					$("div.noteview div.loading").addClass("disable");
 					//Abfrage okay?
 					if (data.status === 'okay') {
+						onLoadEmpty = data.data.empty;
+
 						//neue Notiz (dann Server noch leer)
 						if (!data.data.empty) {
 
@@ -364,8 +368,11 @@ function maker(noteid, notename, sharecont, savecallback) {
 				$("span.notesaved").addClass("disable");
 			}
 		}
-		//			einmal zu Beginn					--- erstmal nichtmehr
-		//			save();
+		// einmal zu Beginn, wenn Nachricht leer war
+		if( onLoadEmpty ){
+			save();
+			onLoadEmpty = false;
+		}
 		//bei jeder Änderung
 		cm_editor.on("change", save);
 
@@ -378,7 +385,7 @@ function maker(noteid, notename, sharecont, savecallback) {
 	//Speicherung per AJAX durchführen
 	function ajaxsave(callback) {
 		//überhaupt Änderungen?
-		if( noteconthash == sjcl.codec.hex.fromBits( sjcl.hash.sha256.hash( cm_editor.getValue() ) ) ){
+		if( noteconthash == sjcl.codec.hex.fromBits( sjcl.hash.sha256.hash( cm_editor.getValue() ) ) && !onLoadEmpty ){
 			//Callback vorhnaden?
 			if (typeof callback === "function") {
 				callback(true);
