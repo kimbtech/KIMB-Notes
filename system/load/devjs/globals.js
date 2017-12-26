@@ -1,5 +1,5 @@
 //Allgemein fuer Userid und Namen
-var userinformation = { "name": null, "id": null, "admin" : false };
+var userinformation = { "name": null, "id": null, "admin" : false, "authcode" : null };
 
 //Speicher fuer Timeout
 var errorMessageTimeOut = null;
@@ -70,7 +70,18 @@ function errorMessage( message, remove ){
  * @param {function (JSON)} errcallback (optional) Funktion bei fehlerhafter Anfrage, JSON Rückgabe wenn möglich
  */
 function ajax_request( task, post, callback, errcallback ){
-	$.post( domain + "/ajax.php?" + task , post,
+	if( systemRESTAPI && ( task != "share" || task != "login" ) || task == "auth" ){
+		var filename = "rest";
+		//nicht jeder Request übergibt den Authcode sicher, deshalb hier anfügen!
+		if( typeof post["authcode"] == "undefined" || post["authcode"] == null ){
+			post["authcode"] = userinformation.authcode;
+		}
+	}
+	else{
+		var filename = "ajax";
+	}
+
+	$.post( domain + "/"+ filename +".php?" + task , post,
 		function (data) {
 			//Serveranwort okay?
 			if( typeof data === "object" ){

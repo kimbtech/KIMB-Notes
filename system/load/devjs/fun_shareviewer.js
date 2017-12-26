@@ -8,6 +8,9 @@ function shareviewer( authcode, errorcallback ) {
 	var lastchanged = 0;
 	var editable = false;
 
+	//kein REST!
+	systemRESTAPI = false;
+
 	function openShare(){
 		//Nachricht abrufen
 		ajax_request( 'share', { "authcode" : authcode },

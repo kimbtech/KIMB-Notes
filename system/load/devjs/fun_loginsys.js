@@ -57,37 +57,48 @@ function loginsys(){
 			userinformation.name = localStorage.getItem( "userinformation_name" );
 			userinformation.admin = JSON.parse( localStorage.getItem( "userinformation_admin" ) );
 
-			$( "div.login div.input div.loading" ).removeClass( "disable" );
-			
-			//testen
-			ajax_request(
-				"login",
-				{ "status" : userinformation.id },
-				function (data){
+			//REST?
+			if( localStorage.getItem( "userinformation_authcode" ) != '' && localStorage.getItem( "userinformation_authcode" ) != null ){
+				userinformation.authcode = localStorage.getItem( "userinformation_authcode" );
+				systemRESTAPI = true;
 
-					$( "div.login div.input div.loading" ).addClass( "disable" );
+				//gleich zur Liste, kein Login nötig!
+				list();
+			}
+			else{
 
-					//Offline
-					if( systemOfflineMode ){
-						//Logoutbutton
-						logout_enable();
-						//Notizliste
-						list();
-					}
-					else{
-						if( data.data == true ){
+				$( "div.login div.input div.loading" ).removeClass( "disable" );
+				
+				//testen
+				ajax_request(
+					"login",
+					{ "status" : userinformation.id },
+					function (data){
 
+						$( "div.login div.input div.loading" ).addClass( "disable" );
+
+						//Offline
+						if( systemOfflineMode ){
 							//Logoutbutton
 							logout_enable();
-
 							//Notizliste
 							list();
 						}
 						else{
-							loginlink();
+							if( data.data == true ){
+
+								//Logoutbutton
+								logout_enable();
+
+								//Notizliste
+								list();
+							}
+							else{
+								loginlink();
+							}
 						}
-					}
-				});
+					});
+			}
 		}
 		else{
 			//wenn offline und keine Infos im localStrorage, dann kann
@@ -135,10 +146,14 @@ function loginsys(){
 							userinformation.name = user;
 							userinformation.id = data.data.id;
 							userinformation.admin = data.data.admin;
+							userinformation.authcode = auth;
 							//in localStorage
 							localStorage.setItem( "userinformation_id", userinformation.id );
 							localStorage.setItem( "userinformation_name", userinformation.name );	
 							localStorage.setItem( "userinformation_admin", userinformation.admin );
+							localStorage.setItem( "userinformation_authcode", userinformation.authcode );
+
+							systemRESTAPI = true;
 
 							//Logoutbutton
 							logout_enable();
@@ -292,10 +307,14 @@ function loginsys(){
 				//nur Loginname
 				localStorage.removeItem( "userinformation_id" );
 				localStorage.removeItem( "userinformation_name" );
+				localStorage.removeItem( "userinformation_authcode" );
 			}
 
 			//Userifos zuruecksetzen
-			userinformation = { "name": null, "id": null, "admin" : false };
+			userinformation = { "name": null, "id": null, "admin" : false, "authcode" : null };
+
+			//kein REST mehr
+			systemRESTAPI = false;
 
 			//Auch etwaige Links wegnehmen
 			window.location.hash = "";
