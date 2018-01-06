@@ -464,5 +464,15 @@ function loginsys(){
 		display_and_listen();
 		keepSessionAlive();
 		adminButtons();
+
+		//Bei Zugriff per REST ist nicht zu 100% sicher, dass der Offline-Wert hier schon bekannt ist!
+		//	Deshalb nach dem ersten AJAX-Request (dann ist es klar)
+		//	nochmal über die Admin-Buttons nachdenken!
+		function task(){
+			adminButtons();
+			//noch öfter wäre unnötig!
+			$( document ).unbind( "ajaxComplete", task );
+		}
+		$( document ).ajaxComplete(task);
 	}
 }
