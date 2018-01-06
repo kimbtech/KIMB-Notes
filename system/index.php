@@ -110,13 +110,21 @@ $manifest = SystemInit::get( 'AppCache' ) ? ' manifest="'.$domain.'/appcache.php
 				Fehler!
 			</div>
 
+			<div class="nojs error message">
+				Die Applikation konnte nicht starten!
+				<div class="small">
+					Entweder ist JavaScript dekatviert oder ihr Browser unterstützt Version
+					<a href="http://es6-features.org/#ClassDefinition" target="_blank" rel="nofollow">ES6</a> nicht!
+				</div> 
+			</div>
+
 			<div class="globalloader loading message disable">
 			</div>
 
 			<p class="message error loggedout disable">Logout erfolgreich!</p>
-			<div class="login">
-				<p class="message important online">Sie müssen sich einloggen!</p>
-				<p class="message important offline">Sie können sich leider offline nicht einloggen!</p>
+			<div class="login disable">
+				<p class="message important online disable">Sie müssen sich einloggen!</p>
+				<p class="message important offline disable">Sie können sich leider offline nicht einloggen!</p>
 				<p class="message error disable">Login nicht erfolgreich!</p>
 				<p class="message okay disable">Login erfolgreich!</p>
 				<div class="input box">

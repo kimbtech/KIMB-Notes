@@ -57,7 +57,7 @@ abstract class SystemInit{
 		//Polling mittels JS des Servers für Änderungen (Zeit in sec.)
 		'sysPoll' => 60,
 		//AppCache aktivieren?
-		'AppCache' => true
+		'AppCache' => false
 	);
 
 	//Sytemversion

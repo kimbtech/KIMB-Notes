@@ -2,6 +2,9 @@
 //	Loginform und Login der Link machen
 //	per AJAX auf Server auth. (Session)
 function loginsys(){
+	//es ist JavaScript korrekt verfügbar!
+	$("div.nojs.error.message").remove();
+
 	//Freigbe prüfen
 	function check_share(){
 		//allgemeiner Ladebalken

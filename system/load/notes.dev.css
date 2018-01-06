@@ -145,7 +145,7 @@ div.main{
 	padding:10px;
 	border-radius:15px;
 	border:1px solid #5d7;
-	border-shadow:5px 5px 5px #ddd;
+	box-shadow:5px 5px 5px #ddd;
 
 	position:relative;
 }
