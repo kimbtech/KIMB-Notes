@@ -238,19 +238,28 @@ elseif(check_params( POST, array( 'userid' => 'strAZaz09', 'reload' => 'strAZaz0
 			foreach( $allNotesList->getArray() as $noteId ){
 				//Notiz schon aktiv?
 				if( !in_array( $noteId, $activeIds ) ){
-					//Notiz diese Users?
-					//	Notzi laden
-					$note = new JSONReader( 'notes/note_' . $noteId );
-					//	nicht leer?
-					if( $note->getArray() !== array() ){
-						//UserID passend?
-						if( $userid == $note->getValue(['userid']) ){
-							$out[] = array(
-								'noteid' => $noteId,
-								'name' => $note->getValue(['name']),
-								'geaendert' => date( 'H:i:s d.m.Y', $note->getValue(['geandert']) )
-							);
+					try{
+						//Notiz diese Users?
+						//	Notzi laden
+						$note = new JSONReader( 'notes/note_' . $noteId );
+						//	nicht leer?
+						if( $note->getArray() !== array() ){
+							//UserID passend?
+							if( $userid == $note->getValue(['userid']) ){
+								$out[] = array(
+									'noteid' => $noteId,
+									'name' => $note->getValue(['name']),
+									'geaendert' => date( 'H:i:s d.m.Y', $note->getValue(['geandert']) )
+								);
+							}
 						}
+					} catch( Exception $e ){
+						// corrupted note
+						$out[] = array(
+							'noteid' => $noteId,
+							'name' => '<div class="error small">corrupted note</div>',
+							'geaendert' => 'ID: ' . substr( $noteId, 0, 10 )
+						);
 					}
 				}
 			}
