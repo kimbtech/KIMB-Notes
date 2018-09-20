@@ -9,12 +9,12 @@ Es wird Syntax-Highlighting für die gängigen Programmiersprachen unterstützt 
 *Geplante Features sind u.a. Dateianhänge und vollständige Verschlüsselung.*
 
 ## Installation & Benutzung
-Das Tool kann direkt im Browser ausgefüghrt werden, weiterhin gibt es eine [Desktop-Application](https://github.com/kimbtech/KIMB-Notes-Desktop/). Auf mobilen Geräten kann das Tool als WebApp auf dem Homescreen angezeigt werden.
+Das Tool kann direkt im Browser ausgefüghrt werden, weiterhin gibt es eine [Desktop-Application](https://github.com/KIMB-technologies/KIMB-Notes-Desktop/). Auf mobilen Geräten kann das Tool als WebApp auf dem Homescreen angezeigt werden.
 
-&rarr; alles weitere im [Wiki](https://github.com/kimbtech/KIMB-Notes/wiki/)
+&rarr; alles weitere im [Wiki](https://github.com/KIMB-technologies/KIMB-Notes/wiki/)
 
 ### Testen
-Eine Demo des Tools befindet sich [hier](https://kimbtech.github.io/KIMB-Notes/system/).
+Eine Demo des Tools befindet sich [hier](https://KIMB-technologies.github.io/KIMB-Notes/system/).
 
 Username: `admin`  
 Passwort: `admin`
@@ -25,12 +25,12 @@ Passwort: `admin`
 >
 
 ### Entwicklung
-Siehe [Issues](https://github.com/kimbtech/KIMB-Notes/issues)
+Siehe [Issues](https://github.com/KIMB-technologies/KIMB-Notes/issues)
 
 #### Technisch
 Das Tool besteht aus einem HTML, CSS & JavaScript Client, welcher per AJAX mit einer PHP-API kommuniziert.
 
-Die [Desktop-Application](https://github.com/kimbtech/KIMB-Notes-Desktop/) ist mittels des Electron Framework realisiert.
+Die [Desktop-Application](https://github.com/KIMB-technologies/KIMB-Notes-Desktop/) ist mittels des Electron Framework realisiert.
 
 Um auch Verbindungsprobleme ausgleichen zu können wird der `localStorage` genutzt.
 
