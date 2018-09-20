@@ -1,5 +1,10 @@
 # KIMB-Notes
 
+>
+> This is the old repository, the development takes now place under  
+> > **https://github.com/KIMB-technologies/KIMB-Notes/**
+>
+
 KIMB-Notes ist ein einfaches Notiztool, welches es erlaubt Notizen online zu erstellen, zu teilen und zu organisieren.
 
 Die Notizen werden in Markdown erstellt und sind über das responsive Interface der WebApp auf allen Geräten erreichbar sowie über die Desktop-Application abrufbar.
@@ -39,4 +44,4 @@ Außerdem ist die PHP-API so konzipiert, dass automatisch Notizverläufe angeleg
 #### Aufbau des Repository
 - `/system/` Hauptsystem
 - `/install/` Installer
-- `/build/` NodeJS Skript für Buildvorgang (bei getaggten Releases ist dies schon ausgeführt)
+- `/build/` NodeJS Skript für Buildvorgang (bei getaggten Releases ist dies schon ausgeführt
